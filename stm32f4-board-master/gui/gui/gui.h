@@ -1,7 +1,7 @@
 /*
  * gui.h
  *
- *  Created on: 2016Äê5ÔÂ14ÈÕ
+ *  Created on: 2016ï¿½ï¿½5ï¿½ï¿½14ï¿½ï¿½
  *      Author: Administrator
  */
 
@@ -63,7 +63,7 @@ struct gui_msg_t
 };
 
 struct gui_operations{
-	int (*create)( struct gui_msg_t*p_msg);
+	int (*create)(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
 	int (*draw_again)(struct gui_msg_t*p_msg);
 	int (*onfocus)(struct gui_msg_t*p_msg);
 	int (*losefocus)(struct gui_msg_t*p_msg);
@@ -72,20 +72,18 @@ struct gui_operations{
 
 struct nxgui_object
 {
-    struct nxgui_object            *link;
-    enum widget_type_t       widget_type;
-    enum widget_shape_t     widget_shape;
-    struct gui_msg_t   *widget_msg;
-    struct widget_pic_t *widget_pic;
-	struct gui_handler* (*sched_getfiles)(void);
+    struct nxgui_object                *link;
+    enum widget_type_t           widget_type;
+    struct gui_msg_t                *gui_msg;
+    int (*callback)(enum event_type,void *data);
 };
 
 /*  */
 struct gui_handler{
-	struct gui_handler       *link;
-	unsigned short              id;
-	struct gui_operations   *gui_ops;
-  struct gui_msg_t        *widget_msg; 
+	struct gui_handler            *link;
+	unsigned short                   id;
+	struct gui_operations      *gui_ops;
+    struct gui_msg_t        widget_msg;
 	int (*callback)(enum event_type,void *data);
 };
 
@@ -111,9 +109,9 @@ typedef struct
 
 /* function */
 
-int gui_create(void);
+int gui_create(const char *device_availdable_list);
 struct gui_handler** gui_sched_root(void);
-
+int widget_create(enum widget_type_t widget_type,struct gui_msg_t *p_gui_msg,int (*callback)(enum event_type,void *data));
 /* end nuttx */
 
 #endif /* __GUI_H__ */

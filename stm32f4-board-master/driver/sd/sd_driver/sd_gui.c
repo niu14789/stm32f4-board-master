@@ -1,7 +1,7 @@
 /*
  * sd_gui.c
  *
- *  Created on: 2016Äê5ÔÂ14ÈÕ
+ *  Created on: 2016ï¿½ï¿½5ï¿½ï¿½14ï¿½ï¿½
  *      Author: Administrator
  */
 
@@ -11,21 +11,21 @@
 /*
  * sd_gui.c
  *
- *  Created on: 2016Äê5ÔÂ14ÈÕ
+ *  Created on: 2016ï¿½ï¿½5ï¿½ï¿½14ï¿½ï¿½
  *      Author: Administrator
  */
 
 /*
  * sd_gui.c
  *
- *  Created on: 2016Äê5ÔÂ14ÈÕ
+ *  Created on: 2016ï¿½ï¿½5ï¿½ï¿½14ï¿½ï¿½
  *      Author: Administrator
  */
 #include "fs.h"
 #include "gui.h"
 #include "button.h"
 
-struct gui_handler* sd_sched_getfiles(void);
+int sd_gui_callback(enum event_type event,void *data);
 
 struct gui_msg_t sd_gui_msg = {
 	100,     /* x position */
@@ -36,37 +36,28 @@ struct gui_msg_t sd_gui_msg = {
 	1       /* init mode  */
 };
 
-int sd_gui_create(struct gui_msg_t*p_msg)
-{
-	return button_create(p_msg->x,p_msg->y,p_msg->xsize,p_msg->ysize,p_msg->caption,p_msg->mode);
-}
-
-/* sd_gui_draw_ops */
-struct gui_operations sd_gui_draw_ops={
-		sd_gui_create
-};
 struct nxgui_object sd_gui_object={
-		NULL,
-		button,
-		rect,
-		&sd_gui_msg,
-		NULL,
-	  sd_sched_getfiles
-};
-
-
-static struct gui_handler sd_gui_handlder_t = {
 	NULL,
-	1,
-	&sd_gui_draw_ops,
-	&sd_gui_msg
+	button,
+	&sd_gui_msg,
+	sd_gui_callback
 };
 
-struct gui_handler* sd_sched_getfiles(void)
+int sd_gui_callback(enum event_type event,void *data)
 {
-	return &sd_gui_handlder_t;
+	extern int lcd_fd;
+	switch(event)
+	{
+		case onfocus:
+		    write(lcd_fd,"sdonfocus",1);
+			break;
+		case losefocus:
+			write(lcd_fd,"sdlosefocus",1);
+			break;
+		default:break;
+	}
+	return 0;
 }
-
 
 
 

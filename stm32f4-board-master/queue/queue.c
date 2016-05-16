@@ -1,7 +1,7 @@
 /*
  * queue.c
  *
- *  Created on: 2016Äê5ÔÂ14ÈÕ
+ *  Created on: 2016ï¿½ï¿½5ï¿½ï¿½14ï¿½ï¿½
  *      Author: Administrator
  */
 #include "fs.h"
@@ -83,13 +83,13 @@ int queue_write_t(const char *data,unsigned short len)
 	sem_take();
 	for(i=0;i<QUEUE_DEEPTH_MSG;i++)
 	{
-	  if(queue_msg[i].useable == USEABLE)
-	  {
+		if(queue_msg[i].useable == USEABLE)
+		{
 			/* write enable */
 			queue_msg[i].useable = NONUSEABLE;
 			memcpy(queue_msg[i].payload,data,len>QUEUE_DEFINE_SIZE?QUEUE_DEFINE_SIZE:len);
 			return OK;
-	  }
+		}
 	}
 	sem_give();
 	return ERR;

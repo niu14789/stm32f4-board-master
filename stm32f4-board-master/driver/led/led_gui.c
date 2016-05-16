@@ -1,21 +1,21 @@
 /*
  * led_gui.c
  *
- *  Created on: 2016Äê5ÔÂ14ÈÕ
+ *  Created on: 2016ï¿½ï¿½5ï¿½ï¿½14ï¿½ï¿½
  *      Author: Administrator
  */
 
 /*
  * led_gui.c
  *
- *  Created on: 2016Äê5ÔÂ14ÈÕ
+ *  Created on: 2016ï¿½ï¿½5ï¿½ï¿½14ï¿½ï¿½
  *      Author: Administrator
  */
 #include "fs.h"
 #include "gui.h"
 #include "button.h"
 
-struct gui_handler* led_sched_getfiles(void);
+int led_gui_callback(enum event_type event,void *data);
 
 struct gui_msg_t led_gui_msg = {
 	100,     /* x position */
@@ -23,55 +23,33 @@ struct gui_msg_t led_gui_msg = {
 	50,     /* x size     */
 	30,     /* y size     */
 	"led",  /* caption    */
-	0       /* init mode  */
+	1       /* init mode  */
 };
 
-int led_gui_create(struct gui_msg_t*p_msg)
-{
-	return button_create(p_msg->x,p_msg->y,p_msg->xsize,p_msg->ysize,p_msg->caption,p_msg->mode);
-}
-
-int led_gui_onfocus(struct gui_msg_t*p_msg)
-{
-	return button_create(p_msg->x,p_msg->y,p_msg->xsize,p_msg->ysize,p_msg->caption,1);
-}
-
-int led_gui_losefocus(struct gui_msg_t*p_msg)
-{
-	return button_create(p_msg->x,p_msg->y,p_msg->xsize,p_msg->ysize,p_msg->caption,0);
-}
-
-/* led_gui_draw_ops */
-struct gui_operations led_gui_draw_ops={
-	led_gui_create,
-	NULL,
-	led_gui_onfocus,
-	led_gui_losefocus,
-	NULL
-};
 struct nxgui_object led_gui_object = {
 	NULL,
 	button,
-	rect,
 	&led_gui_msg,
-	NULL,
-	led_sched_getfiles
+	led_gui_callback
 };
 
 
-static struct gui_handler led_gui_handlder_t = {
-	NULL,
-	1,
-	&led_gui_draw_ops,
-	&led_gui_msg
-};
 
-struct gui_handler* led_sched_getfiles(void)
+int led_gui_callback(enum event_type event,void *data)
 {
-	return &led_gui_handlder_t;
+	extern int lcd_fd;
+	switch(event)
+	{
+		case onfocus:
+		    write(lcd_fd,"ledonfocus",1);
+			break;
+		case losefocus:
+			write(lcd_fd,"ledlosefocus",1);
+			break;
+		default:break;
+	}
+	return 0;
 }
-
-
 
 
 

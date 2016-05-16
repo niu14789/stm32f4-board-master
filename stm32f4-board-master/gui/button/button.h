@@ -1,7 +1,7 @@
 /*
  * button.h
  *
- *  Created on: 2016Äê5ÔÂ11ÈÕ
+ *  Created on: 2016ï¿½ï¿½5ï¿½ï¿½11ï¿½ï¿½
  *      Author: Administrator
  */
 
@@ -9,8 +9,7 @@
 #define __BUTTON_H__
 
 
-int button_create(unsigned short BUTTON_POS_X,unsigned short BUTTON_POS_Y,unsigned short BUTTON_SIZE_X,
-                  unsigned short BUTTON_SIZE_Y,char *caption,char mode );
+int button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
 
 
 #endif /* __BUTTON_H__ */

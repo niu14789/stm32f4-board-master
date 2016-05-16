@@ -15,6 +15,7 @@
 #define FS_INODE_USABLE 0x56AB  /* magic */
 #define ERR -1
 #define OK   0
+#define  DEVICE_END  0x8
 #define printf_d(...)
 
 #define __ONLYREAD 1
@@ -133,7 +134,7 @@ struct file_operations
 extern FAR inode_vmn *inode_sched_getfiles(void);
 extern const inode_vmn __FS_START__;
 extern FAR struct fd_find *inode_find(inode_vmn *inode,FAR const char *path, FAR const char **relpath);
-extern int fs_init(void);
+extern int system_initialization(char *device_availdable_list);
 extern int read(int fd, FAR char *buffer, uint32_t buflen);
 extern int open(const char *path, int oflags);
 extern int32_t write(int fd, FAR const char *buffer, uint32_t buflen);

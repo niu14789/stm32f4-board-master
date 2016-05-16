@@ -1,7 +1,7 @@
 /*
  * server.c
  *
- *  Created on: 2016Äê5ÔÂ15ÈÕ
+ *  Created on: 2016ï¿½ï¿½5ï¿½ï¿½15ï¿½ï¿½
  *      Author: Administrator
  */
 
@@ -73,15 +73,15 @@ int gui_event_done(gui_msg *p_msg,enum event_type event)
 	{
 		case onfocus:
 			if(p_msg->handler->gui_ops->onfocus != NULL)
-				p_msg->handler->gui_ops->onfocus(p_msg->handler->widget_msg);
+				p_msg->handler->gui_ops->onfocus(&p_msg->handler->widget_msg);
 			break;
 		case losefocus:
 			if(p_msg->handler->gui_ops->losefocus != NULL)
-				p_msg->handler->gui_ops->losefocus(p_msg->handler->widget_msg);
+				p_msg->handler->gui_ops->losefocus(&p_msg->handler->widget_msg);
 			break;
 		case onclick:
 			if(p_msg->handler->gui_ops->onclick != NULL)
-				p_msg->handler->gui_ops->onclick(p_msg->handler->widget_msg);
+				p_msg->handler->gui_ops->onclick(&p_msg->handler->widget_msg);
 			break;
 		case doubleclick:
 			break;
@@ -99,8 +99,9 @@ int gui_event_done(gui_msg *p_msg,enum event_type event)
 
 int gui_event_check(void)
 {
-	struct gui_handler **gui_hander_root_t = gui_sched_root();
-	struct gui_handler *gui_hander_root = *gui_hander_root_t,*p_gui;
+	extern struct gui_handler handler[10];
+	struct gui_handler *gui_hander_root_t= &handler[0];
+	struct gui_handler *gui_hander_root = gui_hander_root_t,*p_gui;
 	int x,y;
 	char buffer[1];
 	gui_msg gui_msg_buffer;
@@ -110,26 +111,32 @@ int gui_event_check(void)
 
 	if(gui_key_event_check(buffer)!=ERR)
 	{
-        x = 175;
-        y = 35;
-        if(buffer[0]==1)
-        	gui_msg_buffer.event_type = onfocus;
-        else if(buffer[0]==2)
-        	gui_msg_buffer.event_type = losefocus;
-
+		x = 225;
+		y = 115;
+		if(buffer[0]==1)
+			gui_msg_buffer.event_type = onfocus;
+		else if(buffer[0]==2)
+			gui_msg_buffer.event_type = losefocus;
+		else if(buffer[0]==3)
+		{
+				x = 125;
+				y = 215;
+				gui_msg_buffer.event_type = losefocus;					
+		}
+				
 		for(p_gui=gui_hander_root;
 				p_gui!=NULL;p_gui=p_gui->link)
 		{
-            if(x>=p_gui->widget_msg->x &&
-               x<=(p_gui->widget_msg->xsize+p_gui->widget_msg->x) &&
-			   y>=p_gui->widget_msg->y	&&
-			   y<=(p_gui->widget_msg->ysize+p_gui->widget_msg->y))
-            {
-            	gui_msg_buffer.handler = p_gui;
-            	/*send the data to the msg queue */
-            	write(fd_queue,(const char *)&gui_msg_buffer,sizeof(gui_msg_buffer));
-            	return OK;
-            }
+			if(x>=p_gui->widget_msg.x &&
+				 x<=(p_gui->widget_msg.xsize+p_gui->widget_msg.x) &&
+			   y>=p_gui->widget_msg.y	&&
+			   y<=(p_gui->widget_msg.ysize+p_gui->widget_msg.y))
+				 {
+						gui_msg_buffer.handler = p_gui;
+						/*send the data to the msg queue */
+						write(fd_queue,(const char *)&gui_msg_buffer,sizeof(gui_msg_buffer));
+						return OK;
+				 }
 		}
 	}
 	return ERR;

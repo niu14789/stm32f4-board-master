@@ -9,14 +9,20 @@
 #include "fs.h"
 #include "lcd_hw.h"
 #include "string.h"
-// #define BUTTON_POS_X   80
-// #define BUTTON_POS_Y   100
 
-// #define BUTTON_SIZE_X  120
-// #define BUTTON_SIZE_Y  60
+
+/* memory  manager */
+
+struct gui_handler handler[10];
+static unsigned char handler_cnt = 0;
+
+/*                 */
 
 extern void LCD_DrawLine(uint16_t _usX1 , uint16_t _usY1 , uint16_t _usX2 , uint16_t _usY2 , uint16_t _usColor);
 extern void LCD_Fill_Rect(uint16_t _usX, uint16_t _usY, uint16_t _usHeight, uint16_t _usWidth, uint16_t _usColor);
+int button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
+int button_onfocus(struct gui_msg_t*p_msg);
+int button_losefocus(struct gui_msg_t*p_msg);
 
 struct color_rgb{
 char r;
@@ -24,12 +30,12 @@ char g;
 char b;
 };
 
-int button_create(uint16_t BUTTON_POS_X,uint16_t BUTTON_POS_Y,uint16_t BUTTON_SIZE_X,uint16_t BUTTON_SIZE_Y,char *caption,char mode )
+int button_create_aschild(uint16_t BUTTON_POS_X,uint16_t BUTTON_POS_Y,uint16_t BUTTON_SIZE_X,uint16_t BUTTON_SIZE_Y,char *caption,char mode )
 {
 	unsigned short len = 0;
 	char event = mode;
 	static unsigned char rgb_in = 0;
-		FONT_T _FONT=
+	FONT_T _FONT=
 	{
 		0,
 		0x0,
@@ -206,7 +212,43 @@ void rect_move(unsigned short next_xpos,unsigned short next_ypos,unsigned color)
 	last_ypost  = next_ypos;
 }
 
+/* lcd_gui_draw_ops */
+struct gui_operations button_draw_ops = {
+	button_create,
+	NULL,
+	button_onfocus,
+	button_losefocus,
+};
 
+/* widget create */
+int button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data))
+{
+	/* copy the widget msg to handler */
+	memcpy(&handler[handler_cnt].widget_msg,p_msg,sizeof(handler[handler_cnt].widget_msg));
+	
+	/* copy the handler.ops */
+	handler[handler_cnt].gui_ops = &button_draw_ops;
+	/* callback */
+	handler[handler_cnt].callback = callback;
+	/* ID no use */
+	handler[handler_cnt].id = 1;
+	/* link */
+	handler[handler_cnt].link = &handler[handler_cnt+1];
+
+	if(handler_cnt<10) handler_cnt++;
+
+	return button_create_aschild(p_msg->x,p_msg->y,p_msg->xsize,p_msg->ysize,p_msg->caption,p_msg->mode);
+}
+/* widget on focus */
+int button_onfocus(struct gui_msg_t*p_msg)
+{
+	return button_create_aschild(p_msg->x,p_msg->y,p_msg->xsize,p_msg->ysize,p_msg->caption,1);
+}
+/* widget lose focus */
+int button_losefocus(struct gui_msg_t*p_msg)
+{
+	return button_create_aschild(p_msg->x,p_msg->y,p_msg->xsize,p_msg->ysize,p_msg->caption,0);
+}
 
 
 

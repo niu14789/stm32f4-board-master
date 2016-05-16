@@ -95,46 +95,43 @@ FAR struct fd_find *inode_find(inode_vmn *inode,FAR const char *path, FAR const 
 }
 
 
-int fs_init(void)
+int system_initialization(char *device_availdable_list)
 {
-   int ret,i;
-   char first_time = 0;
-   struct gui_handler **gui_link_root = gui_sched_root();
-   struct gui_handler *gui_link = *gui_link_root;
+  int ret,i;
 
-	 inode_vmn *p_vmn_start = inode_sched_getfiles();
+	inode_vmn *p_vmn_start = inode_sched_getfiles();
 
-	 /*while(p_vmn_start->inode->i_flags == FS_INODE_USABLE)*/
+	/* while(p_vmn_start->inode->i_flags == FS_INODE_USABLE) */
 	for(i=0;i<6;i++)
 	{
 	   ret = p_vmn_start->inode->init();
-	   if(ret != ERR)
+	   if(ret != ERR){
 		   /* inode init ok*/
+		   *device_availdable_list = OK;
 		   printf_d("the device:%s init ok at path:%s\n",p_vmn_start->inode->i_name,p_vmn_start->path);
-	   else
-		   printf_d("the device:%s init err at path:%s\n",p_vmn_start->inode->i_name,p_vmn_start->path);
-		 
-	   if(ret != ERR)
-	   {
-			 if(p_vmn_start->inode->nxgui != NULL)
-			 {
-				 if(!first_time)
-				 {
-					*gui_link_root = p_vmn_start->inode->nxgui->sched_getfiles();
-					gui_link = *gui_link_root;
-					first_time = 1;
-				 }
-				 else
-				 {
-					gui_link->link = p_vmn_start->inode->nxgui->sched_getfiles();
-					gui_link = gui_link->link;
-				 }
-			 }
 	   }
-		 p_vmn_start++;
+	   else{
+		   *device_availdable_list = 1;
+		   printf_d("the device:%s init err at path:%s\n",p_vmn_start->inode->i_name,p_vmn_start->path);
+	   }
+	   device_availdable_list++;
+	   p_vmn_start++;
 	 }
+	*device_availdable_list = DEVICE_END;
 	 return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

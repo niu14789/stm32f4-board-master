@@ -13,7 +13,7 @@
  * */
 static queue_msg_t queue_msg[QUEUE_DEEPTH_MSG] __attribute__((at(QUEUE_MEM)));
 
-struct file_operations queue_ops =
+struct file_operations queue_msg_ops =
 {
   queue_device_open,
   queue_write,
@@ -26,7 +26,7 @@ struct inode inode_queue =
 	NULL,
 	0,
 	FS_INODE_USABLE,
-	&queue_ops,
+	&queue_msg_ops,
 	NULL,
 	NULL,
 	queue_init,

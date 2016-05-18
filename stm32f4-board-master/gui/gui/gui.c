@@ -20,7 +20,7 @@ int gui_create(const char *device_availdable_list)
     			   p_vmn_start->inode->nxgui->callback);
        }
        p_vmn_start++;
-			 device_availdable_list++;
+	   device_availdable_list++;
     }
 
 	return 0;

@@ -227,7 +227,6 @@ void TOUCH_SCAN(void)
 		g_tTP.usAdcNowX = -1;
 		g_tTP.usAdcNowY = -1;	
 	}
-			
 }
 
 /*

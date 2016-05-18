@@ -58,9 +58,10 @@ int delay_ms1(void)
 
 extern void rect_move(unsigned short next_xpos,unsigned short next_ypos,unsigned color);
 void slider_create(uint16_t x,uint16_t y,uint16_t x_size,uint16_t y_size,uint16_t focus);
-
-
+extern void TOUCH_InitHard(void);
+extern void TOUCH_SCAN(void);
 extern int gui_server(void);
+int gui_key_event_check(char *buffer);
 
 void fd_delay(unsigned int t)
 {
@@ -72,7 +73,7 @@ int main(void)
 	int x=0,y=0,xs=5,ys=3;
 	unsigned short r=122,g=90,b=12;
     char device_availdable_list[20];
-
+char key_buffer[3];
     system_initialization(device_availdable_list);
 
     lcd_fd = open("/etc/lcd.d",__ONLYREAD);
@@ -86,9 +87,12 @@ int main(void)
 	 slider_create(50,180,400,50,0);
 	 
 	 gui_create(device_availdable_list);
-	 
+	 TOUCH_InitHard();
+
 	 while(1)
 	 {
+		 gui_key_event_check(key_buffer);
+		 TOUCH_SCAN();
 		 gui_server();
 
 		 rect_move(x,y,RGB(r,g,b));

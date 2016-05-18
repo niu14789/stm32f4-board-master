@@ -86,7 +86,7 @@ FAR struct fd_find *inode_find(inode_vmn *inode,FAR const char *path, FAR const 
           /* Yes...match return*/
 		    fd.inode_find = inode_head;
 		    fd.fd = fd_head;
-        return &fd;
+            return &fd;
 		}
 		inode_head++;
 		fd_head++;
@@ -102,22 +102,22 @@ int system_initialization(char *device_availdable_list)
 	inode_vmn *p_vmn_start = inode_sched_getfiles();
 
 	/* while(p_vmn_start->inode->i_flags == FS_INODE_USABLE) */
-	for(i=0;i<6;i++)
+	for( i = 0 ; i < 7 ; i++ )
 	{
-	   ret = p_vmn_start->inode->init();
-	   if(ret != ERR){
+		ret = p_vmn_start->inode->init();
+		if(ret != ERR){
 		   /* inode init ok*/
 		   *device_availdable_list = OK;
 		   printf_d("the device:%s init ok at path:%s\n",p_vmn_start->inode->i_name,p_vmn_start->path);
-	   }
-	   else{
+		}
+		else{
 		   *device_availdable_list = 1;
 		   printf_d("the device:%s init err at path:%s\n",p_vmn_start->inode->i_name,p_vmn_start->path);
-	   }
-	   device_availdable_list++;
-	   p_vmn_start++;
-	 }
-	*device_availdable_list = DEVICE_END;
+		}
+		device_availdable_list++;
+		p_vmn_start++;
+	}
+    *device_availdable_list = DEVICE_END;
 	 return 0;
 }
 

@@ -87,7 +87,6 @@ struct gui_handler{
 	int (*callback)(enum event_type,void *data);
 };
 
-
 /* the gui system callback typedef */
 
 typedef int (*callback)(enum event_type event,void *data);
@@ -107,6 +106,23 @@ typedef struct
   void *data;
 }gui_msg;
 
+
+/* gui l0 msg
+ *
+ * send form anywhere
+ *
+ *
+ * */
+
+typedef struct
+{
+	enum event_type  event_type;
+	unsigned short           id;
+	unsigned short        x_pos;
+	unsigned short        y_pos;
+	void              *pri_data;
+}gui_msg_l0;
+
 /* function */
 
 int gui_create(const char *device_availdable_list);
@@ -115,6 +131,26 @@ int widget_create(enum widget_type_t widget_type,struct gui_msg_t *p_gui_msg,int
 /* end nuttx */
 
 #endif /* __GUI_H__ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

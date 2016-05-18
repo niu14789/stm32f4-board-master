@@ -646,6 +646,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\queue\queue.c</FilePath>
             </File>
+            <File>
+              <FileName>queuel0.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\queue\queuel0.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1309,6 +1314,11 @@
               <FileName>queue.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\queue\queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>queuel0.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\queue\queuel0.c</FilePath>
             </File>
           </Files>
         </Group>

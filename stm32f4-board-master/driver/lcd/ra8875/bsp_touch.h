@@ -53,7 +53,7 @@ enum
 /* 供外部调用的函数声明 */
 void TOUCH_InitHard(void);
 
-void TOUCH_SCAN(void);
+int TOUCH_SCAN(void);
 
 #endif
 

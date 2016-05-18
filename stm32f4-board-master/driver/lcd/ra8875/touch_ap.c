@@ -206,7 +206,7 @@ uint8_t TOUCH_ReadAdcXY(int16_t *_usX, int16_t *_usY)
 *	·µ »Ø Öµ: ÎÞ
 *********************************************************************************************************
 */
-void TOUCH_SCAN(void)
+int TOUCH_SCAN(void)
 {
 	uint8_t s_invalid_count = 0;
 	
@@ -221,12 +221,17 @@ void TOUCH_SCAN(void)
 			g_tTP.usAdcNowX = -1;
 			g_tTP.usAdcNowY = -1;	
 		}
+		else
+		{
+			return 0;
+		}
 	}
 	else
 	{
 		g_tTP.usAdcNowX = -1;
 		g_tTP.usAdcNowY = -1;	
 	}
+	return 1;
 }
 
 /*

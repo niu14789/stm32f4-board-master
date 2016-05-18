@@ -59,7 +59,7 @@ int delay_ms1(void)
 extern void rect_move(unsigned short next_xpos,unsigned short next_ypos,unsigned color);
 void slider_create(uint16_t x,uint16_t y,uint16_t x_size,uint16_t y_size,uint16_t focus);
 extern void TOUCH_InitHard(void);
-extern void TOUCH_SCAN(void);
+extern int TOUCH_SCAN(void);
 extern int gui_server(void);
 int gui_key_event_check(char *buffer);
 
@@ -70,10 +70,12 @@ void fd_delay(unsigned int t)
 
 int main(void)
 {
-	int x=0,y=0,xs=5,ys=3;
-	unsigned short r=122,g=90,b=12;
+	  int x=0,y=0,xs=5,ys=3;
+	  unsigned short r=122,g=90,b=12;
     char device_availdable_list[20];
-char key_buffer[3];
+    char key_buffer[3];
+	  int fd_touch,flag_f=0; 
+	  gui_msg_l0 msgl0_m;
     system_initialization(device_availdable_list);
 
     lcd_fd = open("/etc/lcd.d",__ONLYREAD);
@@ -89,10 +91,24 @@ char key_buffer[3];
 	 gui_create(device_availdable_list);
 	 TOUCH_InitHard();
 
+	 fd_touch = open("/etc/queuel0.d",__ONLYREAD);
+	 
 	 while(1)
 	 {
 		 gui_key_event_check(key_buffer);
-		 TOUCH_SCAN();
+		 if(TOUCH_SCAN()==0)
+		 {
+			 while(!TOUCH_SCAN());
+			 if(flag_f)
+			   msgl0_m.event_type = onfocus;
+			 else
+				 msgl0_m.event_type = losefocus;
+			 
+			 msgl0_m.x_pos = 125;
+			 msgl0_m.y_pos = 215;
+			 flag_f^=1;
+			 write(fd_touch,(const char *)&msgl0_m,sizeof(msgl0_m));
+		 }
 		 gui_server();
 
 		 rect_move(x,y,RGB(r,g,b));

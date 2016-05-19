@@ -63,6 +63,7 @@ extern int TOUCH_SCAN(void);
 extern int gui_server(void);
 int gui_key_event_check(char *buffer);
 int touch_calibration(void);
+void touch_test(void);
 
 void fd_delay(unsigned int t)
 {
@@ -93,10 +94,11 @@ int main(void)
 	 TOUCH_InitHard();
 
 	 fd_touch = open("/etc/queuel0.d",__ONLYREAD);
+	 touch_calibration();
 	 
 	 while(1)
 	 {
-		 touch_calibration();
+		 touch_test();
 		 gui_key_event_check(key_buffer);
 		 if(TOUCH_SCAN()==0)
 		 {

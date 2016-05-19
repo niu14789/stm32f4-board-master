@@ -1,7 +1,7 @@
 /*
  * lcd_interface.c
  *
- *  Created on: 2016Äê5ÔÂ8ÈÕ
+ *  Created on: 2016ï¿½ï¿½5ï¿½ï¿½8ï¿½ï¿½
  *      Author: Administrator
  */
 #include "fs.h"
@@ -40,6 +40,7 @@ int lcd_device_open(struct file * filp)
 int32_t lcd_write(FAR struct file *filp, FAR const char *buffer, uint32_t buflen) 
 {
 	static unsigned short y_pos = 0 , x_pos = 0;
+	extern void LCD_DrawCircle(uint16_t _usX, uint16_t _usY, uint16_t _usRadius, uint16_t _usColor);
 	FONT_T _FONT=
 	{
 		0,
@@ -47,6 +48,26 @@ int32_t lcd_write(FAR struct file *filp, FAR const char *buffer, uint32_t buflen
 		RGB(240,240,240),
 		0
 	};
+
+	if(buffer[0]=='F' && buffer[1] == '0')
+	{
+		LCD_DrawCircle(15,15,6,0x0);
+		LCD_DrawCircle(15,15,5,0x0);
+		return 0;
+	}else if(buffer[0]=='F' && buffer[1] == '1')
+	{
+		LCD_DrawCircle(15,15,6,0xffff);
+		LCD_DrawCircle(15,15,5,0xffff);
+
+		LCD_DrawCircle(465,272-15,6,0x0);
+		LCD_DrawCircle(465,272-15,5,0x0);
+	    return 0;
+	}else if(buffer[0]=='c' && buffer[1] == 'l')
+	{
+
+	}
+
+
   if(!y_pos && !x_pos) LCD_ClrScr(RGB(255,255,255));
 	
 	LCD_DispStr(x_pos,y_pos,(char *)buffer,&_FONT);

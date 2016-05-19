@@ -23,7 +23,7 @@
 
 #include "fs.h"
 
-short calibration_check( short *param, short len);
+float calibration_check( float *param, signed short len);
 
 /*
  *
@@ -65,10 +65,10 @@ void TOUCH_SaveParam(void);
 int32_t TOUCH_Abs(int32_t x);
 
 static struct tp_cali_param{
-	 short xa;
-	 short xb;
-	 short ya;
-	 short yb;
+	 float xa;
+	 float xb;
+	 float ya;
+	 float yb;
 }tp_cali;
 
 
@@ -86,7 +86,6 @@ void TOUCH_InitHard(void)
 	 
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOH, ENABLE);
 	
-	/* ���� PC7 Ϊ��������ģʽ�����ڴ����ж� */
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;	/* ���������費ʹ�� */
@@ -249,13 +248,13 @@ int TOUCH_SCAN(void)
 /*
  *   take the touch x y
  * */
-int touch_take( short *x, short *y)
+int touch_take( signed short *x, signed short *y)
 {
 	uint8_t s_invalid_count = 0;
 
 	if(TOUCH_PressValid == 0)
 	{
-		while(!TOUCH_ReadAdcXY(x, x)&&s_invalid_count < 20);
+		while(!TOUCH_ReadAdcXY(x,y)&&s_invalid_count < 20);
 		{
 			s_invalid_count++;
 		}
@@ -356,7 +355,8 @@ void TOUCH_LoadParam(void)
 int touch_calibration(void)
 {
 	int fd=-1,lcd_fd,ret;
-	short calibration_t[5];
+	float calibration_t[5];
+	short touch_tmp[5];
 //	fd = open("/e2prom/calibration.d",__ONLYREAD);
 
 	if(fd != ERR)
@@ -394,21 +394,26 @@ int touch_calibration(void)
     /* set the circle at 15 15 */
     write(lcd_fd,"F0",2);
     /* wait the touch it */
-    while(touch_take(&calibration_t[0],&calibration_t[1])!=0);
+    while(touch_take(&touch_tmp[0],&touch_tmp[1])!=0);
+    while(touch_take(&touch_tmp[4],&touch_tmp[4])!=1);
 	/* set the circle at 465 272-15 */
 	write(lcd_fd,"F1",2);
 	/* wait the touch it */
-	while(touch_take(&calibration_t[2],&calibration_t[3])!=0);
+	while(touch_take(&touch_tmp[2],&touch_tmp[3])!=0);
+	while(touch_take(&touch_tmp[4],&touch_tmp[4])!=1);
+		
+	tp_cali.xa = 450.0f/(float)(touch_tmp[2]-touch_tmp[0]);
+	tp_cali.xb = 15.0f - tp_cali.xa * (float)touch_tmp[0];
 
-	tp_cali.xa = 450/(calibration_t[2]-calibration_t[0]);
-	tp_cali.xb = 15 - tp_cali.xa * calibration_t[0];
-
+	tp_cali.ya = 242.0f/(float)(touch_tmp[3]-touch_tmp[1]);
+	tp_cali.yb = 15.0f - tp_cali.ya * (float)touch_tmp[1];
+	
 	return 0;
 }
 
-short calibration_check( short *param, short len)
+float calibration_check( float *param,signed short len)
 {
-	unsigned short ret = 0 ,i;
+	float ret = 0 ,i;
 	for(i=0;i<len;i++)
 	{
 		ret+=*param;
@@ -416,6 +421,35 @@ short calibration_check( short *param, short len)
 	}
 	return ret;
 }
+
+unsigned short change_ad(char xory,short data)
+{
+	unsigned short tmp;
+	if(xory==0) /* x */
+	{
+		tmp = (unsigned short)((float)data * tp_cali.xa + tp_cali.xb);
+	}else /* y */
+	{
+		tmp = (unsigned short)((float)data * tp_cali.ya + tp_cali.yb);
+	}
+	return tmp;
+}
+
+void touch_test()
+{
+	extern void LCD_DrawCircle(uint16_t _usX, uint16_t _usY, uint16_t _usRadius, uint16_t _usColor);
+	short touch_tmp_x,touch_tmp_y;
+	unsigned short touch_now_x,touch_now_y;
+	if(touch_take(&touch_tmp_x,&touch_tmp_x)==0)
+	{
+		touch_now_x = change_ad(0,touch_tmp_x);
+		touch_now_y = change_ad(1,touch_tmp_y);
+
+		LCD_DrawCircle(touch_now_x,touch_now_y,2,0x0);
+
+	}
+}
+
 
 /*************************************************************************/
 

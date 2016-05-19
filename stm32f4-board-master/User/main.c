@@ -62,6 +62,7 @@ extern void TOUCH_InitHard(void);
 extern int TOUCH_SCAN(void);
 extern int gui_server(void);
 int gui_key_event_check(char *buffer);
+int touch_calibration(void);
 
 void fd_delay(unsigned int t)
 {
@@ -95,6 +96,7 @@ int main(void)
 	 
 	 while(1)
 	 {
+		 touch_calibration();
 		 gui_key_event_check(key_buffer);
 		 if(TOUCH_SCAN()==0)
 		 {

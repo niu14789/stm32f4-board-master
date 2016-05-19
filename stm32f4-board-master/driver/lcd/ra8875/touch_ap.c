@@ -1,14 +1,14 @@
 /*
 *********************************************************************************************************
 *
-*	Ä£¿éÃû³Æ : µç×èÊ½´¥Ãþ°åÇý¶¯Ä£¿é
-*	ÎÄ¼þÃû³Æ : bsp_touch.h
-*	°æ    ±¾ : V1.1
-*	Ëµ    Ã÷ : Çý¶¯TS2046Ð¾Æ¬ ºÍ RA8875ÄÚÖÃ´¥Ãþ
-*	ÐÞ¸Ä¼ÇÂ¼ :
-*		°æ±¾ºÅ   ÈÕÆÚ         ×÷Õß           ËµÃ÷
-*       v1.0    2012-12-17   Eric2013  ST¹Ì¼þ¿âV1.0.2°æ±¾
-*       v1.1    2013-02-25   Eric2013  ST¹Ì¼þ¿âV1.3.0°æ±¾
+*	Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
+*	ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ : bsp_touch.h
+*	ï¿½ï¿½    ï¿½ï¿½ : V1.1
+*	Ëµ    ï¿½ï¿½ : ï¿½ï¿½ï¿½ï¿½TS2046Ð¾Æ¬ ï¿½ï¿½ RA8875ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½
+*	ï¿½Þ¸Ä¼ï¿½Â¼ :
+*		ï¿½æ±¾ï¿½ï¿½   ï¿½ï¿½ï¿½ï¿½         ï¿½ï¿½ï¿½ï¿½           Ëµï¿½ï¿½
+*       v1.0    2012-12-17   Eric2013  STï¿½Ì¼ï¿½ï¿½ï¿½V1.0.2ï¿½æ±¾
+*       v1.1    2013-02-25   Eric2013  STï¿½Ì¼ï¿½ï¿½ï¿½V1.3.0ï¿½æ±¾
 *
 *********************************************************************************************************
 */
@@ -21,8 +21,13 @@
 #include "bsp_timer.h"
 #include "lcd_hw.h"
 
+#include "fs.h"
+
+short calibration_check( short *param, short len);
+
 /*
-¡¾1¡¿°²¸»À³STM32-X2¿ª·¢°å + 3.0´çÏÔÊ¾Ä£¿é£¬ ÏÔÊ¾Ä£¿éÉÏµÄ´¥ÃþÐ¾Æ¬Îª TSC2046»òÆä¼æÈÝÐ¾Æ¬
+ *
+ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½STM32-X2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ + 3.0ï¿½ï¿½ï¿½ï¿½Ê¾Ä£ï¿½é£¬ ï¿½ï¿½Ê¾Ä£ï¿½ï¿½ï¿½ÏµÄ´ï¿½ï¿½ï¿½Ð¾Æ¬Îª TSC2046ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¾Æ¬
 	PA8   --> TP_CS
 	PD3   --> TP_BUSY
 	PA5   --> TP_SCK
@@ -30,12 +35,12 @@
 	PA7   --> TP_MOSI
 	PC7   --> TP_PEN_INT
 
-¡¾2¡¿°²¸»À³STM32¿ª·¢°å + 4.3´ç»ò7´çÏÔÊ¾Ä£¿é£¨ÄÚÖÃRA8875Ð¾Æ¬)
-	RA8875ÄÚÖÃ´¥ÃþÆÁ½Ó¿Ú£¬Òò´ËÖ±½ÓÍ¨¹ýFSMC·ÃÎÊRA8875Ïà¹Ø¼Ä´æÆ÷¼´¿É¡£
+ï¿½ï¿½2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½STM32ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ + 4.3ï¿½ï¿½ï¿½7ï¿½ï¿½ï¿½ï¿½Ê¾Ä£ï¿½é£¨ï¿½ï¿½ï¿½ï¿½RA8875Ð¾Æ¬)
+	RA8875ï¿½ï¿½ï¿½Ã´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¿Ú£ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ï¿½Í¨ï¿½ï¿½FSMCï¿½ï¿½ï¿½ï¿½RA8875ï¿½ï¿½Ø¼Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¡ï¿½
 
-	²ÉÑù2µãÐ£×¼·½·¨£¬Ð£×¼ºó±£´æ2¸öÐ£×¼µãµÄADCÖµ£¬Êµ¼Ê¹¤×÷Ê±£¬¸ù¾Ý2µãÖ±Ïß·½³Ì¼ÆËãÆÁÄ»×ø±ê¡£
-	Ð£×¼²ÎÊýÓÐ±£´æ½Ó¿Ú£¬±¾³ÌÐòÖ÷ÒªÓÃÓÚÑÝÊ¾£¬Î´×ö±£´æ¹¦ÄÜ¡£
-	´ó¼Ò¿ÉÒÔ×Ô¼ºÐÞ¸Ä  TOUCH_SaveParam() ºÍ TOUCH_LoadParam() Á½¸öº¯ÊýÊµÏÖ±£´æ¹¦ÄÜ¡£
+	ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½Ð£×¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð£×¼ï¿½ó±£´ï¿½2ï¿½ï¿½Ð£×¼ï¿½ï¿½ï¿½ADCÖµï¿½ï¿½Êµï¿½Ê¹ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½Ö±ï¿½ß·ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ê¡£
+	Ð£×¼ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½Ó¿Ú£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½æ¹¦ï¿½Ü¡ï¿½
+	ï¿½ï¿½Ò¿ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½Þ¸ï¿½  TOUCH_SaveParam() ï¿½ï¿½ TOUCH_LoadParam() ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½Ö±ï¿½ï¿½æ¹¦ï¿½Ü¡ï¿½
 
 */
 
@@ -44,12 +49,12 @@
 #define TSC2046_CS_0()	GPIOH->BSRRH = 	GPIO_Pin_6
 #define TOUCH_PressValid    GPIO_ReadInputDataBit(GPIOH, GPIO_Pin_6)
 
-/* TSC2046 ÄÚ²¿ADCÍ¨µÀºÅ */
-#define ADC_CH_X	1		/* XÍ¨µÀ£¬²âÁ¿XÎ»ÖÃ */
-#define ADC_CH_Y	5		/* YÍ¨µÀ£¬²âÁ¿YÎ»ÖÃ */
+/* TSC2046 ï¿½Ú²ï¿½ADCÍ¨ï¿½ï¿½ï¿½ï¿½ */
+#define ADC_CH_X	1		/* XÍ¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½XÎ»ï¿½ï¿½ */
+#define ADC_CH_Y	5		/* YÍ¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½YÎ»ï¿½ï¿½ */
 
 
-/* ´¥ÆÁÄ£¿éÓÃµ½µÄÈ«¾Ö±äÁ¿ */
+/* ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½Ãµï¿½ï¿½ï¿½È«ï¿½Ö±ï¿½ï¿½ï¿½ */
 TOUCH_T g_tTP;
 TOUCHSL_T g_tTPSL;
 
@@ -59,12 +64,20 @@ void TOUCH_LoadParam(void);
 void TOUCH_SaveParam(void);
 int32_t TOUCH_Abs(int32_t x);
 
+static struct tp_cali_param{
+	 short xa;
+	 short xb;
+	 short ya;
+	 short yb;
+}tp_cali;
+
+
 /*
 *********************************************************************************************************
-*	º¯ Êý Ãû: bsp_InitTouch
-*	¹¦ÄÜËµÃ÷: ÅäÖÃSTM32ºÍ´¥ÃþÏà¹ØµÄ¿ÚÏß£¬Ê¹ÄÜÓ²¼þSPI1, Æ¬Ñ¡ÓÉÈí¼þ¿ØÖÆ
-*	ÐÎ    ²Î£ºÎÞ
-*	·µ »Ø Öµ: ÎÞ
+*	ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½: bsp_InitTouch
+*	ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½STM32ï¿½Í´ï¿½ï¿½ï¿½ï¿½ï¿½ØµÄ¿ï¿½ï¿½ß£ï¿½Ê¹ï¿½ï¿½Ó²ï¿½ï¿½SPI1, Æ¬Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+*	ï¿½ï¿½    ï¿½Î£ï¿½ï¿½ï¿½
+*	ï¿½ï¿½ ï¿½ï¿½ Öµ: ï¿½ï¿½
 *********************************************************************************************************
 */
 void TOUCH_InitHard(void)
@@ -73,13 +86,13 @@ void TOUCH_InitHard(void)
 	 
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOH, ENABLE);
 	
-	/* ÅäÖÃ PC7 Îª¸¡¿ÕÊäÈëÄ£Ê½£¬ÓÃÓÚ´¥±ÊÖÐ¶Ï */
+	/* ï¿½ï¿½ï¿½ï¿½ PC7 Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½ */
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;	/* ÉÏÏÂÀ­µç×è²»Ê¹ÄÜ */
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;	/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è²»Ê¹ï¿½ï¿½ */
 	GPIO_Init(GPIOH, &GPIO_InitStructure);
 	
-	
+
 	if (g_ChipID == IC_8875)
 	{
 		RA8875_TouchInit();
@@ -92,17 +105,17 @@ void TOUCH_InitHard(void)
 
 /*
 *********************************************************************************************************
-*	º¯ Êý Ãû: TOUCH_DataFilter
-*	¹¦ÄÜËµÃ÷: ¶ÁÈ¡Ò»¸ö×ø±êÖµ(x»òÕßy)
-*             Á¬Ðø¶ÁÈ¡XPT2046_READ_TIMES´ÎÊý¾Ý,¶ÔÕâÐ©Êý¾ÝÉýÐòÅÅÁÐ,
-*             È»ºóÈ¥µô×îµÍºÍ×î¸ßXPT2046_LOST_VAL¸öÊý,È¡Æ½¾ùÖµ 
-*	ÐÎ    ²Î£ºÎÞ
-*	·µ »Ø Öµ: ¶Áµ½µÄÊý¾Ý
+*	ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½: TOUCH_DataFilter
+*	ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½: ï¿½ï¿½È¡Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ(xï¿½ï¿½ï¿½ï¿½y)
+*             ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡XPT2046_READ_TIMESï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½Ð©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,
+*             È»ï¿½ï¿½È¥ï¿½ï¿½ï¿½ï¿½Íºï¿½ï¿½ï¿½ï¿½XPT2046_LOST_VALï¿½ï¿½ï¿½ï¿½,È¡Æ½ï¿½ï¿½Öµ
+*	ï¿½ï¿½    ï¿½Î£ï¿½ï¿½ï¿½
+*	ï¿½ï¿½ ï¿½ï¿½ Öµ: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 *********************************************************************************************************
 */
-/* ¶ÁÈ¡´ÎÊý */
+/* ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ */
 #define XPT2046_READ_TIMES    5 
-/* ¶ªÆúÖµ  */	
+/* ï¿½ï¿½ï¿½ï¿½Öµ  */	
 #define XPT2046_LOST_VAL      1	  	
 uint16_t TOUCH_DataFilter(uint8_t _ucCh)
 {
@@ -111,7 +124,7 @@ uint16_t TOUCH_DataFilter(uint8_t _ucCh)
 	uint16_t usSum;
 	uint16_t usTemp;
 
-	/* ¶ÁÈ¡READ_TIMES´ÎÊý¾Ý*/
+	/* ï¿½ï¿½È¡READ_TIMESï¿½ï¿½ï¿½ï¿½ï¿½ï¿½*/
 	for(i=0; i < XPT2046_READ_TIMES; i++)
 	{
 		if (g_ChipID == IC_8875)
@@ -131,7 +144,7 @@ uint16_t TOUCH_DataFilter(uint8_t _ucCh)
 		}	
 	}
 	
-	/* ÉýÐòÅÅÁÐ */		 		    
+	/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */		 		    
 	for(i = 0; i < XPT2046_READ_TIMES - 1; i++)
 	{
 		for(j = i + 1; j < XPT2046_READ_TIMES; j++)
@@ -147,12 +160,12 @@ uint16_t TOUCH_DataFilter(uint8_t _ucCh)
 		  
 	usSum = 0;
 
-	/*ÇóºÍ */
+	/*ï¿½ï¿½ï¿½ */
 	for(i = XPT2046_LOST_VAL; i < XPT2046_READ_TIMES - XPT2046_LOST_VAL; i++)
 	{
 		usSum += buf[i];
 	}
-	/*ÇóÆ½¾ù */
+	/*ï¿½ï¿½Æ½ï¿½ï¿½ */
 	usTemp = usSum / (XPT2046_READ_TIMES - 2 * XPT2046_LOST_VAL);
 
 	return usTemp; 
@@ -160,15 +173,15 @@ uint16_t TOUCH_DataFilter(uint8_t _ucCh)
 
 /*
 *********************************************************************************************************
-*	º¯ Êý Ãû: TOUCH_ReadAdcXY
-*	¹¦ÄÜËµÃ÷: Á¬Ðø2´Î¶ÁÈ¡´¥ÃþÆÁIC,ÇÒÕâÁ½´ÎµÄÆ«²î²»ÄÜ³¬¹ý
-*             ADC_ERR_RANGE,Âú×ãÌõ¼þ,ÔòÈÏÎª¶ÁÊýÕýÈ·,·ñÔò¶ÁÊý´íÎó.	   
-*             ¸Ãº¯ÊýÄÜ´ó´óÌá¸ß×¼È·¶È
-*	ÐÎ    ²Î£ºx,y:¶ÁÈ¡µ½µÄ×ø±êÖµ
-*	·µ »Ø Öµ: 0,Ê§°Ü;1,³É¹¦
+*	ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½: TOUCH_ReadAdcXY
+*	ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½2ï¿½Î¶ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½IC,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½Æ«ï¿½î²»ï¿½Ü³ï¿½ï¿½ï¿½
+*             ADC_ERR_RANGE,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.	   
+*             ï¿½Ãºï¿½ï¿½ï¿½ï¿½Ü´ï¿½ï¿½ï¿½ï¿½ï¿½×¼È·ï¿½ï¿½
+*	ï¿½ï¿½    ï¿½Î£ï¿½x,y:ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+*	ï¿½ï¿½ ï¿½ï¿½ Öµ: 0,Ê§ï¿½ï¿½;1,ï¿½É¹ï¿½
 *********************************************************************************************************
 */
-/* Îó²î·¶Î§ */  
+/* ï¿½ï¿½î·¶Î§ */  
 uint8_t ADC_ERR_RANGE = 5; 
 uint8_t TOUCH_ReadAdcXY(int16_t *_usX, int16_t *_usY) 
 {
@@ -184,7 +197,7 @@ uint8_t TOUCH_ReadAdcXY(int16_t *_usX, int16_t *_usY)
 	iX = TOUCH_Abs(iX1 - iX2);
 	iY = TOUCH_Abs(iY1 - iY2); 
 	
-	/* Ç°ºóÁ½´Î²ÉÑùÔÚ+-ERR_RANGEÄÚ */  
+	/* Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Î²ï¿½ï¿½ï¿½ï¿½ï¿½+-ERR_RANGEï¿½ï¿½ */  
     if ((iX <= ADC_ERR_RANGE) && (iY <= ADC_ERR_RANGE))
     {       	
 		*_usX = (iX1 + iX2) / 2;
@@ -200,10 +213,10 @@ uint8_t TOUCH_ReadAdcXY(int16_t *_usX, int16_t *_usY)
 
 /*
 *********************************************************************************************************
-*	º¯ Êý Ãû: TOUCH_Scan
-*	¹¦ÄÜËµÃ÷: ´¥Ãþ°åÊÂ¼þ¼ì²â³ÌÐò¡£¸Ãº¯Êý±»ÖÜÆÚÐÔµ÷ÓÃ£¬Ã¿msµ÷ÓÃ1´Î. ¼û bsp_Timer.c
-*	ÐÎ    ²Î£ºÎÞ
-*	·µ »Ø Öµ: ÎÞ
+*	ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½: TOUCH_Scan
+*	ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ò¡£¸Ãºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôµï¿½ï¿½Ã£ï¿½Ã¿msï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½. ï¿½ï¿½ bsp_Timer.c
+*	ï¿½ï¿½    ï¿½Î£ï¿½ï¿½ï¿½
+*	ï¿½ï¿½ ï¿½ï¿½ Öµ: ï¿½ï¿½
 *********************************************************************************************************
 */
 int TOUCH_SCAN(void)
@@ -233,174 +246,43 @@ int TOUCH_SCAN(void)
 	}
 	return 1;
 }
+/*
+ *   take the touch x y
+ * */
+int touch_take( short *x, short *y)
+{
+	uint8_t s_invalid_count = 0;
+
+	if(TOUCH_PressValid == 0)
+	{
+		while(!TOUCH_ReadAdcXY(x, x)&&s_invalid_count < 20);
+		{
+			s_invalid_count++;
+		}
+		if(s_invalid_count >= 20)
+		{
+			*x = -1;
+			*y = -1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	else
+	{
+		*x = -1;
+		*y = -1;
+	}
+	return 1;
+}
 
 /*
 *********************************************************************************************************
-*	º¯ Êý Ãû: bsp_InitTouch
-*	¹¦ÄÜËµÃ÷: ÅäÖÃSTM32ºÍ´¥ÃþÏà¹ØµÄ¿ÚÏß£¬Ê¹ÄÜÓ²¼þSPI1, Æ¬Ñ¡ÓÉÈí¼þ¿ØÖÆ
-*	ÐÎ    ²Î£ºÎÞ
-*	·µ »Ø Öµ: ÎÞ
-*********************************************************************************************************
-*/
-// static void TSC2046_InitHard(void)
-// {
-// /*
-// ¡¾1¡¿°²¸»À³STM32-X2, X4 ¿ª·¢°å + 3.0´çÏÔÊ¾Ä£¿é£¬ ÏÔÊ¾Ä£¿éÉÏµÄ´¥ÃþÐ¾Æ¬Îª TSC2046»òÆä¼æÈÝÐ¾Æ¬
-// 	PA8   --> TP_CS
-// 	PD3   --> TP_BUSY
-// 	PA5   --> TP_SCK
-// 	PA6   --> TP_MISO
-// 	PA7   --> TP_MOSI
-// 	PC7   --> TP_PEN_INT
-// */
-
-// 	GPIO_InitTypeDef  GPIO_InitStructure;
-// 	SPI_InitTypeDef   SPI_InitStructure;
-
-// 	/* ¿ªÆôGPIOÊ±ÖÓ */
-// 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD | RCC_AHB1Periph_GPIOB | RCC_AHB1Periph_GPIOI, ENABLE);
-
-// 	/* ¿ªÆô SPI3 ÍâÉèÊ±ÖÓ */
-// 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_SPI1, ENABLE);
-
-// 	/* ÅäÖÃ PB3¡¢PB4¡¢PB5 Îª¸´ÓÃÍÆÍìÊä³ö£¬ÓÃÓÚ SCK, MISO and MOSI */
-// 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource3, GPIO_AF_SPI1);
-// 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource4, GPIO_AF_SPI1);
-// 	GPIO_PinAFConfig(GPIOB, GPIO_PinSource5, GPIO_AF_SPI1);	
-// 	
-// 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3 | GPIO_Pin_4 | GPIO_Pin_5;
-// 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-// 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-// 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-// 	GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-// 	GPIO_Init(GPIOB,&GPIO_InitStructure);
-
-// 	/* ÅäÖÃ PI10 ½ÅÎªÍÆÍìÊä³ö£¬ÓÃÓÚ TP_CS  */
-// 	TSC2046_CS_1();
-// 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
-// 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-// 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
-// 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-// 	GPIO_InitStructure.GPIO_PuPd  = GPIO_PuPd_NOPULL;
-// 	GPIO_Init(GPIOI, &GPIO_InitStructure);
-
-// 	/* ÅäÖÃ PD3 Òý½ÅÎªÉÏÀ­ÊäÈë£¬ÓÃÓÚ TP_BUSY */
-// 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
-// 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-// 	GPIO_Init(GPIOD, &GPIO_InitStructure);
-
-
-// 	/* ÅäÖÃ SPI1¹¤×÷Ä£Ê½ */
-// 	SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
-// 	SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
-// 	SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
-// 	SPI_InitStructure.SPI_CPOL = SPI_CPOL_Low;
-// 	SPI_InitStructure.SPI_CPHA = SPI_CPHA_1Edge;
-// 	SPI_InitStructure.SPI_NSS = SPI_NSS_Soft; 		/* Èí¼þ¿ØÖÆÆ¬Ñ¡ */
-// 	/*
-// 		SPI_BaudRatePrescaler_64 ¶ÔÓ¦SCKÊ±ÖÓÆµÂÊÔ¼1M
-// 		TSC2046 ¶ÔSCKÊ±ÖÓµÄÒªÇó£¬¸ßµçÆ½ºÍµÍµçÆ½×îÐ¡200ns£¬ÖÜÆÚ400ns£¬Ò²¾ÍÊÇ2.5M
-
-// 		Ê¾²¨Æ÷Êµ²âÆµÂÊ
-// 		SPI_BaudRatePrescaler_64 Ê±£¬SCKÊ±ÖÓÆµÂÊÔ¼ 1.116M
-// 		SPI_BaudRatePrescaler_32 Ê±£¬SCKÊ±ÖÓÆµÂÊÔÂ 2.232M
-// 	*/
-// 	SPI_InitStructure.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_256;
-// 	SPI_InitStructure.SPI_FirstBit = SPI_FirstBit_MSB;
-// 	SPI_InitStructure.SPI_CRCPolynomial = 7;
-// 	SPI_Init(SPI1,&SPI_InitStructure);
-
-// 	/* Ê¹ÄÜ SPI1 */
-// 	SPI_Cmd(SPI1,ENABLE);
-// }
-
-// /*
-// *********************************************************************************************************
-// *	º¯ Êý Ãû: SPI_ShiftByte
-// *	¹¦ÄÜËµÃ÷: ÏòSPI×ÜÏß·¢ËÍÒ»¸ö×Ö½Ú£¬Í¬Ê±·µ»Ø½ÓÊÕµ½µÄ×Ö½Ú
-// *	ÐÎ    ²Î£ºÎÞ
-// *	·µ »Ø Öµ: ÎÞ
-// *********************************************************************************************************
-// */
-// static uint8_t SPI_ShiftByte(uint8_t _ucByte)
-// {
-// 	uint8_t ucRxByte;
-
-// 	/* µÈ´ý·¢ËÍ»º³åÇø¿Õ */
-// 	while(SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_TXE) == RESET);
-
-// 	/* ·¢ËÍÒ»¸ö×Ö½Ú */
-// 	SPI_I2S_SendData(SPI1, _ucByte);
-
-// 	/* µÈ´ýÊý¾Ý½ÓÊÕÍê±Ï */
-// 	while(SPI_I2S_GetFlagStatus(SPI1, SPI_I2S_FLAG_RXNE) == RESET);
-
-// 	/* ¶ÁÈ¡½ÓÊÕµ½µÄÊý¾Ý */
-// 	ucRxByte = SPI_I2S_ReceiveData(SPI1);
-
-// 	/* ·µ»Ø¶Áµ½µÄÊý¾Ý */
-// 	return ucRxByte;
-// }
-
-// /*
-// *********************************************************************************************************
-// *	º¯ Êý Ãû: SpiDelay
-// *	¹¦ÄÜËµÃ÷: ÏòSPI×ÜÏß·¢ËÍÒ»¸ö×Ö½Ú£¬Í¬Ê±·µ»Ø½ÓÊÕµ½µÄ×Ö½Ú
-// *	ÐÎ    ²Î£ºÎÞ
-// *	·µ »Ø Öµ: ÎÞ
-// *********************************************************************************************************
-// */
-// void SpiDelay(uint32_t DelayCnt)
-// {
-// 	uint32_t i;
-
-// 	for(i=0;i<DelayCnt;i++);
-// }
-
-// /*
-// *********************************************************************************************************
-// *	º¯ Êý Ãû: TSC2046_ReadAdc
-// *	¹¦ÄÜËµÃ÷: Ñ¡ÔñÒ»¸öÄ£ÄâÍ¨µÀ£¬Æô¶¯ADC£¬²¢·µ»ØADC²ÉÑù½á¹û
-// *	ÐÎ    ²Î£º_ucCh = 0 ±íÊ¾XÍ¨µÀ£» 1±íÊ¾YÍ¨µÀ
-// *	·µ »Ø Öµ: 12Î»ADCÖµ
-// *********************************************************************************************************
-// */
-// uint16_t TSC2046_ReadAdc(uint8_t _ucCh)
-// {
-// 	uint16_t usAdc;
-
-// 	TSC2046_CS_0();		/* Ê¹ÄÜTS2046µÄÆ¬Ñ¡ */
-
-// 	/*
-// 		TSC2046 ¿ØÖÆ×Ö£¨8Bit£©
-// 		Bit7   = S     ÆðÊ¼Î»£¬±ØÐëÊÇ1
-// 		Bit6:4 = A2-A0 Ä£ÄâÊäÈëÍ¨µÀÑ¡ÔñA2-A0; ¹²ÓÐ6¸öÍ¨µÀ¡£
-// 		Bit3   = MODE  ADCÎ»ÊýÑ¡Ôñ£¬0 ±íÊ¾12Bit;1±íÊ¾8Bit
-// 		Bit2   = SER/DFR Ä£ÄâÊäÈëÐÎÊ½£¬  1±íÊ¾µ¥¶ËÊäÈë£»0±íÊ¾²î·ÖÊäÈë
-// 		Bit1:0 = PD1-PD0 µôµçÄ£Ê½Ñ¡ÔñÎ»
-// 	*/
-// 	SPI_ShiftByte((1 << 7) | (_ucCh << 4));			/* Ñ¡ÔñÍ¨µÀ1, ²âÁ¿XÎ»ÖÃ */
-
-// 	/* ¶ÁADC½á¹û, 12Î»ADCÖµµÄ¸ßÎ»ÏÈ´«£¬Ç°12bitÓÐÐ§£¬×îºó4bitÌî0 */
-// 	usAdc = SPI_ShiftByte(0x00);		/* ·¢ËÍµÄ0x00¿ÉÒÔÎªÈÎÒâÖµ£¬ÎÞÒâÒå */
-// 	usAdc <<= 8;
-// 	usAdc += SPI_ShiftByte(0x00);		/* »ñµÃ12Î»µÄADC²ÉÑùÖµ */
-
-// 	usAdc >>= 3;						/* ÓÒÒÆ3Î»£¬±£Áô12Î»ÓÐÐ§Êý×Ö */
-
-// 	TSC2046_CS_1();					/* ½ûÄÜÆ¬Ñ¡ */
-
-// 	return (usAdc);
-// }
-
-
-
-/*
-*********************************************************************************************************
-*	º¯ Êý Ãû: TOUCH_Abs
-*	¹¦ÄÜËµÃ÷: ¼ÆËã¾ø¶ÔÖµ
-*	ÐÎ    ²Î£ºÎÞ
-*	·µ »Ø Öµ: ÎÞ
+*	ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½: TOUCH_Abs
+*	ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+*	ï¿½ï¿½    ï¿½Î£ï¿½ï¿½ï¿½
+*	ï¿½ï¿½ ï¿½ï¿½ Öµ: ï¿½ï¿½
 *********************************************************************************************************
 */
 int32_t TOUCH_Abs(int32_t x)
@@ -418,16 +300,16 @@ int32_t TOUCH_Abs(int32_t x)
 
 /*
 *********************************************************************************************************
-*	º¯ Êý Ãû: TOUCH_SaveParam
-*	¹¦ÄÜËµÃ÷: ±£´æÐ£×¼²ÎÊý	s_usAdcX1 s_usAdcX2 s_usAdcY1 s_usAdcX2
-*	ÐÎ    ²Î£ºÎÞ
-*	·µ »Ø Öµ: ÎÞ
+*	ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½: TOUCH_SaveParam
+*	ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½Ð£×¼ï¿½ï¿½ï¿½ï¿½	s_usAdcX1 s_usAdcX2 s_usAdcY1 s_usAdcX2
+*	ï¿½ï¿½    ï¿½Î£ï¿½ï¿½ï¿½
+*	ï¿½ï¿½ ï¿½ï¿½ Öµ: ï¿½ï¿½
 *********************************************************************************************************
 */
 void TOUCH_SaveParam(void)
 {
 #if 0
-	/* ±£´æÏÂÃæµÄ4¸ö±äÁ¿¼´¿É */
+	/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½4ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	uint16_t usBuf[5];
 
 	usBuf[0] = g_tTP.usAdcX1;
@@ -443,16 +325,16 @@ void TOUCH_SaveParam(void)
 
 /*
 *********************************************************************************************************
-*	º¯ Êý Ãû: TOUCH_LoadParam
-*	¹¦ÄÜËµÃ÷: ¶ÁÈ¡Ð£×¼²ÎÊý
-*	ÐÎ    ²Î£ºÎÞ
-*	·µ »Ø Öµ: ÎÞ
+*	ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½: TOUCH_LoadParam
+*	ï¿½ï¿½ï¿½ï¿½Ëµï¿½ï¿½: ï¿½ï¿½È¡Ð£×¼ï¿½ï¿½ï¿½ï¿½
+*	ï¿½ï¿½    ï¿½Î£ï¿½ï¿½ï¿½
+*	ï¿½ï¿½ ï¿½ï¿½ Öµ: ï¿½ï¿½
 *********************************************************************************************************
 */
 void TOUCH_LoadParam(void)
 {
 #if 0
-	/* ±£´æÏÂÃæµÄ5¸ö±äÁ¿¼´¿É */
+	/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½5ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */
 	uint16_t usBuf[5];
 
 	/* ReadParamToBuf() */
@@ -468,4 +350,83 @@ void TOUCH_LoadParam(void)
 #endif
 }
 
-/***************************** °²¸»À³µç×Ó www.armfly.com (END OF FILE) *********************************/
+
+
+
+int touch_calibration(void)
+{
+	int fd=-1,lcd_fd,ret;
+	short calibration_t[5];
+//	fd = open("/e2prom/calibration.d",__ONLYREAD);
+
+	if(fd != ERR)
+	{
+		ret = read(fd,(char *)calibration_t,sizeof(calibration_t));
+		if(ret!=ERR)
+		{
+			printf_d("e2prom read ok \n");
+			if(calibration_t[4] == calibration_check(calibration_t,4))
+			{
+               printf_d("check_ok\n");
+               tp_cali.xa = calibration_t[0];
+               tp_cali.xb = calibration_t[1];
+               tp_cali.ya = calibration_t[2];
+               tp_cali.yb = calibration_t[3];
+               return OK;
+			}
+		}
+		else
+			printf_d("e2prom read err ! please calibration again\n");
+	}
+	else
+	  printf_d("can`t find the e2prom,I don`t know how to save and read it\n please calibration again\n");
+
+    lcd_fd = open("/etc/lcd.d",__ONLYREAD);
+
+    if(lcd_fd == ERR)
+    {
+    	printf_d("can`t find the lcd device please check\n");
+    	return ERR;
+    }
+
+    /* clear the lcd pad to white */
+    write(lcd_fd,"clear",6);
+    /* set the circle at 15 15 */
+    write(lcd_fd,"F0",2);
+    /* wait the touch it */
+    while(touch_take(&calibration_t[0],&calibration_t[1])!=0);
+	/* set the circle at 465 272-15 */
+	write(lcd_fd,"F1",2);
+	/* wait the touch it */
+	while(touch_take(&calibration_t[2],&calibration_t[3])!=0);
+
+	tp_cali.xa = 450/(calibration_t[2]-calibration_t[0]);
+	tp_cali.xb = 15 - tp_cali.xa * calibration_t[0];
+
+	return 0;
+}
+
+short calibration_check( short *param, short len)
+{
+	unsigned short ret = 0 ,i;
+	for(i=0;i<len;i++)
+	{
+		ret+=*param;
+		param++;
+	}
+	return ret;
+}
+
+/*************************************************************************/
+
+
+
+
+
+
+
+
+
+
+
+

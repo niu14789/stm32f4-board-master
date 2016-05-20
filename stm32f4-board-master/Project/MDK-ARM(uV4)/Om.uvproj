@@ -661,6 +661,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\driver\key\key.c</FilePath>
             </File>
+            <File>
+              <FileName>key_gui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\driver\key\key_gui.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1329,6 +1334,11 @@
               <FileName>key.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\driver\key\key.c</FilePath>
+            </File>
+            <File>
+              <FileName>key_gui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\driver\key\key_gui.c</FilePath>
             </File>
           </Files>
         </Group>

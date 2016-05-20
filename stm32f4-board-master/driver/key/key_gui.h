@@ -10,5 +10,4 @@
 
 extern struct nxgui_object key_gui_object;
 
-
 #endif /* __KEY_GUI_H__ */

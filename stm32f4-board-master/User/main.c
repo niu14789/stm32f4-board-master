@@ -76,8 +76,7 @@ int main(void)
 	  unsigned short r=122,g=90,b=12;
     char device_availdable_list[20];
     char key_buffer[3];
-	  int fd_touch,flag_f=0; 
-	  gui_msg_l0 msgl0_m;
+	
     system_initialization(device_availdable_list);
 
     lcd_fd = open("/etc/lcd.d",__ONLYREAD);
@@ -93,26 +92,14 @@ int main(void)
 	 gui_create(device_availdable_list);
 	 TOUCH_InitHard();
 
-	 fd_touch = open("/etc/queuel0.d",__ONLYREAD);
 	 touch_calibration();
 	 
 	 while(1)
 	 {
 		 touch_test();
+		 
 		 gui_key_event_check(key_buffer);
-// 		 if(TOUCH_SCAN()==0)
-// 		 {
-// 			 while(!TOUCH_SCAN());
-// 			 if(flag_f)
-// 			   msgl0_m.event_type = onfocus;
-// 			 else
-// 				 msgl0_m.event_type = losefocus;
-// 			 
-// 			 msgl0_m.x_pos = 125;
-// 			 msgl0_m.y_pos = 215;
-// 			 flag_f^=1;
-// 			 write(fd_touch,(const char *)&msgl0_m,sizeof(msgl0_m));
-// 		 }
+
 		 gui_server();
 
 		 rect_move(x,y,RGB(r,g,b));

@@ -8,6 +8,10 @@
 #ifndef __GUI_H__
 #define __GUI_H__
 
+#define  FOCUS_ON   1
+#define  FOCUS_OFF  0
+
+
 struct widget_pic_t
 {
 	char *pic_path;
@@ -80,9 +84,10 @@ struct nxgui_object
 
 /*  */
 struct gui_handler{
-	struct gui_handler            *link;
-	unsigned short                   id;
-	struct gui_operations      *gui_ops;
+	struct gui_handler           *link;
+	unsigned short                  id;
+	unsigned short              status;
+	struct gui_operations     *gui_ops;
     struct gui_msg_t        widget_msg;
 	int (*callback)(enum event_type,void *data);
 };

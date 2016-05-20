@@ -28,12 +28,12 @@
 int sd_gui_callback(enum event_type event,void *data);
 
 struct gui_msg_t sd_gui_msg = {
-	100,     /* x position */
-	100,     /* y position */
-	50,     /* x size     */
-	30,     /* y size     */
-	"sd",  /* caption    */
-	1       /* init mode  */
+	100,        /* x position */
+	100,        /* y position */
+	50,         /* x size     */
+	30,         /* y size     */
+	"sd",       /* caption    */
+	FOCUS_OFF   /* init mode  */
 };
 
 struct nxgui_object sd_gui_object={

@@ -14,9 +14,6 @@
 static int fd_queue = 0;
 static int fd_queuel0 = 0;
 
-int gui_event_check(void);
-int gui_event_done(gui_msg *p_msg,enum event_type event);
-int gui_event_idle(void);
 
 int gui_server(void)
 {
@@ -125,13 +122,49 @@ int gui_event_check(void)
 			gui_msgl0.x_pos<=(p_gui->widget_msg.xsize+p_gui->widget_msg.x) &&
 			gui_msgl0.y_pos>=p_gui->widget_msg.y	&&
 			gui_msgl0.y_pos<=(p_gui->widget_msg.ysize+p_gui->widget_msg.y))
-		   {
+		    {
 				gui_msg_buffer.handler = p_gui;
 				gui_msg_buffer.event_type = gui_msgl0.event_type;
+
+				/*revert all focus widget in same parent window*/
+				gui_revert_widget(gui_hander_root,p_gui);
 				/*send the data to the msg queue */
 				write(fd_queue,(const char *)&gui_msg_buffer,sizeof(gui_msg_buffer));
+
+				p_gui->status = FOCUS_ON;
+
+
 				return OK;
-		  }
+		    }
+	}
+	return ERR;
+}
+
+
+/* revert all focused widget */
+int gui_revert_widget(struct gui_handler * p_gui_root,struct gui_handler * p_gui_same)
+{
+	struct gui_handler * p_gui = p_gui_root;
+	gui_msg gui_msg_buffer;
+
+	for(;p_gui!=NULL;p_gui=p_gui->link)
+	{
+	   if(p_gui->status == FOCUS_ON)
+	   {
+		   if(!fd_queue)
+			   fd_queue = open("/etc/queuel0.d",__ONLYREAD);
+
+		   if(p_gui == p_gui_same)
+			   return ERR;
+
+		   gui_msg_buffer.event_type = losefocus;
+		   gui_msg_buffer.handler = p_gui;
+		   /* send the data to the msg queue */
+		   write(fd_queue,(const char *)&gui_msg_buffer,sizeof(gui_msg_buffer));
+		   /* release the source */
+		   p_gui->status = FOCUS_OFF;
+		   return OK;
+	   }
 	}
 	return ERR;
 }
@@ -170,7 +203,7 @@ int gui_key_event_check(char *buffer)
     }
 
     else
-    	return ERR;
+      return ERR;
 }
 
 

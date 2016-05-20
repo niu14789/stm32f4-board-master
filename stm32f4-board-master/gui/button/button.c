@@ -10,7 +10,6 @@
 #include "lcd_hw.h"
 #include "string.h"
 
-
 /* memory  manager */
 
 struct gui_handler handler[10];
@@ -34,7 +33,6 @@ int button_create_aschild(uint16_t BUTTON_POS_X,uint16_t BUTTON_POS_Y,uint16_t B
 {
 	unsigned short len = 0;
 	char event = mode;
-	static unsigned char rgb_in = 0;
 	FONT_T _FONT=
 	{
 		0,
@@ -49,10 +47,9 @@ int button_create_aschild(uint16_t BUTTON_POS_X,uint16_t BUTTON_POS_Y,uint16_t B
 		color[1].r =color[1].g=color[1].b=144;
 		color[2].r =color[2].g=color[2].b=119;
 		color[3].r =color[3].g=color[3].b=226;
-		color[4].r =color[4].g=color[4].b=150+rgb_in;
-		color[5].r =color[5].g=color[5].b=120+rgb_in;
+		color[4].r =color[4].g=color[4].b=150;
+		color[5].r =color[5].g=color[5].b=120;
 		color[6].r =color[6].g=color[6].b=200;
-		rgb_in+=4;
 	}
 	else if(event == 1)
 	{
@@ -232,6 +229,8 @@ int button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *d
 	handler[handler_cnt].callback = callback;
 	/* ID no use */
 	handler[handler_cnt].id = 1;
+	/* widget status */
+	handler[handler_cnt].status =  p_msg->mode;
 	/* link */
 	handler[handler_cnt].link = &handler[handler_cnt+1];
 

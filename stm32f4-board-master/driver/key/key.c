@@ -3,6 +3,7 @@
 #include "stm32f4xx.h"
 #include "fs.h"
 #include "key.h"
+#include "key_gui.h"
 
 struct file_operations key_ops =
 {
@@ -18,7 +19,7 @@ struct inode inode_key =
 	0,
 	FS_INODE_USABLE,
 	&key_ops,
-	NULL,
+	&key_gui_object,
 	NULL,
 	key_init,
 	"key"

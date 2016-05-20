@@ -166,7 +166,7 @@ int gui_key_event_check(char *buffer)
 
 			write(fd_queuel0,(const char *)&gui_key,sizeof(gui_key));
 
-      	return OK;
+      return OK;
     }
 
     else

@@ -440,13 +440,29 @@ void touch_test()
 	extern void LCD_DrawCircle(uint16_t _usX, uint16_t _usY, uint16_t _usRadius, uint16_t _usColor);
 	short touch_tmp_x,touch_tmp_y;
 	unsigned short touch_now_x,touch_now_y;
-	if(touch_take(&touch_tmp_x,&touch_tmp_x)==0)
+	gui_msg_l0 touch_msg;
+	static int fd = 0;
+	
+	if(touch_take(&touch_tmp_x,&touch_tmp_y)==0)
 	{
 		touch_now_x = change_ad(0,touch_tmp_x);
 		touch_now_y = change_ad(1,touch_tmp_y);
 
-		LCD_DrawCircle(touch_now_x,touch_now_y,2,0x0);
+		if(touch_now_x>480) touch_now_x = 480;
+		if(touch_now_y>272) touch_now_y = 272;
+		
+		
+		if(!fd)
+		  fd = open("/etc/queuel0.d",__ONLYREAD);
+		
+		touch_msg.x_pos = touch_now_x;
+		touch_msg.y_pos = touch_now_y;
+		
+		touch_msg.event_type = losefocus;
 
+		write(fd,(const char *)&touch_msg,sizeof(touch_msg));
+
+		LCD_DrawCircle(touch_now_x,touch_now_y,2,0x0);
 	}
 }
 

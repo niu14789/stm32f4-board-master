@@ -29,17 +29,17 @@ struct nxgui_object lcd_gui_object = {
 
 int lcd_gui_callback(enum event_type event,void *data)
 {
-	extern int lcd_fd;
-	switch(event)
-	{
-		case onfocus:
-		    write(lcd_fd,"lcd_onfocus",1);
-			break;
-		case losefocus:
-			write(lcd_fd,"lcd_losefocus",1);
-			break;
-		default:break;
-	}
+// 	extern int lcd_fd;
+// 	switch(event)
+// 	{
+// 		case onfocus:
+// 		    write(lcd_fd,"lcd_onfocus",1);
+// 			break;
+// 		case losefocus:
+// 			write(lcd_fd,"lcd_losefocus",1);
+// 			break;
+// 		default:break;
+// 	}
 	return 0;
 }
 

@@ -100,19 +100,19 @@ int main(void)
 	 {
 		 touch_test();
 		 gui_key_event_check(key_buffer);
-		 if(TOUCH_SCAN()==0)
-		 {
-			 while(!TOUCH_SCAN());
-			 if(flag_f)
-			   msgl0_m.event_type = onfocus;
-			 else
-				 msgl0_m.event_type = losefocus;
-			 
-			 msgl0_m.x_pos = 125;
-			 msgl0_m.y_pos = 215;
-			 flag_f^=1;
-			 write(fd_touch,(const char *)&msgl0_m,sizeof(msgl0_m));
-		 }
+// 		 if(TOUCH_SCAN()==0)
+// 		 {
+// 			 while(!TOUCH_SCAN());
+// 			 if(flag_f)
+// 			   msgl0_m.event_type = onfocus;
+// 			 else
+// 				 msgl0_m.event_type = losefocus;
+// 			 
+// 			 msgl0_m.x_pos = 125;
+// 			 msgl0_m.y_pos = 215;
+// 			 flag_f^=1;
+// 			 write(fd_touch,(const char *)&msgl0_m,sizeof(msgl0_m));
+// 		 }
 		 gui_server();
 
 		 rect_move(x,y,RGB(r,g,b));

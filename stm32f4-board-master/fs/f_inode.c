@@ -62,24 +62,24 @@ FAR inode_vmn *inode_sched_getfiles(void)
 FAR struct fd_find *inode_find(inode_vmn *inode,FAR const char *path, FAR const char **relpath)
 {
 	inode_vmn * inode_head;
-	int result;
+	int result,i;
 	int fd_head=0;
 	static struct fd_find fd;
 	inode_head = inode;
 	
-	while(inode_head->inode->i_flags == FS_INODE_USABLE)
+	for( i = 0 ; i < 7 ; i++ )
 	{
 		result = _inode_compare(path,inode_head);
 
 		if( result > 0 )
 		{
 			  /* not match link the next child inode */
-		//	  inode_head->inode->i_peer = inode_head->inode->i_peer->i_child;
+//			  inode_head->inode->i_peer = inode_head->inode->i_peer->i_child;
 		}
 		else if( result < 0 )
 		{
 			  /* not match link the next ipeer inode */
-		//	  inode_head->inode->i_peer = inode_head->inode->i_peer->i_peer;
+//		  inode_head->inode->i_peer = inode_head->inode->i_peer->i_peer;
 		}
 		else
 		{
@@ -97,9 +97,9 @@ FAR struct fd_find *inode_find(inode_vmn *inode,FAR const char *path, FAR const 
 
 int system_initialization(char *device_availdable_list)
 {
-  int ret,i;
+    int ret,i;
 
-	inode_vmn *p_vmn_start = inode_sched_getfiles();
+	inode_vmn * p_vmn_start = inode_sched_getfiles();
 
 	/* while(p_vmn_start->inode->i_flags == FS_INODE_USABLE) */
 	for( i = 0 ; i < 7 ; i++ )
@@ -118,7 +118,7 @@ int system_initialization(char *device_availdable_list)
 		p_vmn_start++;
 	}
     *device_availdable_list = DEVICE_END;
-	 return 0;
+	return 0;
 }
 
 

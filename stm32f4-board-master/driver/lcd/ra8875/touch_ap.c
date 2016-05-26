@@ -354,59 +354,59 @@ void TOUCH_LoadParam(void)
 
 int touch_calibration(void)
 {
-	int fd=-1,lcd_fd,ret;
-	float calibration_t[5];
-	short touch_tmp[5];
-//	fd = open("/e2prom/calibration.d",__ONLYREAD);
+// 	int fd=-1,lcd_fd,ret;
+// 	float calibration_t[5];
+// 	short touch_tmp[5];
+// //	fd = open("/e2prom/calibration.d",__ONLYREAD);
 
-	if(fd != ERR)
-	{
-		ret = read(fd,(char *)calibration_t,sizeof(calibration_t));
-		if(ret!=ERR)
-		{
-			printf_d("e2prom read ok \n");
-			if(calibration_t[4] == calibration_check(calibration_t,4))
-			{
-               printf_d("check_ok\n");
-               tp_cali.xa = calibration_t[0];
-               tp_cali.xb = calibration_t[1];
-               tp_cali.ya = calibration_t[2];
-               tp_cali.yb = calibration_t[3];
-               return OK;
-			}
-		}
-		else
-			printf_d("e2prom read err ! please calibration again\n");
-	}
-	else
-	  printf_d("can`t find the e2prom,I don`t know how to save and read it\n please calibration again\n");
+// 	if(fd != ERR)
+// 	{
+// 		ret = read(fd,(char *)calibration_t,sizeof(calibration_t));
+// 		if(ret!=ERR)
+// 		{
+// 			printf_d("e2prom read ok \n");
+// 			if(calibration_t[4] == calibration_check(calibration_t,4))
+// 			{
+//                printf_d("check_ok\n");
+//                tp_cali.xa = calibration_t[0];
+//                tp_cali.xb = calibration_t[1];
+//                tp_cali.ya = calibration_t[2];
+//                tp_cali.yb = calibration_t[3];
+//                return OK;
+// 			}
+// 		}
+// 		else
+// 			printf_d("e2prom read err ! please calibration again\n");
+// 	}
+// 	else
+// 	  printf_d("can`t find the e2prom,I don`t know how to save and read it\n please calibration again\n");
 
-    lcd_fd = open("/etc/lcd.d",__ONLYREAD);
+//     lcd_fd = open("/etc/lcd.d",__ONLYREAD);
 
-    if(lcd_fd == ERR)
-    {
-    	printf_d("can`t find the lcd device please check\n");
-    	return ERR;
-    }
+//     if(lcd_fd == ERR)
+//     {
+//     	printf_d("can`t find the lcd device please check\n");
+//     	return ERR;
+//     }
 
-    /* clear the lcd pad to white */
-    write(lcd_fd,"clear",6);
-    /* set the circle at 15 15 */
-    write(lcd_fd,"F0",2);
-    /* wait the touch it */
-    while(touch_take(&touch_tmp[0],&touch_tmp[1])!=0);
-    while(touch_take(&touch_tmp[4],&touch_tmp[4])!=1);
-	/* set the circle at 465 272-15 */
-	write(lcd_fd,"F1",2);
-	/* wait the touch it */
-	while(touch_take(&touch_tmp[2],&touch_tmp[3])!=0);
-	while(touch_take(&touch_tmp[4],&touch_tmp[4])!=1);
+//     /* clear the lcd pad to white */
+//     write(lcd_fd,"clear",6);
+//     /* set the circle at 15 15 */
+//     write(lcd_fd,"F0",2);
+//     /* wait the touch it */
+//     while(touch_take(&touch_tmp[0],&touch_tmp[1])!=0);
+//     while(touch_take(&touch_tmp[4],&touch_tmp[4])!=1);
+// 	/* set the circle at 465 272-15 */
+// 	write(lcd_fd,"F1",2);
+// 	/* wait the touch it */
+// 	while(touch_take(&touch_tmp[2],&touch_tmp[3])!=0);
+// 	while(touch_take(&touch_tmp[4],&touch_tmp[4])!=1);
 		
-	tp_cali.xa = 450.0f/(float)(touch_tmp[2]-touch_tmp[0]);
-	tp_cali.xb = 15.0f - tp_cali.xa * (float)touch_tmp[0];
+	tp_cali.xa = /*450.0f/(float)(touch_tmp[2]-touch_tmp[0]);//*/-0.7839721;
+	tp_cali.xb = /*15.0f - tp_cali.xa * (float)touch_tmp[0];//*/508.1185;
 
-	tp_cali.ya = 242.0f/(float)(touch_tmp[3]-touch_tmp[1]);
-	tp_cali.yb = 15.0f - tp_cali.ya * (float)touch_tmp[1];
+	tp_cali.ya = /*242.0f/(float)(touch_tmp[3]-touch_tmp[1]);//*/-0.3310533;
+	tp_cali.yb = /*15.0f - tp_cali.ya * (float)touch_tmp[1];//*/302.6854;
 	
 	return 0;
 }

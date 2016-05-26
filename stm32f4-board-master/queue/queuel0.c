@@ -33,7 +33,7 @@ struct inode inode_queuel0 =
 	"queue"
 };
 
-FS_REGISTER("/etc/queuel0.d",inode_queuel0);
+FS_REGISTER(FS_DEVICE("queuel0.d"),inode_queuel0);
 
 /* interface functions */
 int queuel0_device_open(struct file * filp)

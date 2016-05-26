@@ -13,16 +13,16 @@
  */
 #include "fs.h"
 #include "gui.h"
-
+#include "stdio.h"
 
 int key_gui_callback(enum event_type event,void *data);
 
 struct gui_msg_t key_gui_msg = {
 	300,        /* x position */
-	180,        /* y position */
+	185,        /* y position */
 	80,        /* x size     */
 	60,        /* y size     */
-	"key",     /* caption    */
+	"unclock",     /* caption    */
 	FOCUS_OFF  /* init mode  */
 };
 
@@ -48,6 +48,9 @@ int key_gui_callback(enum event_type event,void *data)
 // 			break;
 // 		default:break;
 // 	}
+	char s_send[5]={0x53,0x00,0x02,0x11,0x66};
+	printf(s_send);
+	
 	return 0;
 }
 

@@ -28,7 +28,7 @@ struct inode inode_led =
 	"led"
 };
 
-FS_REGISTER("/etc/led.d",inode_led);
+FS_REGISTER(FS_DEVICE("led.d"),inode_led);
 
 int led_device_open(struct file * filp)
 {

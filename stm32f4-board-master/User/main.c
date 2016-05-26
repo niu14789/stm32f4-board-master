@@ -12,6 +12,11 @@
 #include "lcd_hw.h"
 #include "gui.h"
 
+
+
+
+static unsigned int sram_test[0xffff] __attribute__((at(0x68000000)));
+
 int delay_ms(struct file * filp);
 int delay_ms1(void);
 
@@ -64,6 +69,7 @@ extern int gui_server(void);
 int gui_key_event_check(char *buffer);
 int touch_calibration(void);
 void touch_test(void);
+void FSMC_SRAM_Init(void);
 
 void fd_delay(unsigned int t)
 {
@@ -93,6 +99,32 @@ int main(void)
 	 TOUCH_InitHard();
 
 	 touch_calibration();
+	 FSMC_SRAM_Init();
+	 
+	 write(lcd_fd,"sram test",14);
+	 {
+		 unsigned int i;
+		 char t[100];
+		 for(i=0;i<0xffff;i++)
+		 {
+			 sram_test[i] = i;
+		 }
+		 
+		 for(i=0;i<0xffff;i++)
+		 {
+			 if(sram_test[i] != i)
+			 {
+				 sprintf(t,"sram_test[i]->0x%x,i->0x%x",sram_test[i],i);
+				 write(lcd_fd,"sram error",14);
+				 write(lcd_fd,t,14);
+				 break;
+			 }
+		 }
+		 if(i==0xffff)
+			 write(lcd_fd,"sram ok",14);
+		 
+	 }
+	 stm32_usart_init(USART3,PB10_PB11,57600);
 	 
 	 while(1)
 	 {

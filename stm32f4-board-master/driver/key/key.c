@@ -25,7 +25,7 @@ struct inode inode_key =
 	"key"
 };
 
-FS_REGISTER("/etc/key.d",inode_key);
+FS_REGISTER(FS_DEVICE("key.d"),inode_key);
 
 int key_device_open(struct file * filp)
 {

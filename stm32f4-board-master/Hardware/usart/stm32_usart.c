@@ -431,8 +431,8 @@ int sendchar (int c) {
   ITM_SendChar (c & 0xFF);
   for (i = 10000; i; i--);
 #else
-  while (!(USART6->SR & 0x0080));
-  USART6->DR = (c & 0xFF);
+  while (!(USART3->SR & 0x0080));
+  USART3->DR = (c & 0xFF);
 #endif  
 
   return (c);
@@ -448,8 +448,8 @@ int getkey (void) {
   if (ITM_CheckChar())
     return ITM_ReceiveChar();
 #else
-  if (USART6->SR & 0x0020)
-    return (USART6->DR);
+  if (USART3->SR & 0x0020)
+    return (USART3->DR);
 #endif
   return (-1);
 }

@@ -133,7 +133,6 @@ int gui_event_check(void)
 
 				p_gui->status = FOCUS_ON;
 
-
 				return OK;
 		    }
 	}

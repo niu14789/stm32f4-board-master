@@ -67,8 +67,8 @@ struct gui_msg_t
 };
 
 struct gui_operations{
-	int (*create)(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
-	int (*draw_again)(struct gui_msg_t*p_msg);
+	struct gui_handler * (*create)(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
+	int (*show)(struct gui_msg_t*p_msg);
 	int (*onfocus)(struct gui_msg_t*p_msg);
 	int (*losefocus)(struct gui_msg_t*p_msg);
 	int (*onclick)(struct gui_msg_t*p_msg);
@@ -82,7 +82,11 @@ struct nxgui_object
     int (*callback)(enum event_type,void *data);
 };
 
-/*  */
+/* gui widget handler
+ *
+ * as child
+ *
+ * */
 struct gui_handler{
 	struct gui_handler           *link;
 	unsigned short                  id;
@@ -91,6 +95,17 @@ struct gui_handler{
     struct gui_msg_t        widget_msg;
 	int (*callback)(enum event_type,void *data);
 };
+
+/* handler window describe
+ * as parent
+ * */
+struct gui_hwnd{
+	struct gui_handler *handle_root;
+};
+
+
+
+
 
 /* the gui system callback typedef */
 
@@ -129,7 +144,7 @@ typedef struct
 }gui_msg_l0;
 
 /* function */
-
+struct gui_handler * handler_insert(struct gui_handler *insert_one);
 int gui_create(const char *device_availdable_list);
 struct gui_handler** gui_sched_root(void);
 int widget_create(enum widget_type_t widget_type,struct gui_msg_t *p_gui_msg,int (*callback)(enum event_type,void *data));

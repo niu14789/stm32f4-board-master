@@ -9,7 +9,7 @@
 #include "fs.h"
 #include "lcd_hw.h"
 #include "string.h"
-
+#include "gui.h"
 /* memory  manager */
 
 struct gui_handler handler[10];
@@ -19,9 +19,10 @@ static unsigned char handler_cnt = 0;
 
 extern void LCD_DrawLine(uint16_t _usX1 , uint16_t _usY1 , uint16_t _usX2 , uint16_t _usY2 , uint16_t _usColor);
 extern void LCD_Fill_Rect(uint16_t _usX, uint16_t _usY, uint16_t _usHeight, uint16_t _usWidth, uint16_t _usColor);
-int button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
+struct gui_handler * button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
 int button_onfocus(struct gui_msg_t*p_msg);
 int button_losefocus(struct gui_msg_t*p_msg);
+int button_show(struct gui_msg_t*p_msg);
 
 struct color_rgb{
 char r;
@@ -128,7 +129,7 @@ int button_create_aschild(uint16_t BUTTON_POS_X,uint16_t BUTTON_POS_Y,uint16_t B
 	LCD_PutPixel(BUTTON_POS_X+BUTTON_SIZE_X-2, BUTTON_POS_Y+BUTTON_SIZE_Y-2,RGB(color[6].r,color[6].g,color[6].b));
 	LCD_PutPixel(BUTTON_POS_X+2, BUTTON_POS_Y+BUTTON_SIZE_Y-2,RGB(color[6].r,color[6].g,color[6].b));
 
-  LCD_DrawLine(BUTTON_POS_X+3,
+    LCD_DrawLine(BUTTON_POS_X+3,
 	             BUTTON_POS_Y+1,
 	             BUTTON_POS_X+BUTTON_SIZE_X-3,
 	             BUTTON_POS_Y+1,
@@ -212,32 +213,41 @@ void rect_move(unsigned short next_xpos,unsigned short next_ypos,unsigned color)
 /* lcd_gui_draw_ops */
 struct gui_operations button_draw_ops = {
 	button_create,
-	NULL,
+	button_show,
 	button_onfocus,
 	button_losefocus,
 };
 
 /* widget create */
-int button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data))
+struct gui_handler * button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data))
 {
+	unsigned char now = handler_cnt;
 	/* copy the widget msg to handler */
-	memcpy(&handler[handler_cnt].widget_msg,p_msg,sizeof(handler[handler_cnt].widget_msg));
+	memcpy(&handler[now].widget_msg,p_msg,sizeof(handler[now].widget_msg));
 	
 	/* copy the handler.ops */
-	handler[handler_cnt].gui_ops = &button_draw_ops;
+	handler[now].gui_ops = &button_draw_ops;
 	/* callback */
-	handler[handler_cnt].callback = callback;
+	handler[now].callback = callback;
 	/* ID no use */
-	handler[handler_cnt].id = 1;
+	handler[now].id = 1;
 	/* widget status */
-	handler[handler_cnt].status =  p_msg->mode;
+	handler[now].status =  p_msg->mode;
 	/* link */
-	handler[handler_cnt].link = &handler[handler_cnt+1];
+	handler[now].link = NULL;
+	/* template */
+	handler_cnt++;
 
-	if(handler_cnt<10) handler_cnt++;
+	handler_insert(&handler[now]);
 
+	return &handler[now];
+}
+
+int button_show(struct gui_msg_t*p_msg)
+{
 	return button_create_aschild(p_msg->x,p_msg->y,p_msg->xsize,p_msg->ysize,p_msg->caption,p_msg->mode);
 }
+
 /* widget on focus */
 int button_onfocus(struct gui_msg_t*p_msg)
 {

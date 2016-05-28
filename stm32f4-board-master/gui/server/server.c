@@ -97,8 +97,8 @@ int gui_event_done(gui_msg *p_msg,enum event_type event)
 
 int gui_event_check(void)
 {
-	extern struct gui_handler handler[10];
-	struct gui_handler *gui_hander_root_t= &handler[0];
+	extern struct gui_handler * handler_current(void);
+	struct gui_handler *gui_hander_root_t= handler_current();
 	struct gui_handler *gui_hander_root = gui_hander_root_t,*p_gui;
 	int ret;
 	gui_msg gui_msg_buffer;

@@ -122,7 +122,7 @@ int gui_event_check(void)
 			gui_msgl0.x_pos<=(p_gui->widget_msg.xsize+p_gui->widget_msg.x) &&
 			gui_msgl0.y_pos>=p_gui->widget_msg.y	&&
 			gui_msgl0.y_pos<=(p_gui->widget_msg.ysize+p_gui->widget_msg.y))
-		    {
+		  {
 				gui_msg_buffer.handler = p_gui;
 				gui_msg_buffer.event_type = gui_msgl0.event_type;
 
@@ -134,7 +134,7 @@ int gui_event_check(void)
 				p_gui->status = FOCUS_ON;
 
 				return OK;
-		    }
+		  }
 	}
 	return ERR;
 }

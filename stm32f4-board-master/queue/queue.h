@@ -11,8 +11,12 @@
 #define USEABLE      0x14
 #define NONUSEABLE   0x38
 
-#define sem_give(...)
-#define sem_take(...)
+#pragma once 
+
+static char sem_flag = 0;
+	 
+#define sem_give(...)   { sem_flag = 0; } 
+#define sem_take(...)   { if(sem_flag)return -1; sem_flag = 1;}
 
 /* base on a simple queue
  *

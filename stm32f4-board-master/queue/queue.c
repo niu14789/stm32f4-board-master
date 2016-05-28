@@ -88,6 +88,7 @@ int queue_write_t(const char *data,unsigned short len)
 			/* write enable */
 			queue_msg[i].useable = NONUSEABLE;
 			memcpy(queue_msg[i].payload,data,len>QUEUE_DEFINE_SIZE?QUEUE_DEFINE_SIZE:len);
+			sem_give();
 			return OK;
 		}
 	}
@@ -106,6 +107,7 @@ int queue_read_t(void *data,unsigned short len)
 			/* read enable */
 			queue_msg[QUEUE_DEEPTH_MSG-i-1].useable = USEABLE;
 			memcpy(data,queue_msg[QUEUE_DEEPTH_MSG-i-1].payload,len>QUEUE_DEFINE_SIZE?QUEUE_DEFINE_SIZE:len);
+			sem_give();
 			return OK;
 		}
 	}

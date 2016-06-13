@@ -34,7 +34,7 @@ int button_create_aschild(uint16_t BUTTON_POS_X,uint16_t BUTTON_POS_Y,uint16_t B
 {
 	unsigned short len = 0;
 	char event = mode;
-	FONT_T _FONT=
+	FONT_T _FONT =
 	{
 		0,
 		0x0,
@@ -72,11 +72,11 @@ int button_create_aschild(uint16_t BUTTON_POS_X,uint16_t BUTTON_POS_Y,uint16_t B
 	             BUTTON_POS_X+BUTTON_SIZE_X-3,
 	             BUTTON_POS_Y+BUTTON_SIZE_Y,
 	             RGB(color[0].r,color[0].g,color[0].b));
-	LCD_DrawLine( BUTTON_POS_X+BUTTON_SIZE_X,
-								BUTTON_POS_Y+3,
-								BUTTON_POS_X+BUTTON_SIZE_X,
-								BUTTON_POS_Y+BUTTON_SIZE_Y-3,
-								RGB(color[0].r,color[0].g,color[0].b));
+	LCD_DrawLine(   BUTTON_POS_X+BUTTON_SIZE_X,
+					BUTTON_POS_Y+3,
+					BUTTON_POS_X+BUTTON_SIZE_X,
+					BUTTON_POS_Y+BUTTON_SIZE_Y-3,
+					RGB(color[0].r,color[0].g,color[0].b));
 	
 	LCD_PutPixel(BUTTON_POS_X+1,BUTTON_POS_Y,RGB(color[1].r,color[1].g,color[1].b));
 	LCD_PutPixel(BUTTON_POS_X,BUTTON_POS_Y+1,RGB(color[1].r,color[1].g,color[1].b));
@@ -162,7 +162,8 @@ int button_create_aschild(uint16_t BUTTON_POS_X,uint16_t BUTTON_POS_Y,uint16_t B
 	return 0;
 }
 
-#define MOVE_RECT_SIXE 15
+#define MOVE_RECT_SIXE   15
+
 void rect_move(unsigned short next_xpos,unsigned short next_ypos,unsigned color)
 {
 	static unsigned short gbuf[MOVE_RECT_SIXE*MOVE_RECT_SIXE];

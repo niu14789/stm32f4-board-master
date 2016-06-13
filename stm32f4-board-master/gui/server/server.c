@@ -180,7 +180,7 @@ int gui_key_event_check(char *buffer)
 		 fd_queuel0 = open("/etc/queuel0.d",__ONLYREAD);
 
 	if(fd_key==ERR)
-	 return ERR; /*open fail*/
+	  return ERR; /*open fail*/
 
     ret = read(fd_key,buffer,1);
 

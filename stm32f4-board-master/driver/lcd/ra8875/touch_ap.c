@@ -402,11 +402,11 @@ int touch_calibration(void)
 // 	while(touch_take(&touch_tmp[2],&touch_tmp[3])!=0);
 // 	while(touch_take(&touch_tmp[4],&touch_tmp[4])!=1);
 		
-	tp_cali.xa = /*450.0f/(float)(touch_tmp[2]-touch_tmp[0]);//*/-0.7839721;
-	tp_cali.xb = /*15.0f - tp_cali.xa * (float)touch_tmp[0];//*/508.1185;
+	tp_cali.xa = -0.7839721f;///*450.0f/(float)(touch_tmp[2]-touch_tmp[0]);//*/
+	tp_cali.xb = 508.1185f;///*15.0f - tp_cali.xa * (float)touch_tmp[0];//*/
 
-	tp_cali.ya = /*242.0f/(float)(touch_tmp[3]-touch_tmp[1]);//*/-0.3310533;
-	tp_cali.yb = /*15.0f - tp_cali.ya * (float)touch_tmp[1];//*/302.6854;
+	tp_cali.ya = -0.3310533f;///*242.0f/(float)(touch_tmp[3]-touch_tmp[1]);//*/
+	tp_cali.yb = 302.6854f;///*15.0f - tp_cali.ya * (float)touch_tmp[1];//*/
 	
 	return 0;
 }

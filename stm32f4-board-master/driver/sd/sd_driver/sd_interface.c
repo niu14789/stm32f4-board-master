@@ -39,12 +39,12 @@ FS_REGISTER(FS_DEVICE("sd.d"),inode_sd);
 
 int sd_device_open(struct file * filp)
 {
-	f_mount(0, &fs);  //¹ÒÔØSD¿¨
+	f_mount(0, &fs);  //ï¿½ï¿½ï¿½ï¿½SDï¿½ï¿½
 	
 	if( !f_open(&fsrc, "0:Om.txt",FA_CREATE_ALWAYS | FA_WRITE))
 	  return 0;
 	else
-		return 1;
+	  return 1;
 }
 
 int32_t sd_device_write(FAR struct file *filp, FAR const char *buffer, uint32_t buflen)

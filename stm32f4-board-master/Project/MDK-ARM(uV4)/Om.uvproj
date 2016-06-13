@@ -350,7 +350,7 @@
               <MiscControls>--diag_suppress=870</MiscControls>
               <Define>USE_STDPERIPH_DRIVER,USE_USB_OTG_FS,USE_EMBEDDED_PHY</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Libraries\CMSIS\Include;..\..\Libraries\CMSIS\Device\ST\STM32F4xx\Include;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\User\bsp_stm32f4xx\inc;..\..\User\bsp_stm32f4xx;..\..\User;..\..\Libraries\STM32_USB_Device_Library\Class\msc\inc;..\..\Libraries\STM32_USB_Device_Library\Core\inc;..\..\Libraries\STM32_USB_OTG_Driver\inc;..\..\User\usb_mass_storage;..\..\User\iapss;..\..\User\iapss\fatfs;..\..\Hardware\io;..\..\Hardware\led;..\..\Hardware\key;..\..\Hardware\usart;..\..\Hardware\exit;..\..\Hardware\pwm;..\..\Hardware\adc;..\..\Hardware\rtc;..\..\fs;..\..\driver\lcd;..\..\driver\lcd\ra8875;..\..\driver\sd\sd_driver;..\..\driver\sd\fatfs;..\..\gui\button;..\..\gui\gui;..\..\driver\led;..\..\gui\server;..\..\driver\sram</IncludePath>
+              <IncludePath>..\..\Libraries\CMSIS\Include;..\..\Libraries\CMSIS\Device\ST\STM32F4xx\Include;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\User\bsp_stm32f4xx\inc;..\..\User\bsp_stm32f4xx;..\..\User;..\..\Libraries\STM32_USB_Device_Library\Class\msc\inc;..\..\Libraries\STM32_USB_Device_Library\Core\inc;..\..\Libraries\STM32_USB_OTG_Driver\inc;..\..\User\usb_mass_storage;..\..\User\iapss;..\..\User\iapss\fatfs;..\..\Hardware\io;..\..\Hardware\led;..\..\Hardware\key;..\..\Hardware\usart;..\..\Hardware\exit;..\..\Hardware\pwm;..\..\Hardware\adc;..\..\Hardware\rtc;..\..\fs;..\..\driver\lcd;..\..\driver\lcd\ra8875;..\..\driver\sd\sd_driver;..\..\driver\sd\fatfs;..\..\gui\widget\button;..\..\gui\gui;..\..\driver\led;..\..\gui\server;..\..\driver\sram</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -607,11 +607,6 @@
           <GroupName>gui</GroupName>
           <Files>
             <File>
-              <FileName>button.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\gui\button\button.c</FilePath>
-            </File>
-            <File>
               <FileName>slider.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\gui\widget\slider\slider.c</FilePath>
@@ -620,6 +615,16 @@
               <FileName>gui.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\gui\gui\gui.c</FilePath>
+            </File>
+            <File>
+              <FileName>button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\gui\widget\button\button.c</FilePath>
+            </File>
+            <File>
+              <FileName>window.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\gui\widget\window\window.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1291,11 +1296,6 @@
           <GroupName>gui</GroupName>
           <Files>
             <File>
-              <FileName>button.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\gui\button\button.c</FilePath>
-            </File>
-            <File>
               <FileName>slider.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\gui\widget\slider\slider.c</FilePath>
@@ -1304,6 +1304,16 @@
               <FileName>gui.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\gui\gui\gui.c</FilePath>
+            </File>
+            <File>
+              <FileName>button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\gui\widget\button\button.c</FilePath>
+            </File>
+            <File>
+              <FileName>window.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\gui\widget\window\window.c</FilePath>
             </File>
           </Files>
         </Group>

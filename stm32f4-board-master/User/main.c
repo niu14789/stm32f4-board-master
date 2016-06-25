@@ -76,13 +76,14 @@ void fd_delay(unsigned int t)
 
 int main(void)
 {
-	  int x=0,y=0,xs=5,ys=3;
-	  unsigned short r=122,g=90,b=12;
-    char device_availdable_list[20];
-    char key_buffer[3];
+
+// 	  int x=0,y=0,xs=5,ys=3;
+// 	  unsigned short r=122,g=90,b=12;
+     char device_availdable_list[20];
+//     char key_buffer[3];
 	
     system_initialization(device_availdable_list);
-
+#if 0
     lcd_fd = open("/etc/lcd.d",__ONLYREAD);
 	 
 	 if(lcd_fd)
@@ -152,6 +153,25 @@ int main(void)
 		 
 		 fd_delay(0xffff);
 	 }
+#else
+{
+	 unsigned short draw_t[480]={1,2,3,4,5,20,2,6,2,5,4,8,3,6,9,5,2,8,4,1,2,5,3,6,9,8,5,2,1,4,7,8,9,6,3,2,5,4,1,2,3,6,9,85,2,14,7,8,5,4,6,45,25,5,35,88,64,6,6,64,6};
+	 int i;
+		 RA8875_ClrScr(0xffff);
+	 RA8875_DrawLine(0,0,200,200,0);
+		 
+	 for( i=0;i<480;i++)
+	 {
+			RA8875_DrawLine(i,136-draw_t[i],i+1,136-draw_t[i+1],0x0); 
+	 }
+}
+	 while(1);
+		 
+
+
+#endif
+
+	 
 }
 
 

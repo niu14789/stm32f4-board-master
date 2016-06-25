@@ -68,7 +68,7 @@ int32_t lcd_write(FAR struct file *filp, FAR const char *buffer, uint32_t buflen
 	}
 
 
-  if(!y_pos && !x_pos) LCD_ClrScr(RGB(255,255,255));
+//  if(!y_pos && !x_pos) LCD_ClrScr(RGB(255,255,255));
 	
 	LCD_DispStr(x_pos,y_pos,(char *)buffer,&_FONT);
 	y_pos+=16;

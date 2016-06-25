@@ -27,20 +27,20 @@ struct file_operations f_ops =
   delay_ms,
 };
 
-struct inode inode_start = 
-{
-	NULL,
-	NULL,
-	0,
-	FS_INODE_USABLE,
-	&f_ops,
-	NULL,
-	NULL,
-	delay_ms1,
-	NULL
-};
+// struct inode inode_start = 
+// {
+// 	NULL,
+// 	NULL,
+// 	0,
+// 	FS_INODE_USABLE,
+// 	&f_ops,
+// 	NULL,
+// 	NULL,
+// 	delay_ms1,
+// 	NULL
+// };
 
-FS_REGISTER_START("/etc/inode_start.d",inode_start);
+// FS_REGISTER_START("/etc/inode_start.d",inode_start);
 
 int delay_ms(struct file * filp)
 {
@@ -99,29 +99,28 @@ int main(void)
 	 touch_calibration();
 	 FSMC_SRAM_Init();
 	 
-	 write(lcd_fd,"sram test",14);
-	 {
-		 unsigned int i;
-		 char t[100];
-		 for(i=0;i<0xffff;i++)
-		 {
-			 sram_test[i] = i;
-		 }
-		 
-		 for(i=0;i<0xffff;i++)
-		 {
-			 if(sram_test[i] != i)
-			 {
-				 sprintf(t,"sram_test[i]->0x%x,i->0x%x",sram_test[i],i);
-				 write(lcd_fd,"sram error",14);
-				 write(lcd_fd,t,14);
-				 break;
-			 }
-		 }
-		 if(i==0xffff)
-			 write(lcd_fd,"sram ok",14);
-		 
-	 }
+// 	 write(lcd_fd,"sram test",14);
+// 	 {
+// 		 unsigned int i;
+// 		 char t[100];
+// 		 for(i=0;i<0xffff;i++)
+// 		 {
+// 			 sram_test[i] = i;
+// 		 }
+// 		 
+// 		 for(i=0;i<0xffff;i++)
+// 		 {
+// 			 if(sram_test[i] != i)
+// 			 {
+// 				 sprintf(t,"sram_test[i]->0x%x,i->0x%x",sram_test[i],i);
+// 				 write(lcd_fd,"sram error",14);
+// 				 write(lcd_fd,t,14);
+// 				 break;
+// 			 }
+// 		 }
+// 		 if(i==0xffff)
+// 			 write(lcd_fd,"sram ok",14);
+// 	 }
 	 stm32_usart_init(USART3,PB10_PB11,57600);
 	 
 	 while(1)

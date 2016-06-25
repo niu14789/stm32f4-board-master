@@ -48,7 +48,16 @@ static int _inode_compare(FAR const char *fname,
 
 FAR inode_vmn *inode_sched_getfiles(void)
 {
-	return (inode_vmn *)&__FS_START__;
+	extern inode_vmn  fs_vmn$$Base;
+	return (inode_vmn *)&fs_vmn$$Base;
+}
+
+FAR int inode_sched_limit(void)
+{
+	extern inode_vmn  fs_vmn$$Base;
+	extern inode_vmn  fs_vmn$$Limit;
+	
+	return (&fs_vmn$$Limit-&fs_vmn$$Base);
 }
 
 /****************************************************************************
@@ -62,12 +71,14 @@ FAR inode_vmn *inode_sched_getfiles(void)
 FAR struct fd_find *inode_find(inode_vmn *inode,FAR const char *path, FAR const char **relpath)
 {
 	inode_vmn * inode_head;
-	int result,i;
+	int result,i,n;
 	int fd_head=0;
 	static struct fd_find fd;
 	inode_head = inode;
 	
-	for( i = 0 ; i < 7 ; i++ )
+  n = inode_sched_limit();
+	
+	for( i = 0 ; i < n ; i++ )
 	{
 		result = _inode_compare(path,inode_head);
 
@@ -97,12 +108,13 @@ FAR struct fd_find *inode_find(inode_vmn *inode,FAR const char *path, FAR const 
 
 int system_initialization(char *device_availdable_list)
 {
-    int ret,i;
+  int ret,i,n;
 
 	inode_vmn * p_vmn_start = inode_sched_getfiles();
-
+  n = inode_sched_limit();
+	
 	/* while(p_vmn_start->inode->i_flags == FS_INODE_USABLE) */
-	for( i = 0 ; i < 7 ; i++ )
+	for( i = 0 ; i < n ; i++ )
 	{
 		ret = p_vmn_start->inode->init();
 		if(ret != ERR){

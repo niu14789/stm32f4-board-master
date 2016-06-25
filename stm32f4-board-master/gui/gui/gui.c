@@ -18,7 +18,7 @@ int gui_create(const char *device_availdable_list)
 	inode_vmn *p_vmn_start = inode_sched_getfiles();
 
 	struct gui_msg_t sert={
-			0,0,10-1,10-1,NULL,FOCUS_OFF
+			0,0,20,20,NULL,FOCUS_OFF
 	};
     /* create the default create */
 	window_create(&sert,NULL);
@@ -31,7 +31,7 @@ int gui_create(const char *device_availdable_list)
     			   p_vmn_start->inode->nxgui->callback);
        }
        p_vmn_start++;
-	   device_availdable_list++;
+	     device_availdable_list++;
     }
     show(&window_handler);
 	return 0;

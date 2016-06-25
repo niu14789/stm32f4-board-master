@@ -50,7 +50,7 @@ static char sem_flag = 0;
 typedef struct queue_t{
 	struct queue_t *link;
 	int useable;
-  char payload[QUEUE_DEFINE_SIZE];
+    char payload[QUEUE_DEFINE_SIZE];
 }queue_msg_t;
 
 

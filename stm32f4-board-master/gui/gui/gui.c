@@ -31,7 +31,7 @@ int gui_create(const char *device_availdable_list)
     			   p_vmn_start->inode->nxgui->callback);
        }
        p_vmn_start++;
-	     device_availdable_list++;
+	   device_availdable_list++;
     }
     show(&window_handler);
 	return 0;
@@ -41,11 +41,11 @@ int widget_create(enum widget_type_t widget_type,struct gui_msg_t *p_gui_msg,int
 {
     switch(widget_type)
     {
-    case button:
-        button_create(p_gui_msg,callback);
-      return 0;
-    default:
-    	break;
+		case button:
+			button_create(p_gui_msg,callback);
+		  return 0;
+		default:
+		  break;
     }
 	return 0;
 }
@@ -54,7 +54,6 @@ struct gui_handler * handler_current(void)
 {
 	return &window_handler;
 }
-
 
 
 /*
@@ -79,7 +78,7 @@ struct gui_handler * handler_insert(struct gui_handler *insert_one)
     /* insert it to the tail  */
 	handler_t->link = insert_one;
 
-  return window_now_hwnd;
+    return window_now_hwnd;
 }
 
 

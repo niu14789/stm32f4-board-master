@@ -77,13 +77,13 @@ void fd_delay(unsigned int t)
 int main(void)
 {
 
-// 	  int x=0,y=0,xs=5,ys=3;
-// 	  unsigned short r=122,g=90,b=12;
+ 	  int x=0,y=0,xs=5,ys=3;
+	  unsigned short r=122,g=90,b=12;
      char device_availdable_list[20];
-//     char key_buffer[3];
+     char key_buffer[3];
 	
     system_initialization(device_availdable_list);
-#if 0
+#if 1
     lcd_fd = open("/etc/lcd.d",__ONLYREAD);
 	 
 	 if(lcd_fd)

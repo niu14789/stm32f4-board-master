@@ -76,7 +76,7 @@ FAR struct fd_find *inode_find(inode_vmn *inode,FAR const char *path, FAR const 
 	static struct fd_find fd;
 	inode_head = inode;
 	
-  n = inode_sched_limit();
+    n = inode_sched_limit();
 	
 	for( i = 0 ; i < n ; i++ )
 	{
@@ -111,7 +111,7 @@ int system_initialization(char *device_availdable_list)
   int ret,i,n;
 
 	inode_vmn * p_vmn_start = inode_sched_getfiles();
-  n = inode_sched_limit();
+    n = inode_sched_limit();
 	
 	/* while(p_vmn_start->inode->i_flags == FS_INODE_USABLE) */
 	for( i = 0 ; i < n ; i++ )
@@ -119,17 +119,21 @@ int system_initialization(char *device_availdable_list)
 		ret = p_vmn_start->inode->init();
 		if(ret != ERR){
 		   /* inode init ok*/
-		   *device_availdable_list = OK;
+		  if(device_availdable_list!=NULL)/*just initialization*/
+		    *device_availdable_list = OK;
 		   printf_d("the device:%s init ok at path:%s\n",p_vmn_start->inode->i_name,p_vmn_start->path);
 		}
 		else{
-		   *device_availdable_list = 1;
+		   if(device_availdable_list!=NULL)/*just initialization*/
+		     *device_availdable_list = 1;
 		   printf_d("the device:%s init err at path:%s\n",p_vmn_start->inode->i_name,p_vmn_start->path);
 		}
-		device_availdable_list++;
+		if(device_availdable_list!=NULL)/*just initialization*/
+		   device_availdable_list++;
 		p_vmn_start++;
 	}
-    *device_availdable_list = DEVICE_END;
+	if(device_availdable_list!=NULL)/*just initialization*/
+      *device_availdable_list = DEVICE_END;
 	return 0;
 }
 

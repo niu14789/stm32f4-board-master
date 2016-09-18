@@ -68,7 +68,7 @@ int gui_key_event_check(char *buffer);
 int touch_calibration(void);
 void touch_test(void);
 void FSMC_SRAM_Init(void);
-
+extern struct gui_handler * button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
 void fd_delay(unsigned int t)
 {
 	while(t--);
@@ -81,7 +81,9 @@ int main(void)
 	  unsigned short r=122,g=90,b=12;
      char device_availdable_list[20];
      char key_buffer[3];
-	
+	struct gui_msg_t bu_rect={
+270,50,20,20,"test"
+	};
     system_initialization(device_availdable_list);
 #if 1
     lcd_fd = open("/etc/lcd.d",__ONLYREAD);
@@ -99,7 +101,7 @@ int main(void)
 
 	 touch_calibration();
 	 FSMC_SRAM_Init();
-	 
+	 button_create(&bu_rect,NULL);
 // 	 write(lcd_fd,"sram test",14);
 // 	 {
 // 		 unsigned int i;

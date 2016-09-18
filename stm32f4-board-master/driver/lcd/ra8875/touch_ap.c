@@ -443,7 +443,7 @@ void touch_test()
 	static char flag_a = 1;
 	gui_msg_l0 touch_msg;
 	static int fd = 0;
-	
+	static unsigned short touch_last_x,touch_last_y; 
 	if(touch_take(&touch_tmp_x,&touch_tmp_y)==0)
 	{
 		touch_now_x = change_ad(0,touch_tmp_x);
@@ -461,6 +461,8 @@ void touch_test()
 		if(flag_a)
 		{
 			flag_a = 0;
+			touch_last_x = touch_msg.x_pos;
+			touch_last_y = touch_msg.y_pos;
 			touch_msg.event_type = onfocus;
 			write(fd,(const char *)&touch_msg,sizeof(touch_msg));
 		}
@@ -471,6 +473,8 @@ void touch_test()
 		if(0==flag_a)
 		{
 			flag_a = 1;
+			touch_msg.x_pos = touch_last_x;
+			touch_msg.y_pos = touch_last_y;
 			touch_msg.event_type = losefocus;
 			write(fd,(const char *)&touch_msg,sizeof(touch_msg));
 		}

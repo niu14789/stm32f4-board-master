@@ -28,11 +28,13 @@ typedef struct inode_vmn_t
    struct inode *inode;
 }inode_vmn;
 
-#define __FS_DEVICE__   "/etc/"
+#define __FS_DEVICE__   "/dev/"
 #define __FS_FILE__     "/sdcard/"
+#define __FS_DRV__      "/drv/"
 
 #define FS_DEVICE(x)   __FS_DEVICE__##x
 #define FS_FILE(x)     __FS_FILE__##x
+#define FS_DRV(x)      __FS_DRV__##x
 
 #define __INIT __attribute__((unused, section("fs_vmn")))
 #define FS_REGISTER(inode_name,node_t) const inode_vmn __FS_##node_t __INIT =      \

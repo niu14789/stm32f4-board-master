@@ -97,9 +97,8 @@ int gui_event_done(gui_msg *p_msg,enum event_type event)
 
 int gui_event_check(void)
 {
-	extern struct gui_handler * handler_current(void);
-	struct gui_handler *gui_hander_root_t= handler_current();
-	struct gui_handler *gui_hander_root = gui_hander_root_t,*p_gui;
+	struct gui_handler *p_gui;
+	struct gui_handler *gui_hander_root = handler_current();
 	int ret;
 	gui_msg gui_msg_buffer;
 	gui_msg_l0 gui_msgl0;
@@ -107,12 +106,12 @@ int gui_event_check(void)
 	if( fd_queue == 0 )
 		return ERR;  /* queue init error ,direct return */
 
-	if(!fd_queuel0)
+	if( !fd_queuel0 )
 		 fd_queuel0 = open("/etc/queuel0.d",__ONLYREAD);
 
 	ret = read(fd_queuel0,(char *)&gui_msgl0,sizeof(gui_msgl0));
 
-	if(ret!=OK)
+	if( ret != OK )
       return ERR;
 
 	for(p_gui=gui_hander_root;

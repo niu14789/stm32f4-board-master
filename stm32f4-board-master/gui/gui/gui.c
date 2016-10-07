@@ -7,14 +7,14 @@
 #include "fs.h"
 #include "gui.h"
 #include "button.h"
+#include "window.h"
 
-extern struct gui_handler  window_handler;
+extern window_hwnd  window_handler;
+
 int show(struct gui_handler *root);
 
 int gui_create(const char *device_availdable_list)
 {
-	extern struct gui_handler * window_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
-
 	inode_vmn *p_vmn_start = inode_sched_getfiles();
 
 	struct gui_msg_t sert={
@@ -33,7 +33,7 @@ int gui_create(const char *device_availdable_list)
        p_vmn_start++;
 	   device_availdable_list++;
     }
-    show(&window_handler);
+    show(&window_handler.window);
 	return 0;
 }
 
@@ -52,7 +52,7 @@ int widget_create(enum widget_type_t widget_type,struct gui_msg_t *p_gui_msg,int
 
 struct gui_handler * handler_current(void)
 {
-	return &window_handler;
+	return &window_handler.window;
 }
 
 

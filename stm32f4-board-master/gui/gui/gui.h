@@ -87,14 +87,14 @@ struct nxgui_object
  * as child
  *
  * */
-struct gui_handler{
+typedef struct gui_handler{
 	struct gui_handler           *link;
 	unsigned short                  id;
 	unsigned short              status;
 	struct gui_operations     *gui_ops;
     struct gui_msg_t        widget_msg;
 	int (*callback)(enum event_type,void *data);
-};
+}widget_hwnd;
 
 /* handler window describe
  * as parent
@@ -103,9 +103,10 @@ struct gui_hwnd{
 	struct gui_handler *handle_root;
 };
 
-
-
-
+typedef struct window_hwnd_t{
+	struct window_hwnd_t *link[3]; // support three child windows
+	widget_hwnd  window;
+}window_hwnd;
 
 /* the gui system callback typedef */
 
@@ -144,9 +145,9 @@ typedef struct
 }gui_msg_l0;
 
 /* function */
+struct gui_handler * handler_current(void);
 struct gui_handler * handler_insert(struct gui_handler *insert_one);
 int gui_create(const char *device_availdable_list);
-struct gui_handler** gui_sched_root(void);
 int widget_create(enum widget_type_t widget_type,struct gui_msg_t *p_gui_msg,int (*callback)(enum event_type,void *data));
 /* end nuttx */
 

@@ -10,8 +10,10 @@
 #include "string.h"
 #include "lcd_hw.h"
 
+/* should be macro */
 /* as use the handler */
-struct gui_handler  window_handler;
+window_hwnd  window_handler;
+
 struct gui_operations window_ops;
 
 int window_create_asparent(uint16_t x_pos,uint16_t y_pos,uint16_t x_size,uint16_t y_size,char *caption,char mode)
@@ -39,12 +41,12 @@ int window_show(struct gui_msg_t*p_msg)
 struct gui_handler * window_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data))
 {
 	/* widget message */
-	memcpy(&window_handler.widget_msg,p_msg,sizeof(window_handler.widget_msg));
-	window_handler.gui_ops = &window_ops;
-	window_handler.callback = callback;
-	window_handler.id = 1;
-	window_handler.link = NULL;
-	window_handler.status = p_msg->mode;
+	memcpy(&window_handler.window.widget_msg,p_msg,sizeof(window_handler.window.widget_msg));
+	window_handler.window.gui_ops = &window_ops;
+	window_handler.window.callback = callback;
+	window_handler.window.id = 1;
+	window_handler.window.link = NULL;
+	window_handler.window.status = p_msg->mode;
 
 	/*
 	 *   reserve function
@@ -52,7 +54,7 @@ struct gui_handler * window_create(struct gui_msg_t*p_msg,int (*callback)(enum e
 	 *   window_insert(&window_handler);
 	 *
 	 * */
-    return &window_handler;
+    return &window_handler.window;
 }
 
 struct gui_operations window_ops = {

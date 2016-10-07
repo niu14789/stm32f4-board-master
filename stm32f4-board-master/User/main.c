@@ -77,30 +77,30 @@ void fd_delay(unsigned int t)
 int main(void)
 {
 
- 	  int x=0,y=0,xs=5,ys=3;
-	  unsigned short r=122,g=90,b=12;
-     char device_availdable_list[20];
-     char key_buffer[3];
-	struct gui_msg_t bu_rect={
-270,50,20,20,"test"
+//  	  int x=0,y=0,xs=5,ys=3;
+// 	  unsigned short r=122,g=90,b=12;
+      char device_availdable_list[20];
+//      char key_buffer[3];
+ 	struct gui_msg_t bu_rect={
+  270,50,20,20,"test"
 	};
     system_initialization(device_availdable_list);
 #if 1
-    lcd_fd = open("/etc/lcd.d",__ONLYREAD);
-	 
-	 if(lcd_fd)
-	 {
-		 write(lcd_fd,"2",1);
-		 write(lcd_fd,"this is a test",14);
-	 }
+//     lcd_fd = open("/etc/lcd.d",__ONLYREAD);
+// 	 
+// 	 if(lcd_fd)
+// 	 {
+// 		 write(lcd_fd,"2",1);
+// 		 write(lcd_fd,"this is a test",14);
+// 	 }
 
-	 slider_create(50,180,400,50,0);
-	 
-	 gui_create(device_availdable_list);
-	 TOUCH_InitHard();
+// 	 slider_create(50,180,400,50,0);
+// 	 
+ 	 gui_create(device_availdable_list);
+// 	 TOUCH_InitHard();
 
-	 touch_calibration();
-	 FSMC_SRAM_Init();
+// 	 touch_calibration();
+// 	 FSMC_SRAM_Init();
 	 button_create(&bu_rect,NULL);
 // 	 write(lcd_fd,"sram test",14);
 // 	 {
@@ -126,35 +126,35 @@ int main(void)
 // 	 }
 	 stm32_usart_init(USART3,PB10_PB11,57600);
 	 
-	 while(1)
-	 {
-		 touch_test();
-		 
-		 gui_key_event_check(key_buffer);
+	 while(1);
+// 	 {
+// 		 touch_test();
+// 		 
+// 		 gui_key_event_check(key_buffer);
 
-		 gui_server();
+// 		 gui_server();
 
-		 rect_move(x,y,RGB(r,g,b));
-		 x+=xs;
-		 y+=ys;
-		 if(y>=262)
-		 {
-			 ys = -3;
-		 }
-		 if(y<1)
-			 ys = 3;
-		 
-		 if(x>=470)
-			 xs = -5;
-		 if(x<1)
-			 xs = 5;
-		 
-		 r++;
-		 g++;
-		 b++;
-		 
-		 fd_delay(0xffff);
-	 }
+// 		 rect_move(x,y,RGB(r,g,b));
+// 		 x+=xs;
+// 		 y+=ys;
+// 		 if(y>=262)
+// 		 {
+// 			 ys = -3;
+// 		 }
+// 		 if(y<1)
+// 			 ys = 3;
+// 		 
+// 		 if(x>=470)
+// 			 xs = -5;
+// 		 if(x<1)
+// 			 xs = 5;
+// 		 
+// 		 r++;
+// 		 g++;
+// 		 b++;
+// 		 
+// 		 fd_delay(0xffff);
+// 	 }
 #else
 {
 	 unsigned short draw_t[480]={1,2,3,4,5,20,2,6,2,5,4,8,3,6,9,5,2,8,4,1,2,5,3,6,9,8,5,2,1,4,7,8,9,6,3,2,5,4,1,2,3,6,9,85,2,14,7,8,5,4,6,45,25,5,35,88,64,6,6,64,6};

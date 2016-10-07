@@ -350,7 +350,7 @@
               <MiscControls>--diag_suppress=870</MiscControls>
               <Define>USE_STDPERIPH_DRIVER,USE_USB_OTG_FS,USE_EMBEDDED_PHY</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Libraries\CMSIS\Include;..\..\Libraries\CMSIS\Device\ST\STM32F4xx\Include;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\User\bsp_stm32f4xx\inc;..\..\User\bsp_stm32f4xx;..\..\User;..\..\Libraries\STM32_USB_Device_Library\Class\msc\inc;..\..\Libraries\STM32_USB_Device_Library\Core\inc;..\..\Libraries\STM32_USB_OTG_Driver\inc;..\..\User\usb_mass_storage;..\..\User\iapss;..\..\User\iapss\fatfs;..\..\Hardware\io;..\..\Hardware\led;..\..\Hardware\key;..\..\Hardware\usart;..\..\Hardware\exit;..\..\Hardware\pwm;..\..\Hardware\adc;..\..\Hardware\rtc;..\..\fs;..\..\driver\lcd;..\..\driver\lcd\ra8875;..\..\driver\sd\sd_driver;..\..\driver\sd\fatfs;..\..\gui\widget\button;..\..\gui\gui;..\..\driver\led;..\..\gui\server;..\..\driver\sram;..\..\gui\widget\window</IncludePath>
+              <IncludePath>..\..\Libraries\CMSIS\Include;..\..\Libraries\CMSIS\Device\ST\STM32F4xx\Include;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\User\bsp_stm32f4xx\inc;..\..\User\bsp_stm32f4xx;..\..\User;..\..\Libraries\STM32_USB_Device_Library\Class\msc\inc;..\..\Libraries\STM32_USB_Device_Library\Core\inc;..\..\Libraries\STM32_USB_OTG_Driver\inc;..\..\User\usb_mass_storage;..\..\User\iapss;..\..\User\iapss\fatfs;..\..\Hardware\io;..\..\Hardware\led;..\..\Hardware\key;..\..\Hardware\usart;..\..\Hardware\exit;..\..\Hardware\pwm;..\..\Hardware\adc;..\..\Hardware\rtc;..\..\fs;..\..\driver\lcd;..\..\driver\lcd\ra8875;..\..\driver\sd\sd_driver;..\..\driver\sd\fatfs;..\..\gui\widget\button;..\..\gui\gui;..\..\driver\led;..\..\gui\server;..\..\driver\sram;..\..\gui\widget\window;..\..\driver\lcd\ili93xx;..\..\gui\gui_config</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -539,7 +539,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>lcd</GroupName>
+          <GroupName>lcd1</GroupName>
           <Files>
             <File>
               <FileName>lcd_ap.c</FileName>
@@ -626,6 +626,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\gui\widget\window\window.c</FilePath>
             </File>
+            <File>
+              <FileName>display_device.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\gui\gui_config\display_device.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -690,6 +695,21 @@
               <FileName>sram.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\driver\sram\sram.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>lcd2</GroupName>
+          <Files>
+            <File>
+              <FileName>lcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\driver\lcd\ili93xx\lcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_fs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\driver\lcd\ili93xx\lcd_fs.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1228,7 +1248,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>lcd</GroupName>
+          <GroupName>lcd1</GroupName>
           <Files>
             <File>
               <FileName>lcd_ap.c</FileName>
@@ -1315,6 +1335,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\gui\widget\window\window.c</FilePath>
             </File>
+            <File>
+              <FileName>display_device.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\gui\gui_config\display_device.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1379,6 +1404,21 @@
               <FileName>sram.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\driver\sram\sram.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>lcd2</GroupName>
+          <Files>
+            <File>
+              <FileName>lcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\driver\lcd\ili93xx\lcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd_fs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\driver\lcd\ili93xx\lcd_fs.c</FilePath>
             </File>
           </Files>
         </Group>

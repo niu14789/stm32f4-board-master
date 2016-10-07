@@ -437,7 +437,7 @@ unsigned short change_ad(char xory,short data)
 
 void touch_test()
 {
-	extern void LCD_DrawCircle(uint16_t _usX, uint16_t _usY, uint16_t _usRadius, uint16_t _usColor);
+//	extern void LCD_DrawCircle(uint16_t _usX, uint16_t _usY, uint16_t _usRadius, uint16_t _usColor);
 	short touch_tmp_x,touch_tmp_y;
 	unsigned short touch_now_x,touch_now_y;
 	static char flag_a = 1;
@@ -466,7 +466,7 @@ void touch_test()
 			touch_msg.event_type = onfocus;
 			write(fd,(const char *)&touch_msg,sizeof(touch_msg));
 		}
-		LCD_DrawCircle(touch_now_x,touch_now_y,2,0x0);
+//		LCD_DrawCircle(touch_now_x,touch_now_y,2,0x0);
 	}
 	else
 	{

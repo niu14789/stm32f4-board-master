@@ -28,7 +28,7 @@ struct inode inode_lcd =
 	"led"
 };
 
-FS_REGISTER(FS_DEVICE("lcd.d"),inode_lcd);
+//FS_REGISTER(FS_DEVICE("lcd1.d"),inode_lcd);
 
 
 int lcd_device_open(struct file * filp)

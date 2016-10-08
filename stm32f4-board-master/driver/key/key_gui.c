@@ -18,10 +18,10 @@
 int key_gui_callback(enum event_type event,void *data);
 
 struct gui_msg_t key_gui_msg = {
-	300,        /* x position */
+	200,        /* x position */
 	185,        /* y position */
-	80,        /* x size     */
-	60,        /* y size     */
+	50,        /* x size     */
+	30,        /* y size     */
 	"unclock",     /* caption    */
 	FOCUS_OFF  /* init mode  */
 };

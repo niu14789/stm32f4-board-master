@@ -25,7 +25,7 @@ extern gui_device *gui_device_g;
 
 // extern void gui_device_g->gui_dev_ops_g->set_line(uint16_t _usX1 , uint16_t _usY1 , uint16_t _usX2 , uint16_t _usY2 , uint16_t _usColor);
 // extern void gui_device_g->gui_dev_ops_g->fill_dect(uint16_t _usX, uint16_t _usY, uint16_t _usHeight, uint16_t _usWidth, uint16_t _usColor);
-struct gui_handler * button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
+window_hwnd  *  button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
 int button_onfocus(struct gui_msg_t*p_msg);
 int button_losefocus(struct gui_msg_t*p_msg);
 int button_show(struct gui_msg_t*p_msg);
@@ -168,7 +168,7 @@ int button_create_aschild(uint16_t BUTTON_POS_X,uint16_t BUTTON_POS_Y,uint16_t B
 	return 0;
 }
 
-#define MOVE_RECT_SIXE   15
+#define MOVE_RECT_SIXE   10
 
 void rect_move(unsigned short next_xpos,unsigned short next_ypos,unsigned color)
 {
@@ -226,7 +226,7 @@ struct gui_operations button_draw_ops = {
 };
 
 /* widget create */
-struct gui_handler * button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data))
+window_hwnd  * button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data))
 {
 	unsigned char now = handler_cnt;
 	/* copy the widget msg to handler */
@@ -247,7 +247,7 @@ struct gui_handler * button_create(struct gui_msg_t*p_msg,int (*callback)(enum e
 
 	handler_insert(&handler[now]);
 
-	return &handler[now];
+	return NULL;/*&handler[now];*/
 }
 
 int button_show(struct gui_msg_t*p_msg)

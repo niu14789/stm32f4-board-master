@@ -2477,7 +2477,7 @@ int LCD_Init(void)
 		LCD_WriteReg(0X07,0X0033);   
 		LCD_WriteReg(0X07,0X0133);   
 	}		 
-	LCD_Display_Dir(0);		 	//默认为竖屏
+	LCD_Display_Dir(1);		 	//默认为竖屏
 	LCD_LED=1;					//点亮背光
 	LCD_Clear(0);
 	return lcddev.id;
@@ -2509,11 +2509,13 @@ void LCD_Clear(u16 color)
 //在指定区域内填充单个颜色
 //(sx,sy),(ex,ey):填充矩形对角坐标,区域大小为:(ex-sx+1)*(ey-sy+1)   
 //color:要填充的颜色
-void LCD_Fill(u16 sx,u16 sy,u16 ex,u16 ey,u16 color)
+void LCD_Fill(u16 sx,u16 sy,u16 ey,u16 ex,u16 color)
 {          
 	u16 i,j;
 	u16 xlen=0;
 	u16 temp;
+	ex = ex + sx;
+	ey = ey + sy;
 	if((lcddev.id==0X6804)&&(lcddev.dir==1))	//6804横屏的时候特殊处理  
 	{
 		temp=sx;

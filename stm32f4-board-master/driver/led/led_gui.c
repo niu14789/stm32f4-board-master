@@ -18,8 +18,8 @@
 int led_gui_callback(enum event_type event,void *data);
 
 struct gui_msg_t led_gui_msg = {
-	100,        /* x position */
-	200,        /* y position */
+	20,        /* x position */
+	20,        /* y position */
 	50,        /* x size     */
 	30,        /* y size     */
 	"led",     /* caption    */

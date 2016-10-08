@@ -9,20 +9,20 @@
 #include "gui.h"
 #include "string.h"
 #include "lcd_hw.h"
+#include "display_device.h"
 
 /* should be macro */
 /* as use the handler */
 window_hwnd  window_handler;
 
 struct gui_operations window_ops;
-
+extern gui_device *gui_device_g;
 int window_create_asparent(uint16_t x_pos,uint16_t y_pos,uint16_t x_size,uint16_t y_size,char *caption,char mode)
 {
-	extern void LCD_Fill_Rect(uint16_t _usX, uint16_t _usY, uint16_t _usHeight, uint16_t _usWidth, uint16_t _usColor);
-	/* window without caption */
+		/* window without caption */
     if(caption==NULL)
     {
-    	LCD_Fill_Rect(x_pos,y_pos,x_size,y_size,RGB(196,218,234));
+    	gui_device_g->gui_dev_ops_g->fill_dect(x_pos,y_pos,x_size,y_size,RGB(196,218,234));
     	return OK;
     }
     else
@@ -38,7 +38,7 @@ int window_show(struct gui_msg_t*p_msg)
 }
 
 
-struct gui_handler * window_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data))
+window_hwnd * window_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data))
 {
 	/* widget message */
 	memcpy(&window_handler.window.widget_msg,p_msg,sizeof(window_handler.window.widget_msg));
@@ -54,7 +54,7 @@ struct gui_handler * window_create(struct gui_msg_t*p_msg,int (*callback)(enum e
 	 *   window_insert(&window_handler);
 	 *
 	 * */
-    return &window_handler.window;
+    return &window_handler;
 }
 
 struct gui_operations window_ops = {

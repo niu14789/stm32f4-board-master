@@ -18,7 +18,7 @@ int gui_create(const char *device_availdable_list)
 	inode_vmn *p_vmn_start = inode_sched_getfiles();
 
 	struct gui_msg_t sert={
-			0,0,20,20,NULL,FOCUS_OFF
+			0,0,240,320,NULL,FOCUS_OFF
 	};
     /* create the default create */
 	window_create(&sert,NULL);
@@ -50,9 +50,9 @@ int widget_create(enum widget_type_t widget_type,struct gui_msg_t *p_gui_msg,int
 	return 0;
 }
 
-struct gui_handler * handler_current(void)
+window_hwnd * handler_current(void)
 {
-	return &window_handler.window;
+	return &window_handler;
 }
 
 
@@ -62,23 +62,23 @@ struct gui_handler * handler_current(void)
  * */
 struct gui_handler * handler_insert(struct gui_handler *insert_one)
 {
-	struct gui_handler * window_now_hwnd,*handler_t;
-
+	struct gui_handler *handler_t;
+  window_hwnd * window_now_hwnd;
 	window_now_hwnd = handler_current();
 
 	if(handler_current==NULL) /* can not find the window handler */
 		return NULL;
 
-	for(handler_t = window_now_hwnd;
-		handler_t->link!=NULL;
-		handler_t=handler_t->link)
-	{
-		/*nothing to do with it*/
-	}
-    /* insert it to the tail  */
-	handler_t->link = insert_one;
+	  for(handler_t = &window_now_hwnd->window;
+			handler_t->link!=NULL;
+			handler_t=handler_t->link)
+			{
+			/*nothing to do with it*/
+			}
+			/* insert it to the tail  */
+	  handler_t->link = insert_one;
 
-    return window_now_hwnd;
+    return &window_now_hwnd->window;
 }
 
 
@@ -95,6 +95,20 @@ int show(struct gui_handler *root)
 	return 0;
 }
 
+int refresh(void)
+{
+	struct gui_handler *p_root , *root;
+	
+	root = &handler_current()->window;
+	for(p_root=root;
+			p_root!=NULL;
+			p_root=p_root->link)
+	{
+		if(p_root->gui_ops->show!=NULL)
+			p_root->gui_ops->show(&p_root->widget_msg);
+	}
+	return 0;
+}
 
 
 

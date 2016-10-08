@@ -12,9 +12,9 @@
 int lcd_gui_callback(enum event_type event,void *data);
 
 struct gui_msg_t lcd_gui_msg = { /* as a button */
-	200,        /* x position */
-	100,        /* y position */
-	50,         /* x size     */
+	20,        /* x position */
+	20,        /* y position */
+	20,         /* x size     */
 	30,         /* y size     */
 	"lcd",      /* caption    */
 	FOCUS_OFF   /* init mode  */

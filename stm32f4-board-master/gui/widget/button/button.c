@@ -9,22 +9,14 @@
 #include "fs.h"
 #include "string.h"
 #include "gui.h"
-#include "display_device.h"
+#include "gui_config.h"
 /* memory  manager */
 #define RGB(R,G,B)	(((R >> 3) << 11) | ((G >> 2) << 5) | (B >> 3))
 struct gui_handler handler[10];
 static unsigned char handler_cnt = 0;
 
 /*                 */
-extern gui_device *gui_device_g;
 
-//#define gui_device_g->gui_dev_ops_g->set_line  gui_device_g->gui_dev_ops_g->set_line;
-//#define gui_device_g->gui_dev_ops_g->fill_dect gui_device_g->gui_dev_ops_g->fill_dect;
-//#define gui_device_g->gui_dev_ops_g->put_pixel  gui_device_g->gui_dev_ops_g->put_pixel;
-//#define gui_device_g->gui_dev_ops_g->get_pixel  gui_device_g->gui_dev_ops_g->get_pixel;
-
-// extern void gui_device_g->gui_dev_ops_g->set_line(uint16_t _usX1 , uint16_t _usY1 , uint16_t _usX2 , uint16_t _usY2 , uint16_t _usColor);
-// extern void gui_device_g->gui_dev_ops_g->fill_dect(uint16_t _usX, uint16_t _usY, uint16_t _usHeight, uint16_t _usWidth, uint16_t _usColor);
 window_hwnd  *  button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
 int button_onfocus(struct gui_msg_t*p_msg);
 int button_losefocus(struct gui_msg_t*p_msg);
@@ -38,6 +30,7 @@ char b;
 
 int button_create_aschild(uint16_t BUTTON_POS_X,uint16_t BUTTON_POS_Y,uint16_t BUTTON_SIZE_X,uint16_t BUTTON_SIZE_Y,char *caption,char mode )
 {
+	gui_device *gui_device_t;
 	unsigned short len = 0;
 	char event = mode;
 // 	FONT_T _FONT =
@@ -48,6 +41,9 @@ int button_create_aschild(uint16_t BUTTON_POS_X,uint16_t BUTTON_POS_Y,uint16_t B
 // 		0	
 // 	};
 	struct color_rgb color[10];
+
+	gui_device_t = gui_dev_ops_g();
+
 	if(event==0)
 	{
 		color[0].r =color[0].g=color[0].b=112;
@@ -71,89 +67,89 @@ int button_create_aschild(uint16_t BUTTON_POS_X,uint16_t BUTTON_POS_Y,uint16_t B
 	else
 	{
 	}
-	gui_device_g->gui_dev_ops_g->set_line(BUTTON_POS_X+3,BUTTON_POS_Y,BUTTON_POS_X+BUTTON_SIZE_X-3,BUTTON_POS_Y,RGB(color[0].r,color[0].g,color[0].b));
-	gui_device_g->gui_dev_ops_g->set_line(BUTTON_POS_X,BUTTON_POS_Y+3,BUTTON_POS_X,BUTTON_POS_Y+BUTTON_SIZE_Y-3,RGB(color[0].r,color[0].g,color[0].b));
-	gui_device_g->gui_dev_ops_g->set_line(BUTTON_POS_X+3,
+	gui_device_t->gui_dev_ops_g.set_line(BUTTON_POS_X+3,BUTTON_POS_Y,BUTTON_POS_X+BUTTON_SIZE_X-3,BUTTON_POS_Y,RGB(color[0].r,color[0].g,color[0].b));
+	gui_device_t->gui_dev_ops_g.set_line(BUTTON_POS_X,BUTTON_POS_Y+3,BUTTON_POS_X,BUTTON_POS_Y+BUTTON_SIZE_Y-3,RGB(color[0].r,color[0].g,color[0].b));
+	gui_device_t->gui_dev_ops_g.set_line(BUTTON_POS_X+3,
 	             BUTTON_POS_Y+BUTTON_SIZE_Y,
 	             BUTTON_POS_X+BUTTON_SIZE_X-3,
 	             BUTTON_POS_Y+BUTTON_SIZE_Y,
 	             RGB(color[0].r,color[0].g,color[0].b));
-	gui_device_g->gui_dev_ops_g->set_line(   BUTTON_POS_X+BUTTON_SIZE_X,
+	gui_device_t->gui_dev_ops_g.set_line(   BUTTON_POS_X+BUTTON_SIZE_X,
 					BUTTON_POS_Y+3,
 					BUTTON_POS_X+BUTTON_SIZE_X,
 					BUTTON_POS_Y+BUTTON_SIZE_Y-3,
 					RGB(color[0].r,color[0].g,color[0].b));
 	
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+1,BUTTON_POS_Y,RGB(color[1].r,color[1].g,color[1].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X,BUTTON_POS_Y+1,RGB(color[1].r,color[1].g,color[1].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+1,BUTTON_POS_Y+1,RGB(color[1].r,color[1].g,color[1].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+1,BUTTON_POS_Y,RGB(color[1].r,color[1].g,color[1].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X,BUTTON_POS_Y+1,RGB(color[1].r,color[1].g,color[1].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+1,BUTTON_POS_Y+1,RGB(color[1].r,color[1].g,color[1].b));
 	
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+2,BUTTON_POS_Y,RGB(color[2].r,color[2].g,color[2].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X,BUTTON_POS_Y+2,RGB(color[2].r,color[2].g,color[2].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+2,BUTTON_POS_Y,RGB(color[2].r,color[2].g,color[2].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X,BUTTON_POS_Y+2,RGB(color[2].r,color[2].g,color[2].b));
 	
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+2,BUTTON_POS_Y+1,RGB(color[3].r,color[3].g,color[3].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+1,BUTTON_POS_Y+2,RGB(color[3].r,color[3].g,color[3].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+2,BUTTON_POS_Y+1,RGB(color[3].r,color[3].g,color[3].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+1,BUTTON_POS_Y+2,RGB(color[3].r,color[3].g,color[3].b));
 	
 	/*---------*/
 	
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+1,BUTTON_POS_Y+BUTTON_SIZE_Y,RGB(color[1].r,color[1].g,color[1].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X,BUTTON_POS_Y+BUTTON_SIZE_Y-1,RGB(color[1].r,color[1].g,color[1].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+1,BUTTON_POS_Y+BUTTON_SIZE_Y-1,RGB(color[1].r,color[1].g,color[1].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+1,BUTTON_POS_Y+BUTTON_SIZE_Y,RGB(color[1].r,color[1].g,color[1].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X,BUTTON_POS_Y+BUTTON_SIZE_Y-1,RGB(color[1].r,color[1].g,color[1].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+1,BUTTON_POS_Y+BUTTON_SIZE_Y-1,RGB(color[1].r,color[1].g,color[1].b));
 	
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+2,BUTTON_POS_Y+BUTTON_SIZE_Y,RGB(color[2].r,color[2].g,color[2].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X,BUTTON_POS_Y+BUTTON_SIZE_Y-2,RGB(color[2].r,color[2].g,color[2].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+2,BUTTON_POS_Y+BUTTON_SIZE_Y,RGB(color[2].r,color[2].g,color[2].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X,BUTTON_POS_Y+BUTTON_SIZE_Y-2,RGB(color[2].r,color[2].g,color[2].b));
 	
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+2,BUTTON_POS_Y+BUTTON_SIZE_Y-1,RGB(color[3].r,color[3].g,color[3].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+1,BUTTON_POS_Y+BUTTON_SIZE_Y-2,RGB(color[3].r,color[3].g,color[3].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+2,BUTTON_POS_Y+BUTTON_SIZE_Y-1,RGB(color[3].r,color[3].g,color[3].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+1,BUTTON_POS_Y+BUTTON_SIZE_Y-2,RGB(color[3].r,color[3].g,color[3].b));
 	
 	/*--------*/
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-1,BUTTON_POS_Y+BUTTON_SIZE_Y,RGB(color[1].r,color[1].g,color[1].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X,BUTTON_POS_Y-1+BUTTON_SIZE_Y,RGB(color[1].r,color[1].g,color[1].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-1,BUTTON_POS_Y-1+BUTTON_SIZE_Y,RGB(color[1].r,color[1].g,color[1].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-1,BUTTON_POS_Y+BUTTON_SIZE_Y,RGB(color[1].r,color[1].g,color[1].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X,BUTTON_POS_Y-1+BUTTON_SIZE_Y,RGB(color[1].r,color[1].g,color[1].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-1,BUTTON_POS_Y-1+BUTTON_SIZE_Y,RGB(color[1].r,color[1].g,color[1].b));
 	
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-2,BUTTON_POS_Y+BUTTON_SIZE_Y,RGB(color[2].r,color[2].g,color[2].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X,BUTTON_POS_Y-2+BUTTON_SIZE_Y,RGB(color[2].r,color[2].g,color[2].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-2,BUTTON_POS_Y+BUTTON_SIZE_Y,RGB(color[2].r,color[2].g,color[2].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X,BUTTON_POS_Y-2+BUTTON_SIZE_Y,RGB(color[2].r,color[2].g,color[2].b));
 	
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-2,BUTTON_POS_Y+BUTTON_SIZE_Y-1,RGB(color[3].r,color[3].g,color[3].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-1,BUTTON_POS_Y+BUTTON_SIZE_Y-2,RGB(color[3].r,color[3].g,color[3].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-2,BUTTON_POS_Y+BUTTON_SIZE_Y-1,RGB(color[3].r,color[3].g,color[3].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-1,BUTTON_POS_Y+BUTTON_SIZE_Y-2,RGB(color[3].r,color[3].g,color[3].b));
 	/*--*/
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-1,BUTTON_POS_Y,RGB(color[1].r,color[1].g,color[1].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X,BUTTON_POS_Y+1,RGB(color[1].r,color[1].g,color[1].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-1,BUTTON_POS_Y+1,RGB(color[1].r,color[1].g,color[1].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-1,BUTTON_POS_Y,RGB(color[1].r,color[1].g,color[1].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X,BUTTON_POS_Y+1,RGB(color[1].r,color[1].g,color[1].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-1,BUTTON_POS_Y+1,RGB(color[1].r,color[1].g,color[1].b));
 	
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-2,BUTTON_POS_Y,RGB(color[2].r,color[2].g,color[2].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X,BUTTON_POS_Y+2,RGB(color[2].r,color[2].g,color[2].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-2,BUTTON_POS_Y,RGB(color[2].r,color[2].g,color[2].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X,BUTTON_POS_Y+2,RGB(color[2].r,color[2].g,color[2].b));
 	/*----------*/
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-2,BUTTON_POS_Y+1,RGB(color[3].r,color[3].g,color[3].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-1,BUTTON_POS_Y+2,RGB(color[3].r,color[3].g,color[3].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-2,BUTTON_POS_Y+1,RGB(color[3].r,color[3].g,color[3].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-1,BUTTON_POS_Y+2,RGB(color[3].r,color[3].g,color[3].b));
 	/*--*/
-	gui_device_g->gui_dev_ops_g->fill_dect(BUTTON_POS_X+2,BUTTON_POS_Y+2,BUTTON_SIZE_Y/2-2,BUTTON_SIZE_X-3,RGB(color[4].r,color[4].g,color[4].b));
-	gui_device_g->gui_dev_ops_g->fill_dect(BUTTON_POS_X+2,BUTTON_POS_Y+BUTTON_SIZE_Y/2,BUTTON_SIZE_Y/2-1,BUTTON_SIZE_X-3,RGB(color[5].r,color[5].g,color[5].b));
+	gui_device_t->gui_dev_ops_g.fill_dect(BUTTON_POS_X+2,BUTTON_POS_Y+2,BUTTON_SIZE_Y/2-2,BUTTON_SIZE_X-3,RGB(color[4].r,color[4].g,color[4].b));
+	gui_device_t->gui_dev_ops_g.fill_dect(BUTTON_POS_X+2,BUTTON_POS_Y+BUTTON_SIZE_Y/2,BUTTON_SIZE_Y/2-1,BUTTON_SIZE_X-3,RGB(color[5].r,color[5].g,color[5].b));
 	
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+2, BUTTON_POS_Y+2, RGB(color[6].r,color[6].g,color[6].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-2, BUTTON_POS_Y+2,RGB(color[6].r,color[6].g,color[6].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-2, BUTTON_POS_Y+BUTTON_SIZE_Y-2,RGB(color[6].r,color[6].g,color[6].b));
-	gui_device_g->gui_dev_ops_g->put_pixel(BUTTON_POS_X+2, BUTTON_POS_Y+BUTTON_SIZE_Y-2,RGB(color[6].r,color[6].g,color[6].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+2, BUTTON_POS_Y+2, RGB(color[6].r,color[6].g,color[6].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-2, BUTTON_POS_Y+2,RGB(color[6].r,color[6].g,color[6].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+BUTTON_SIZE_X-2, BUTTON_POS_Y+BUTTON_SIZE_Y-2,RGB(color[6].r,color[6].g,color[6].b));
+	gui_device_t->gui_dev_ops_g.put_pixel(BUTTON_POS_X+2, BUTTON_POS_Y+BUTTON_SIZE_Y-2,RGB(color[6].r,color[6].g,color[6].b));
 
-    gui_device_g->gui_dev_ops_g->set_line(BUTTON_POS_X+3,
+    gui_device_t->gui_dev_ops_g.set_line(BUTTON_POS_X+3,
 	             BUTTON_POS_Y+1,
 	             BUTTON_POS_X+BUTTON_SIZE_X-3,
 	             BUTTON_POS_Y+1,
 	             RGB(color[6].r,color[6].g,color[6].b));
 							 
-	gui_device_g->gui_dev_ops_g->set_line(BUTTON_POS_X+1,
+	gui_device_t->gui_dev_ops_g.set_line(BUTTON_POS_X+1,
 	             BUTTON_POS_Y+3,
 	             BUTTON_POS_X+1,
 	             BUTTON_POS_Y+BUTTON_SIZE_Y-3,
 	             RGB(color[6].r,color[6].g,color[6].b));
 							 
-	gui_device_g->gui_dev_ops_g->set_line(BUTTON_POS_X+BUTTON_SIZE_X-1,
+	gui_device_t->gui_dev_ops_g.set_line(BUTTON_POS_X+BUTTON_SIZE_X-1,
 	             BUTTON_POS_Y+3,
 	             BUTTON_POS_X+BUTTON_SIZE_X-1,
 	             BUTTON_POS_Y+BUTTON_SIZE_Y-3,
 	             RGB(color[6].r,color[6].g,color[6].b));
 	
-	gui_device_g->gui_dev_ops_g->set_line(BUTTON_POS_X+3,
+	gui_device_t->gui_dev_ops_g.set_line(BUTTON_POS_X+3,
 	             BUTTON_POS_Y+BUTTON_SIZE_Y-1,
 	             BUTTON_POS_X+BUTTON_SIZE_X-3,
 	             BUTTON_POS_Y+BUTTON_SIZE_Y-1,
@@ -177,19 +173,22 @@ void rect_move(unsigned short next_xpos,unsigned short next_ypos,unsigned color)
 	static char first_flag = 0;
 	int i;
 	int pixel_cnt = 0;
+	gui_device *gui_device_t;
 	
+	gui_device_t = gui_dev_ops_g();
+
 	if(!first_flag) /* first time ? */
 	{
 		first_flag = 1;
 		for(i=0,pixel_cnt=0;i<MOVE_RECT_SIXE*MOVE_RECT_SIXE;i++)
 		{
-			gbuf[pixel_cnt] = gui_device_g->gui_dev_ops_g->get_pixel(next_xpos+pixel_cnt/MOVE_RECT_SIXE,next_ypos+pixel_cnt%MOVE_RECT_SIXE);
+			gbuf[pixel_cnt] = gui_device_t->gui_dev_ops_g.get_pixel(next_xpos+pixel_cnt/MOVE_RECT_SIXE,next_ypos+pixel_cnt%MOVE_RECT_SIXE);
 			pixel_cnt++;
 		}
 
 		for(i=0,pixel_cnt=0;i<MOVE_RECT_SIXE*MOVE_RECT_SIXE;i++)
 		{
-			gui_device_g->gui_dev_ops_g->put_pixel(next_xpos+pixel_cnt/MOVE_RECT_SIXE,next_ypos+pixel_cnt%MOVE_RECT_SIXE,color);
+			gui_device_t->gui_dev_ops_g.put_pixel(next_xpos+pixel_cnt/MOVE_RECT_SIXE,next_ypos+pixel_cnt%MOVE_RECT_SIXE,color);
 			pixel_cnt++;
 		}
 	}
@@ -197,19 +196,19 @@ void rect_move(unsigned short next_xpos,unsigned short next_ypos,unsigned color)
 	{
 			for(i=0,pixel_cnt=0;i<MOVE_RECT_SIXE*MOVE_RECT_SIXE;i++)/* put last pixel */
 			{
-			    gui_device_g->gui_dev_ops_g->put_pixel(last_xpost+pixel_cnt/MOVE_RECT_SIXE,last_ypost+pixel_cnt%MOVE_RECT_SIXE,gbuf[pixel_cnt]);
+			    gui_device_t->gui_dev_ops_g.put_pixel(last_xpost+pixel_cnt/MOVE_RECT_SIXE,last_ypost+pixel_cnt%MOVE_RECT_SIXE,gbuf[pixel_cnt]);
 				pixel_cnt++;
 			}
 
 			for(i=0,pixel_cnt=0;i<MOVE_RECT_SIXE*MOVE_RECT_SIXE;i++)/* get the new field */
 			{
-				gbuf[pixel_cnt] = gui_device_g->gui_dev_ops_g->get_pixel(next_xpos+pixel_cnt/MOVE_RECT_SIXE,next_ypos+pixel_cnt%MOVE_RECT_SIXE);
+				gbuf[pixel_cnt] = gui_device_t->gui_dev_ops_g.get_pixel(next_xpos+pixel_cnt/MOVE_RECT_SIXE,next_ypos+pixel_cnt%MOVE_RECT_SIXE);
 				pixel_cnt++;
 			}
 
 			for(i=0,pixel_cnt=0;i<MOVE_RECT_SIXE*MOVE_RECT_SIXE;i++)
 			{
-				gui_device_g->gui_dev_ops_g->put_pixel(next_xpos+pixel_cnt/MOVE_RECT_SIXE,next_ypos+pixel_cnt%MOVE_RECT_SIXE,color);
+				gui_device_t->gui_dev_ops_g.put_pixel(next_xpos+pixel_cnt/MOVE_RECT_SIXE,next_ypos+pixel_cnt%MOVE_RECT_SIXE,color);
 				pixel_cnt++;
 			}
 	}

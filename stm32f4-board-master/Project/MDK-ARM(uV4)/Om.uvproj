@@ -627,9 +627,9 @@
               <FilePath>..\..\gui\widget\window\window.c</FilePath>
             </File>
             <File>
-              <FileName>display_device.c</FileName>
+              <FileName>gui_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\gui\gui_config\display_device.c</FilePath>
+              <FilePath>..\..\gui\gui_config\gui_config.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1336,9 +1336,9 @@
               <FilePath>..\..\gui\widget\window\window.c</FilePath>
             </File>
             <File>
-              <FileName>display_device.c</FileName>
+              <FileName>gui_config.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\gui\gui_config\display_device.c</FilePath>
+              <FilePath>..\..\gui\gui_config\gui_config.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -1,7 +1,7 @@
 /*
  * window.c
  *
- *  Created on: 2016年5月26日
+ *  Created on: 2016骞�5鏈�26鏃�
  *      Author: YJ-User17
  */
 
@@ -9,20 +9,23 @@
 #include "gui.h"
 #include "string.h"
 #include "lcd_hw.h"
-#include "display_device.h"
+#include "gui_config.h"
 
 /* should be macro */
 /* as use the handler */
 window_hwnd  window_handler;
 
 struct gui_operations window_ops;
-extern gui_device *gui_device_g;
+
 int window_create_asparent(uint16_t x_pos,uint16_t y_pos,uint16_t x_size,uint16_t y_size,char *caption,char mode)
 {
+	gui_device *gui_device_t;
+
+	gui_device_t = gui_dev_ops_g();
 		/* window without caption */
     if(caption==NULL)
     {
-    	gui_device_g->gui_dev_ops_g->fill_dect(x_pos,y_pos,x_size,y_size,RGB(196,218,234));
+    	gui_device_t->gui_dev_ops_g.fill_dect(x_pos,y_pos,x_size,y_size,RGB(196,218,234));
     	return OK;
     }
     else

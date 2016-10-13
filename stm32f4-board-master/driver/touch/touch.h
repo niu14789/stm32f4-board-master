@@ -1,7 +1,7 @@
 /*
  * touch.h
  *
- *  Created on: 2016Äê10ÔÂ12ÈÕ
+ *  Created on: 2016ï¿½ï¿½10ï¿½ï¿½12ï¿½ï¿½
  *      Author: Administrator
  */
 
@@ -10,6 +10,6 @@
 
 
 
-
+int touch2_init(void);
 
 #endif /* DRIVER_TOUCH_TOUCH_H_ */

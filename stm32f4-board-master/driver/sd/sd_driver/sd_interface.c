@@ -35,7 +35,7 @@ struct inode inode_sd =
 	"sd.d"
 };
 
-FS_REGISTER(FS_DEVICE("sd.d"),inode_sd);
+FS_REGISTER(FS_FILE("sd.d"),inode_sd);
 
 int sd_device_open(struct file * filp)
 {

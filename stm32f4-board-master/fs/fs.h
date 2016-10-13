@@ -28,17 +28,21 @@ typedef struct inode_vmn_t
    struct inode *inode;
 }inode_vmn;
 
-#define __FS_DEVICE__   "/dev/"
-#define __FS_FILE__     "/sdcard/"
-#define __FS_DRV__      "/drv/"
-#define __FS_INPUT__    "/input_dev/"
-#define __FS_EEPROM__   "/eeprom/"
-#define __FS_FLASH__    "/flash/"
+#define __FS_DEVICE__      "/dev/"
+#define __FS_FILE__        "/sdcard"
+#define __FS_DRV__         "/drv/"
+#define __FS_INPUT__       "/dev/input/"
+#define __FS_EEPROM__      "/less/eeprom"
+#define __FS_SPIFLASH__    "/less/spiflash"
+#define __FS_FLASH__       "/less/flash"
 
-#define FS_DEVICE(x)   (__FS_DEVICE__##x)
-#define FS_FILE(x)     (__FS_FILE__##x)
-#define FS_DRV(x)      (__FS_DRV__##x)
-#define FS_INPUT(x)    (__FS_INPUT__##x)
+#define FS_DEVICE(x)       (__FS_DEVICE__##x)
+#define FS_FILE(...)       (__FS_FILE__)
+#define FS_DRV(x)          (__FS_DRV__##x)
+#define FS_INPUT(x)        (__FS_INPUT__##x)
+#define FS_EEPROM(...)     (__FS_EEPROM__)
+#define FS_SPIFLASH(x)     (__FS_SPIFLASH__##x)
+#define FS_FLASH(x)        (__FS_FLASH__##x)
 
 #define __INIT __attribute__((unused, section("fs_vmn")))
 #define FS_REGISTER(inode_name,node_t) const inode_vmn __FS_##node_t __INIT =      \
@@ -46,12 +50,6 @@ typedef struct inode_vmn_t
 	inode_name,                                                                    \
 	&node_t                                                                        \
 }                                                                                  \
-
-#define FS_REGISTER_START(inode_name,node_t) const inode_vmn __FS_START__ __INIT = \
-{                                                                                  \
-	inode_name,                                                                    \
-	&node_t                                                                        \
-}   
 
 struct inode;
 

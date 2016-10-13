@@ -12,7 +12,6 @@
 #include "lcd_hw.h"
 #include "gui.h"
 
-
 static unsigned int sram_test[0xffff] __attribute__((at(0x68000000)));
 
 int delay_ms(struct file * filp);

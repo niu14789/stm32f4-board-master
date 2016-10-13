@@ -9,7 +9,7 @@
 #include "gui.h"
 #include "server.h"
 
-#define QUEUE_PATH  "/etc/queue.d"
+#define QUEUE_PATH  "/dev/queue.d"
 
 static int fd_queue = 0;
 static int fd_queuel0 = 0;
@@ -20,7 +20,7 @@ int gui_server(void)
   static char flag = 0;
   if(!flag) /* is first time enter */
   {
-	  fd_queue = open("/etc/queue.d",__ONLYREAD);
+	  fd_queue = open("/dev/queue.d",__ONLYREAD);
 	  if(fd_queue != ERR)
 	  {
 		  printf_d("[gui_server] the queue open ok!\n");
@@ -107,7 +107,7 @@ int gui_event_check(void)
 		return ERR;  /* queue init error ,direct return */
 
 	if( !fd_queuel0 )
-		 fd_queuel0 = open("/etc/queuel0.d",__ONLYREAD);
+		 fd_queuel0 = open("/dev/queuel0.d",__ONLYREAD);
 
 	ret = read(fd_queuel0,(char *)&gui_msgl0,sizeof(gui_msgl0));
 
@@ -150,7 +150,7 @@ int gui_revert_widget(struct gui_handler * p_gui_root,struct gui_handler * p_gui
 	   if(p_gui->status == FOCUS_ON)
 	   {
 		   if(!fd_queue)
-			   fd_queue = open("/etc/queuel0.d",__ONLYREAD);
+			   fd_queue = open("/dev/queuel0.d",__ONLYREAD);
 
 		   if(p_gui == p_gui_same)
 			   return ERR;
@@ -173,10 +173,10 @@ int gui_key_event_check(char *buffer)
 	static int fd_key = 0;
 	gui_msg_l0 gui_key;
 	if(!fd_key)
-	  fd_key = open("/etc/key.d",__ONLYREAD);
+	  fd_key = open("/dev/key.d",__ONLYREAD);
 
 	if(!fd_queuel0)
-		 fd_queuel0 = open("/etc/queuel0.d",__ONLYREAD);
+		 fd_queuel0 = open("/dev/queuel0.d",__ONLYREAD);
 
 	if(fd_key==ERR)
 	  return ERR; /*open fail*/

@@ -134,7 +134,7 @@ int main(void)
 // 		 
 // 		 gui_key_event_check(key_buffer);
 
-// 		 gui_server();
+ 		 gui_server();
 
 		 rect_move(x,y,RGB(r,g,b));
 		 x+=xs;

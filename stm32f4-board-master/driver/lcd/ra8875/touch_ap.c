@@ -454,7 +454,7 @@ void touch_test()
 		
 		
 		if(!fd)
-		  fd = open("/etc/queuel0.d",__ONLYREAD);
+		  fd = open("/dev/queuel0.d",__ONLYREAD);
 		
 		touch_msg.x_pos = touch_now_x;
 		touch_msg.y_pos = touch_now_y;

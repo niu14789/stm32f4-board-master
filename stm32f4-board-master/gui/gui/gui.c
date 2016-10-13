@@ -18,7 +18,7 @@ int gui_create(const char *device_availdable_list)
 	inode_vmn *p_vmn_start = inode_sched_getfiles();
 
 	struct gui_msg_t sert={
-			0,0,240,320,NULL,FOCUS_OFF
+			0,0,10,10,NULL,FOCUS_OFF
 	};
     /* create the default create */
 	window_create(&sert,NULL);

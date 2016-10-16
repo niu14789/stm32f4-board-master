@@ -9,7 +9,12 @@
 #define __BUTTON_H__
 
 
-int button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
+window_hwnd * button_create(window_hwnd * hwnd,struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
 
+/*                 */
+
+int button_onfocus(struct gui_msg_t*p_msg);
+int button_losefocus(struct gui_msg_t*p_msg);
+int button_show(struct gui_msg_t*p_msg);
 
 #endif /* __BUTTON_H__ */

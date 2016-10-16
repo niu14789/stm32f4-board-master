@@ -10,6 +10,11 @@
 #include "string.h"
 #include "lcd_hw.h"
 #include "gui_config.h"
+#include "window.h"
+
+
+
+extern int gui_draw_bmp( const struct gui_msg_t * p_msg , unsigned int __MODE__);
 
 /* should be macro */
 /* as use the handler */
@@ -37,11 +42,12 @@ int window_create_asparent(uint16_t x_pos,uint16_t y_pos,uint16_t x_size,uint16_
 
 int window_show(struct gui_msg_t*p_msg)
 {
-	return window_create_asparent(p_msg->x,p_msg->y,p_msg->xsize,p_msg->ysize,p_msg->caption,p_msg->mode);
+	gui_draw_bmp(p_msg,0);
+	return 0;//window_create_asparent(p_msg->x,p_msg->y,p_msg->xsize,p_msg->ysize,p_msg->caption,p_msg->mode);
 }
 
 
-window_hwnd * window_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data))
+window_hwnd * window_create(window_hwnd * hwnd,struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data))
 {
 	/* widget message */
 	memcpy(&window_handler.window.widget_msg,p_msg,sizeof(window_handler.window.widget_msg));

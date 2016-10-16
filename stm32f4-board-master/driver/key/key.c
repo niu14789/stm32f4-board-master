@@ -5,6 +5,8 @@
 #include "key.h"
 #include "key_gui.h"
 
+static struct file key_file;
+
 struct file_operations key_ops =
 {
   key_device_open,
@@ -27,10 +29,13 @@ struct inode inode_key =
 
 FS_REGISTER(FS_DEVICE("key.d"),inode_key);
 
-int key_device_open(struct file * filp)
+struct file * key_device_open(struct file * filp)
 {
 	/* open always ok */
-	return 0;
+	key_file.f_inode = &inode_key;
+	key_file.f_oflags = filp->f_oflags;
+
+	return &key_file;
 }
 
 int32_t key_write(FAR struct file *filp, FAR const char *buffer, uint32_t buflen)
@@ -38,7 +43,7 @@ int32_t key_write(FAR struct file *filp, FAR const char *buffer, uint32_t buflen
 	/* open always ok */
 	return 0;
 }
-int32_t key_read(FAR struct file *filp, FAR char *buffer, uint32_t buflen)
+uint32_t key_read(FAR struct file *filp, FAR char *buffer, uint32_t buflen)
 {
 	static char key_flag = 0;
 	if(!KEY0)
@@ -77,7 +82,7 @@ int32_t key_read(FAR struct file *filp, FAR char *buffer, uint32_t buflen)
 		  return OK;
 	  }
 	}
-  return ERR;
+  return 0xffffffff;
 }
 int key_init(void)
 {

@@ -31,10 +31,12 @@ struct inode inode_lcd =
 //FS_REGISTER(FS_DEVICE("lcd1.d"),inode_lcd);
 
 
-int lcd_device_open(struct file * filp)
+struct file * lcd_device_open(struct file * filp)
 {
+	static struct file filp_lcd;
+	filp_lcd.f_inode = &inode_lcd;
 	/* open always ok */
-	return 0;
+	return &filp_lcd;
 }
 
 int32_t lcd_write(FAR struct file *filp, FAR const char *buffer, uint32_t buflen) 

@@ -8,6 +8,7 @@
 #include "gui.h"
 #include "button.h"
 #include "window.h"
+#include "gui_config.h"
 
 extern window_hwnd  window_handler;
 
@@ -15,13 +16,34 @@ int show(struct gui_handler *root);
 
 int gui_create(const char *device_availdable_list)
 {
+	gui_device *gui_device_t  = gui_dev_ops_g();
+
 	inode_vmn *p_vmn_start = inode_sched_getfiles();
 
-	struct gui_msg_t sert={
-			0,0,10,10,NULL,FOCUS_OFF
+	gui_message gui_msg_tmp =
+	{
+		0,
+		0,
+		0,
+		0,
+		"main_window",
+		"/sdcard/main.bmp",
+		0,
+		0,
+		__GUI_WIDGET_MODE_1     | /* pic mode , with caption */
+		__GUI_WIDGET_TYPE_OCT   | /* right angle mode */
+		__GUI_WIDGET_FRAME_NONE | /* without frame */
+		__GUI_WIDGET_THEME_0    | /* theme 0 */
+		__GUI_WIDGET_HANDLE       /* no ues */
 	};
+	
+	gui_msg_tmp.xsize = gui_device_t->gui_device_msg.xsize;
+	gui_msg_tmp.ysize = gui_device_t->gui_device_msg.ysize;
+	gui_msg_tmp.x_size_pic = gui_device_t->gui_device_msg.xsize; /* full of window */
+	gui_msg_tmp.y_size_pic = gui_device_t->gui_device_msg.ysize; /* full of window */
+	
     /* create the default create */
-	window_create(&sert,NULL);
+	window_create(&window_handler,&gui_msg_tmp,NULL);
 
     while(*device_availdable_list != DEVICE_END )
     {
@@ -42,7 +64,7 @@ int widget_create(enum widget_type_t widget_type,struct gui_msg_t *p_gui_msg,int
     switch(widget_type)
     {
 		case button:
-			button_create(p_gui_msg,callback);
+			button_create(&window_handler,p_gui_msg,callback);
 		  return 0;
 		default:
 		  break;
@@ -60,25 +82,21 @@ window_hwnd * handler_current(void)
  *    insert the handler to the list
  *    and return the root pointer
  * */
-struct gui_handler * handler_insert(struct gui_handler *insert_one)
+struct gui_handler * handler_insert(window_hwnd * hwnd,struct gui_handler *insert_one)
 {
-	struct gui_handler *handler_t;
-  window_hwnd * window_now_hwnd;
-	window_now_hwnd = handler_current();
 
-	if(handler_current==NULL) /* can not find the window handler */
-		return NULL;
+  struct gui_handler *handler_t;
 
-	  for(handler_t = &window_now_hwnd->window;
-			handler_t->link!=NULL;
-			handler_t=handler_t->link)
-			{
-			/*nothing to do with it*/
-			}
+  for( handler_t = &hwnd->window;
+	   handler_t->link!=NULL;
+	   handler_t=handler_t->link)
+	   {
+		/*nothing to do with it*/
+	   }
 			/* insert it to the tail  */
-	  handler_t->link = insert_one;
+	handler_t->link = insert_one;
 
-    return &window_now_hwnd->window;
+	return &hwnd->window;
 }
 
 

@@ -17,34 +17,8 @@ static unsigned int sram_test[0xffff] __attribute__((at(0x68000000)));
 int delay_ms(struct file * filp);
 int delay_ms1(void);
 
-extern int32_t write(int fd, FAR const char *buffer, uint32_t buflen);
-
 int lcd_fd = 0;
 
-struct file_operations f_ops =
-{
-  delay_ms,
-};
-
-// struct inode inode_start = 
-// {
-// 	NULL,
-// 	NULL,
-// 	0,
-// 	FS_INODE_USABLE,
-// 	&f_ops,
-// 	NULL,
-// 	NULL,
-// 	delay_ms1,
-// 	NULL
-// };
-
-// FS_REGISTER_START("/etc/inode_start.d",inode_start);
-
-int delay_ms(struct file * filp)
-{
-  return 0;
-}
 
 int delay_ms1(void)
 {
@@ -77,6 +51,9 @@ int main(void)
 {
 
  	  int x=0,y=0,xs=5,ys=3;
+	
+//	  struct file *fd1,*fd2,*fd3,*fd4,*fd5;
+	
  	  unsigned short r=122,g=90,b=12;
       char device_availdable_list[20];
 //      char key_buffer[3];
@@ -99,35 +76,37 @@ int main(void)
  	 gui_create(device_availdable_list);
 	button_create(&bu_rect,NULL);
 	refresh();
-// 	 TOUCH_InitHard();
 
-// 	 touch_calibration();
-// 	 FSMC_SRAM_Init();
+	   stm32_usart_init(USART3,PB10_PB11,57600);
 	 
-// 	 write(lcd_fd,"sram test",14);
-// 	 {
-// 		 unsigned int i;
-// 		 char t[100];
-// 		 for(i=0;i<0xffff;i++)
-// 		 {
-// 			 sram_test[i] = i;
-// 		 }
-// 		 
-// 		 for(i=0;i<0xffff;i++)
-// 		 {
-// 			 if(sram_test[i] != i)
-// 			 {
-// 				 sprintf(t,"sram_test[i]->0x%x,i->0x%x",sram_test[i],i);
-// 				 write(lcd_fd,"sram error",14);
-// 				 write(lcd_fd,t,14);
-// 				 break;
-// 			 }
-// 		 }
-// 		 if(i==0xffff)
-// 			 write(lcd_fd,"sram ok",14);
-// 	 }
-	 stm32_usart_init(USART3,PB10_PB11,57600);
-	 
+//     fd1 = open("/sdcard/oma.txt",__FS_CREATE_ALWAYS | __FS_WRITE);
+//
+//     write(fd1,"AAAAAAAAAA",10);
+//
+//     fd2 = open("/sdcard/omb.txt",__FS_CREATE_ALWAYS | __FS_WRITE);
+//
+//     write(fd2,"BBBBBBBBBB",10);
+//
+//     fd3 = open("/sdcard/omc.txt",__FS_CREATE_ALWAYS | __FS_WRITE);
+//
+//     write(fd3,"CCCCCCCCCC",10);
+//
+//     fd4 = open("/sdcard/omd.txt",__FS_CREATE_ALWAYS | __FS_WRITE);
+//
+//     write(fd4,"DDDDDDDDDD",10);
+//
+//     fd5 = open("/sdcard/ome.txt",__FS_CREATE_ALWAYS | __FS_WRITE);
+//
+//     write(fd5,"EEEEEEEEEE",10);
+//
+//     close(fd5);
+//
+//     mkdir("/sdcard/t1/t2");
+//     mkdir("/sdcard/trrt");
+//
+//		 fd5 = open("/sdcard/trrt/om_niu.txt",__FS_CREATE_ALWAYS | __FS_WRITE);
+//		 write(fd5,"niuniuniuniu",12);
+
 	 while(1)
  	 {
 // 		 touch_test();

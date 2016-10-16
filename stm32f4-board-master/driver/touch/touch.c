@@ -192,11 +192,13 @@ u8 TP_Read_XY2(u16 *x,u16 *y)
 u8 TP_Scan(u8 tp)
 {
 	static unsigned short x,y;
-	static int fd = 0,flag = 0;
+	static struct file *fd = NULL;
+	static int flag = 0;
 	gui_msg_l0 touch_msg;
 	
-		if(!fd)
-		  fd = open("/dev/queuel0.d",__ONLYREAD);
+	if(fd == NULL)
+		fd = open("/dev/queuel0.d",__FS_OPEN_EXISTING | __FS_WRITE);
+	
 	if(flag)
 	{
 		touch_msg.x_pos = 25;

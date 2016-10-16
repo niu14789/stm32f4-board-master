@@ -10,17 +10,13 @@
 #include "string.h"
 #include "gui.h"
 #include "gui_config.h"
+#include "button.h"
+
 /* memory  manager */
 #define RGB(R,G,B)	(((R >> 3) << 11) | ((G >> 2) << 5) | (B >> 3))
 struct gui_handler handler[10];
 static unsigned char handler_cnt = 0;
 
-/*                 */
-
-window_hwnd  *  button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
-int button_onfocus(struct gui_msg_t*p_msg);
-int button_losefocus(struct gui_msg_t*p_msg);
-int button_show(struct gui_msg_t*p_msg);
 
 struct color_rgb{
 char r;
@@ -225,7 +221,7 @@ struct gui_operations button_draw_ops = {
 };
 
 /* widget create */
-window_hwnd  * button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data))
+window_hwnd * button_create(window_hwnd * hwnd,struct gui_msg_t * p_msg,int (*callback)(enum event_type,void *data))
 {
 	unsigned char now = handler_cnt;
 	/* copy the widget msg to handler */
@@ -243,10 +239,10 @@ window_hwnd  * button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_t
 	handler[now].link = NULL;
 	/* template */
 	handler_cnt++;
-
-	handler_insert(&handler[now]);
-
-	return NULL;/*&handler[now];*/
+#if 1
+	handler_insert(hwnd,&handler[now]);
+#endif
+	return NULL;
 }
 
 int button_show(struct gui_msg_t*p_msg)

@@ -55,17 +55,17 @@ typedef struct queue_t{
 
 
 	/* function queue msg*/
-	int queue_device_open(struct file * filp);
+    struct file * queue_device_open(struct file * filp);
 	int32_t queue_write(FAR struct file *filp, FAR const char *buffer, uint32_t buflen);
-	int32_t queue_read(FAR struct file *filp, FAR char *buffer, uint32_t buflen);
+	uint32_t queue_read(FAR struct file *filp, FAR char *buffer, uint32_t buflen);
 	int queue_init(void);
 	int queue_create(unsigned short ID,unsigned short deepth);
 	int queue_write_t(const char *data,unsigned short len);
 	int queue_read_t(void *data,unsigned short len);
 	/* for l0*/
-	int queuel0_device_open(struct file * filp);
+	struct file * queuel0_device_open(struct file * filp);
 	int32_t queuel0_write(FAR struct file *filp, FAR const char *buffer, uint32_t buflen);
-	int32_t queuel0_read(FAR struct file *filp, FAR char *buffer, uint32_t buflen);
+	uint32_t queuel0_read(FAR struct file *filp, FAR char *buffer, uint32_t buflen);
 	int queuel0_init(void);
 	int queuel0_create(unsigned short ID,unsigned short deepth);
 	int queuel0_write_t(const char *data,unsigned short len);

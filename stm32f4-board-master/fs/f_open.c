@@ -2,9 +2,8 @@
 
 #include "fs.h"
 
-int open(const char *path, int oflags)
+struct file * open(const char *path, int oflags)
 {
-  int ret; /* file device */
   inode_vmn   *p_vmn_start;
   struct file filp;
   struct fd_find *fd;
@@ -17,15 +16,30 @@ int open(const char *path, int oflags)
 
   fd = inode_find(p_vmn_start,path,(const char **)NULL);
 	
-  if(fd!=NULL)
+  if( fd != NULL )
   {
 	  /* Yes...we match it */
 	  filp.f_oflags = oflags;
-	  ret = fd->inode_find->inode->u.i_ops->open(&filp);
+	  /* send the path to ops  */
+	  filp.f_path = path;
+	  /*
+	   *
+	   */
+	  if( fd->inode_find->inode->u.i_ops->open != NULL )
+	     return fd->inode_find->inode->u.i_ops->open(&filp);
 	  /* if we get the right value(OK),then we return fd */
-	  if(ret!=ERR)
-		  return fd->fd;
   }
-  return ERR;
+  return NULL;
 }
+
+
+
+
+
+
+
+
+
+
+
 

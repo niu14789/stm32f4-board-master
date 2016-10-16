@@ -36,17 +36,19 @@ struct inode inode_queuel0 =
 FS_REGISTER(FS_DEVICE("queuel0.d"),inode_queuel0);
 
 /* interface functions */
-int queuel0_device_open(struct file * filp)
+struct file * queuel0_device_open(struct file * filp)
 {
+	static struct file queue;
+	queue.f_inode = &inode_queuel0;
 	/* open always ok */
-	return 0;
+	return &queue;
 }
 
 int32_t queuel0_write(FAR struct file *filp, FAR const char *buffer, uint32_t buflen)
 {
    return queuel0_write_t(buffer,buflen);
 }
-int32_t queuel0_read(FAR struct file *filp, FAR char *buffer, uint32_t buflen)
+uint32_t queuel0_read(FAR struct file *filp, FAR char *buffer, uint32_t buflen)
 {
    return queuel0_read_t(buffer,buflen);
 }

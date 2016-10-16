@@ -5,7 +5,7 @@
 
 #include "led_gui.h"
 
-int led_device_open(struct file * filp);
+struct file * led_device_open(struct file * filp);
 int32_t led_write(FAR struct file *filp, FAR const char *buffer, uint32_t buflen);
 int led_init(void);
 
@@ -30,10 +30,12 @@ struct inode inode_led =
 
 FS_REGISTER(FS_DEVICE("led.d"),inode_led);
 
-int led_device_open(struct file * filp)
+struct file * led_device_open(struct file * filp)
 {
+	static struct file led_file;
+	led_file.f_inode = &inode_led;
 	/* open always ok */
-	return 0;
+	return &led_file;
 }
 
 int32_t led_write(FAR struct file *filp, FAR const char *buffer, uint32_t buflen)

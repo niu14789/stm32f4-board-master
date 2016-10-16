@@ -11,14 +11,30 @@
 #include "f_typedef.h"
 #include "gui.h"
 
-#define FAR
-#define FS_INODE_USABLE 0x56AB  /* magic */
-#define ERR -1
-#define OK   0
-#define  DEVICE_END  0x8
+/* system printf default none */
 #define printf_d(...)
 
-#define __ONLYREAD 1
+/* general option */
+#define FAR
+#define FS_INODE_USABLE 0x56AB  /* magic */
+#define ERR  (-1)
+#define OK   (0)
+#define  DEVICE_END  0x8
+
+/* open option */
+#define __FS_ONLYREAD           (0x01)
+#define	__FS_READ				(0x01)
+#define	__FS_OPEN_EXISTING	    (0x00)
+#define __FS_ERROR			    (0x80)
+
+#if !_FS_READONLY
+#define	__FS_WRITE			    (0x02)
+#define	__FS_CREATE_NEW		    (0x04)
+#define	__FS_CREATE_ALWAYS	    (0x08)
+#define	__FS_OPEN_ALWAYS		(0x10)
+#define __FS_WRITTEN			(0x20)
+#define __FS_DIRTY  			(0x40)
+#endif
 
 struct inode;
 
@@ -29,7 +45,7 @@ typedef struct inode_vmn_t
 }inode_vmn;
 
 #define __FS_DEVICE__      "/dev/"
-#define __FS_FILE__        "/sdcard"
+#define __FS_FILE__        "/sdcard/"
 #define __FS_DRV__         "/drv/"
 #define __FS_INPUT__       "/dev/input/"
 #define __FS_EEPROM__      "/less/eeprom"
@@ -104,9 +120,13 @@ struct inode
 struct file
 {
   int               f_oflags; /* Open mode flags */
-  int32_t           f_pos;    /* File position */
   FAR struct inode *f_inode;  /* Driver interface */
   void             *f_priv;   /* Per file driver private data */
+  const char       *f_path;   /* file path */
+  int               f_multi;  /* open multiple files */
+#if 0
+	int               f_res;    /* result */
+#endif
 };
 
 struct fd_find
@@ -117,9 +137,17 @@ struct fd_find
 
 struct file_operations
 {
-	int     (*open) (FAR struct file *filp);
-	int32_t (*write)(FAR struct file *filp, FAR const char *buffer, uint32_t buflen);
-	int32_t (*read )(FAR struct file *filp, FAR char *buffer, uint32_t buflen);
+		struct file * (*open) (FAR struct file *filp);
+		int32_t (*write)(FAR struct file *filp, FAR const char *buffer, uint32_t buflen);
+		uint32_t (*read )(FAR struct file *filp, FAR char *buffer, uint32_t buflen);
+		int32_t (*lseek)(FAR struct file *filp, unsigned int offset, unsigned int whence);
+		int     (*close)(FAR struct file *filp);
+		int     (*ioctl)(FAR struct file *filp, int cmd, unsigned long arg,void *pri_data);
+		/* high-end function just for stroge file */
+		int     (*opendir)(FAR struct file *filp, const char *path);
+		int     (*readir)(FAR struct file *filp, const char *path,void * buffer);
+		int     (*mkdir)(const char *dir);
+		int     (*mkfs)(FAR struct file *filp,unsigned char drv,unsigned char sfd,unsigned int au);
 //  /* The device driver open method differs from the mountpoint open method */
 //
 //  int     (*open)(FAR struct file *filp);
@@ -132,7 +160,7 @@ struct file_operations
 //  int     (*close)(FAR struct file *filp);
 //  int32_t (*read )(FAR struct file *filp, FAR char *buffer, uint32_t buflen);
 //  int32_t (*write)(FAR struct file *filp, FAR const char *buffer, uint32_t buflen);
-//  int32_t  (*seek)(FAR struct file *filp, int32_t offset, int whence);
+
 //  int     (*ioctl)(FAR struct file *filp, int cmd, unsigned long arg);
 //#ifdef CONFIG_ENABLE_POLL
 //  int     (*poll)(FAR struct file *filp, struct pollfd *fds, char setup);
@@ -145,10 +173,12 @@ extern FAR inode_vmn *inode_sched_getfiles(void);
 extern const inode_vmn __FS_START__;
 extern FAR struct fd_find *inode_find(inode_vmn *inode,FAR const char *path, FAR const char **relpath);
 extern int system_initialization(char *device_availdable_list);
-extern int read(int fd, FAR char *buffer, uint32_t buflen);
-extern int open(const char *path, int oflags);
-extern int32_t write(int fd, FAR const char *buffer, uint32_t buflen);
-
+extern int32_t read(struct file * filp, FAR char *buffer, uint32_t buflen);
+extern struct file * open(const char *path, int oflags);
+extern int32_t write(struct file * filp, FAR const char *buffer, uint32_t buflen);
+extern int mkdir( const char * path );
+extern int close(struct file * filp);
+extern int32_t lseek(FAR struct file *filp, unsigned int offset, unsigned int whence);
 #endif /* FS_FS_H_ */
 
 

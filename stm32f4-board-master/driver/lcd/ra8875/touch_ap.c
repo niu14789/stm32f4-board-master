@@ -442,7 +442,7 @@ void touch_test()
 	unsigned short touch_now_x,touch_now_y;
 	static char flag_a = 1;
 	gui_msg_l0 touch_msg;
-	static int fd = 0;
+	static struct file * fd = NULL;
 	static unsigned short touch_last_x,touch_last_y; 
 	if(touch_take(&touch_tmp_x,&touch_tmp_y)==0)
 	{
@@ -453,8 +453,8 @@ void touch_test()
 		if(touch_now_y>272) touch_now_y = 272;
 		
 		
-		if(!fd)
-		  fd = open("/dev/queuel0.d",__ONLYREAD);
+		if(fd == NULL)
+		  fd = open("/dev/queuel0.d",__FS_OPEN_EXISTING | __FS_WRITE );
 		
 		touch_msg.x_pos = touch_now_x;
 		touch_msg.y_pos = touch_now_y;

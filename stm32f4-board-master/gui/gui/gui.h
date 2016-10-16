@@ -11,12 +11,28 @@
 #define  FOCUS_ON   1
 #define  FOCUS_OFF  0
 
+#define __GUI_WIDGET_MODE_0           ( 0x1 << 0 ) /* standard mode , no pic */
+#define __GUI_WIDGET_MODE_1           ( 0x1 << 1 ) /* pic mode , without caption */
+#define __GUI_WIDGET_MODE_2           ( 0x1 << 2 ) /* pic mode , with caption */
 
-struct widget_pic_t
-{
-	char *pic_path;
-};
+#define __GUI_WIDGET_MOVE             ( 0x1 << 3 ) /* will be move ? or not */
 
+#define __GUI_WIDGET_TYPE_CIRCULAR    ( 0x1 << 4 ) /* cirular mode */
+#define __GUI_WIDGET_TYPE_OCT         ( 0x1 << 5 ) /* right angle mode */
+
+#define __GUI_WIDGET_FRAME_STANDARD   ( 0x1 << 6 ) /* standard frame */
+#define __GUI_WIDGET_FRAME_LINE       ( 0x1 << 7 ) /* line frame */
+#define __GUI_WIDGET_FRAME_NONE       ( 0x1 << 8 ) /* without frame */
+
+#define __GUI_WIDGET_THEME_0          ( 0x1 << 9 ) /* theme mode 0 */
+#define __GUI_WIDGET_THEME_1          ( 0x1 << 10) /* theme mode 1 */
+#define __GUI_WIDGET_THEME_2          ( 0x1 << 11) /* theme mode 2 */
+#define __GUI_WIDGET_THEME_3          ( 0x1 << 12) /* theme mode 3 */
+#define __GUI_WIDGET_THEME_4          ( 0x1 << 13) /* theme mode 4 */
+#define __GUI_WIDGET_THEME_5          ( 0x1 << 14) /* theme mode 5 */
+#define __GUI_WIDGET_THEME_6          ( 0x1 << 15) /* theme mode 6 */
+
+#define __GUI_WIDGET_HANDLE           ( 0x1 << 16) /*  */
 
 enum widget_type_t
 {
@@ -56,15 +72,18 @@ enum event_type
    OTHER_NPI
 };
 
-struct gui_msg_t
+typedef struct gui_msg_t
 {
 	unsigned short x;
 	unsigned short y;
 	unsigned short xsize;
 	unsigned short ysize;
 	char *caption;
-	char mode;
-};
+	char * pic_path;
+	unsigned short x_size_pic;
+	unsigned short y_size_pic;
+	unsigned int mode;
+}gui_message;
 
 struct nxgui_object
 {
@@ -102,7 +121,7 @@ typedef struct window_hwnd_t{
 
 
 struct gui_operations{
-	window_hwnd  * (*create)(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
+	window_hwnd  * (*create)(window_hwnd * hwnd,struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
 	int (*show)(struct gui_msg_t*p_msg);
 	int (*onfocus)(struct gui_msg_t*p_msg);
 	int (*losefocus)(struct gui_msg_t*p_msg);
@@ -147,7 +166,7 @@ typedef struct
 
 /* function */
 window_hwnd * handler_current(void);
-struct gui_handler * handler_insert(struct gui_handler *insert_one);
+struct gui_handler * handler_insert(window_hwnd * hwnd,struct gui_handler *insert_one);
 int gui_create(const char *device_availdable_list);
 int widget_create(enum widget_type_t widget_type,struct gui_msg_t *p_gui_msg,int (*callback)(enum event_type,void *data));
 /* end nuttx */

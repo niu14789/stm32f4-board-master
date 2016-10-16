@@ -34,7 +34,7 @@ static int _inode_compare(FAR const char *fname,
       return -1;
     }
 
-    while(*nname == *fname)
+    while( (*nname == *fname) || ((*nname == '\0')) )
     {
         if(*nname == '\0')
             return OK;

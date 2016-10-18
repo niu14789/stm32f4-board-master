@@ -30,15 +30,15 @@ int gui_create(const char *device_availdable_list)
 		"/sdcard/main.bmp",
 		0,
 		0,
-		__GUI_WIDGET_MODE_1     | /* pic mode , with caption */
+		__GUI_WIDGET_MODE_0     | /* pic mode , with caption */
 		__GUI_WIDGET_TYPE_OCT   | /* right angle mode */
 		__GUI_WIDGET_FRAME_NONE | /* without frame */
 		__GUI_WIDGET_THEME_0    | /* theme 0 */
 		__GUI_WIDGET_HANDLE       /* no ues */
 	};
 	
-	gui_msg_tmp.xsize = gui_device_t->gui_device_msg.xsize;
-	gui_msg_tmp.ysize = gui_device_t->gui_device_msg.ysize;
+	gui_msg_tmp.xsize = 120;//gui_device_t->gui_device_msg.xsize;
+	gui_msg_tmp.ysize = 80;//gui_device_t->gui_device_msg.ysize;
 	gui_msg_tmp.x_size_pic = gui_device_t->gui_device_msg.xsize; /* full of window */
 	gui_msg_tmp.y_size_pic = gui_device_t->gui_device_msg.ysize; /* full of window */
 	

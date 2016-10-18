@@ -2479,7 +2479,7 @@ int LCD_Init(void)
 	}		 
 	LCD_Display_Dir(1);		 	//默认为竖屏
 	LCD_LED=1;					//点亮背光
-	LCD_Clear(0);
+	LCD_Clear(0x1234);
 	return lcddev.id;
 }  
 

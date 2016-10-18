@@ -19,6 +19,7 @@ int delay_ms1(void);
 
 int lcd_fd = 0;
 
+extern window_hwnd  window_handler;
 
 int delay_ms1(void)
 {
@@ -47,6 +48,24 @@ void fd_delay(unsigned int t)
 	while(t--);
 }
 
+
+gui_message gui_msg_tmp =
+	{
+		0,
+		0,
+		120,
+		80,
+		"main_window",
+		"/sdcard/main.bmp",
+		0,
+		0,
+		__GUI_WIDGET_MODE_0     | /* pic mode , with caption */
+		__GUI_WIDGET_TYPE_OCT   | /* right angle mode */
+		__GUI_WIDGET_FRAME_NONE | /* without frame */
+		__GUI_WIDGET_THEME_0    | /* theme 0 */
+		__GUI_WIDGET_HANDLE       /* no ues */
+	};
+	
 int main(void)
 {
 
@@ -62,70 +81,46 @@ int main(void)
 	};
     system_initialization(device_availdable_list);
 #if 1
-//     lcd_fd = open("/etc/lcd.d",__ONLYREAD);
-// 	 
-// 	 if(lcd_fd)
-// 	 {
-// 		 write(lcd_fd,"2",1);
-// 		 write(lcd_fd,"this is a test",14);
-// 	 }
 
-// 	 slider_create(50,180,400,50,0);
-// 	 
 	 
  	 gui_create(device_availdable_list);
 	button_create(&bu_rect,NULL);
+	
+	gui_msg_tmp.x += 10;
+	gui_msg_tmp.y += 10;
+	
+	window_create(&window_handler,&gui_msg_tmp,NULL);
+	
 	refresh();
 
 	   stm32_usart_init(USART3,PB10_PB11,57600);
-	 
-//     fd1 = open("/sdcard/oma.txt",__FS_CREATE_ALWAYS | __FS_WRITE);
-//
-//     write(fd1,"AAAAAAAAAA",10);
-//
-//     fd2 = open("/sdcard/omb.txt",__FS_CREATE_ALWAYS | __FS_WRITE);
-//
-//     write(fd2,"BBBBBBBBBB",10);
-//
-//     fd3 = open("/sdcard/omc.txt",__FS_CREATE_ALWAYS | __FS_WRITE);
-//
-//     write(fd3,"CCCCCCCCCC",10);
-//
-//     fd4 = open("/sdcard/omd.txt",__FS_CREATE_ALWAYS | __FS_WRITE);
-//
-//     write(fd4,"DDDDDDDDDD",10);
-//
-//     fd5 = open("/sdcard/ome.txt",__FS_CREATE_ALWAYS | __FS_WRITE);
-//
-//     write(fd5,"EEEEEEEEEE",10);
-//
-//     close(fd5);
-//
-//     mkdir("/sdcard/t1/t2");
-//     mkdir("/sdcard/trrt");
-//
-//		 fd5 = open("/sdcard/trrt/om_niu.txt",__FS_CREATE_ALWAYS | __FS_WRITE);
-//		 write(fd5,"niuniuniuniu",12);
+
 
 	 while(1)
  	 {
+		 	gui_msg_tmp.x = x;
+	    gui_msg_tmp.y = y;
+	
+	window_create(&window_handler,&gui_msg_tmp,NULL);
+	
+	refresh();
 // 		 touch_test();
 // 		 
 // 		 gui_key_event_check(key_buffer);
 
  		 gui_server();
 
-		 rect_move(x,y,RGB(r,g,b));
+//		 rect_move(x,y,RGB(r,g,b));
 		 x+=xs;
 		 y+=ys;
-		 if(y>=230)
+		 if(y>=160)
 		 {
 			 ys = -3;
 		 }
 		 if(y<1)
 			 ys = 3;
 		 
-		 if(x>=310)
+		 if(x>=200)
 			 xs = -5;
 		 if(x<1)
 			 xs = 5;
@@ -134,7 +129,7 @@ int main(void)
 		 g++;
 		 b++;
 		 
-		 fd_delay(0xffff);
+		 fd_delay(0xfffff);
  	 }
 #else
 {

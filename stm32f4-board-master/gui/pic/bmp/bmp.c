@@ -13,8 +13,8 @@
 
 
 /*-----------------*/
-#define MAX_READ_LEN_BMP  (3200)
-char buffer_bmp[MAX_READ_LEN_BMP];//
+#define MAX_READ_LEN_BMP  (320 * 4)
+static char buffer_bmp[MAX_READ_LEN_BMP];//
 /*
  * draw a bmp to lcd
  *
@@ -26,10 +26,10 @@ int gui_draw_bmp( const struct gui_msg_t * p_msg , unsigned int __MODE__)
    BITMAPINFO * bmpinfo;
    static unsigned short pic_width , pic_height;
    unsigned char color_byte; //8 16 32bit color byte
-   int i,j,k;
+   unsigned int i,j,k,cnt = 0;
    unsigned short color;
    unsigned char alphabend;
-
+   unsigned char *bmpbuf;
    gui_device *gui_device_t;
 
    gui_device_t = gui_dev_ops_g();
@@ -41,10 +41,10 @@ int gui_draw_bmp( const struct gui_msg_t * p_msg , unsigned int __MODE__)
 	   printf_d("can not open bmp file->%s\n",p_msg->pic_path);
 	   return ERR;
    }
+   memset(buffer_bmp,0,320 * 4);
+   ret = read(fd,buffer_bmp,60);
 
-   ret = read(fd,buffer_bmp,512);
-
-   if( ret != 512 )
+   if( ret != 60 )
    {
 	   printf_d("read %s fail\n",p_msg->pic_path);
 	   return ERR;
@@ -67,25 +67,25 @@ int gui_draw_bmp( const struct gui_msg_t * p_msg , unsigned int __MODE__)
 
    for( i = 0 ; i < 240 ; i++ )
    {
-	   for( j = 0 ; j < 320 ; j++)
-	   {
-// 			 
-					ret = read(fd,buffer_bmp,4);
+				ret = read(fd,buffer_bmp,MAX_READ_LEN_BMP);
 
-					if(ret != 4 )
-					 return ERR;
-// 					
-//        for( k = 0 ; k < 320 ; k ++ )
-// 			 {
-					color      =  buffer_bmp[0]>>3;		   		 	//B
-					color     +=  (((unsigned short)buffer_bmp[1])<<3)&0X07E0;	//G
-					color     +=  (((unsigned short)buffer_bmp[2])<<8)&0XF800;	//R
-					alphabend  =  buffer_bmp[3];			        //ALPHA通道
-
+				if(ret != MAX_READ_LEN_BMP )
+				 return ERR;
+				
+			  cnt = 0;
+		
+				for( j = 0 ; j < 320 ; j++)
+				{
+					color=(buffer_bmp[cnt])>>3;		   		 	//B
+					color+=((unsigned short)(buffer_bmp[cnt+1])<<3)&0X07E0;	//G
+					color+=(((unsigned short)buffer_bmp[cnt+2])<<8)&0XF800;	//R
+					alphabend=buffer_bmp[cnt+3];					//ALPHA通道
 					gui_device_t->gui_dev_ops_g.put_pixel(p_msg->x + j,p_msg->y + i,color);
-// 		   } 
-	   }
-   }
+					cnt +=4;
+					color = 0;
+			 } 
+			 memset(buffer_bmp,0,320 * 4);
+	}	  
 
 
    return 0;

@@ -34,6 +34,8 @@
 
 #define __GUI_WIDGET_HANDLE           ( 0x1 << 16) /*  */
 
+typedef struct window_hwnd_t window_hwnd;
+
 enum widget_type_t
 {
 	button = 0,      /*type button*/
@@ -104,6 +106,7 @@ typedef struct gui_handler{
 	unsigned short              status;
 	struct gui_operations     *gui_ops;
     struct gui_msg_t        widget_msg;
+    window_hwnd * parent_window;
 	int (*callback)(enum event_type,void *data);
 }widget_hwnd;
 
@@ -122,7 +125,7 @@ typedef struct window_hwnd_t{
 
 struct gui_operations{
 	window_hwnd  * (*create)(window_hwnd * hwnd,struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
-	int (*show)(struct gui_msg_t*p_msg);
+	int (*show)(struct gui_handler * g_hmd);
 	int (*onfocus)(struct gui_msg_t*p_msg);
 	int (*losefocus)(struct gui_msg_t*p_msg);
 	int (*onclick)(struct gui_msg_t*p_msg);

@@ -43,6 +43,9 @@ int touch_calibration(void);
 void touch_test(void);
 void FSMC_SRAM_Init(void);
 extern struct gui_handler * button_create(struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
+
+window_hwnd * window_create(window_hwnd * hwnd,struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
+
 void fd_delay(unsigned int t)
 {
 	while(t--);
@@ -84,7 +87,7 @@ int main(void)
 
 	 
  	 gui_create(device_availdable_list);
-	button_create(&bu_rect,NULL);
+
 	
 	gui_msg_tmp.x += 10;
 	gui_msg_tmp.y += 10;

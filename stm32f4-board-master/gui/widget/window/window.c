@@ -132,14 +132,14 @@ int window_create_asparent( struct gui_msg_t * p_msg )
 }
 
 
-int window_show(struct gui_msg_t*p_msg)
+int window_show(struct gui_handler * g_hmd)
 {
-	if(p_msg->mode & (__GUI_WIDGET_MODE_2))
+	if(g_hmd->widget_msg.mode & (__GUI_WIDGET_MODE_2))
 	{
-		gui_draw_bmp(p_msg,0);
-	}else if(p_msg->mode & (__GUI_WIDGET_MODE_0))
+		gui_draw_bmp(&g_hmd->widget_msg,0);
+	}else if(g_hmd->widget_msg.mode & (__GUI_WIDGET_MODE_0))
 	{
-		window_create_asparent(p_msg);
+		window_create_asparent(&g_hmd->widget_msg);
 	}
 
 	return 0;//window_create_asparent(p_msg->x,p_msg->y,p_msg->xsize,p_msg->ysize,p_msg->caption,p_msg->mode);

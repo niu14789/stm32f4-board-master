@@ -96,6 +96,8 @@ struct gui_handler * handler_insert(window_hwnd * hwnd,struct gui_handler *inser
 			/* insert it to the tail  */
 	handler_t->link = insert_one;
 
+	insert_one->parent_window = hwnd;
+
 	return &hwnd->window;
 }
 
@@ -108,7 +110,7 @@ int show(struct gui_handler *root)
 			p_root=p_root->link)
 	{
 		if(p_root->gui_ops->show!=NULL)
-			p_root->gui_ops->show(&p_root->widget_msg);
+			p_root->gui_ops->show(p_root);
 	}
 	return 0;
 }
@@ -123,7 +125,7 @@ int refresh(void)
 			p_root=p_root->link)
 	{
 		if(p_root->gui_ops->show!=NULL)
-			p_root->gui_ops->show(&p_root->widget_msg);
+			p_root->gui_ops->show(p_root);
 	}
 	return 0;
 }

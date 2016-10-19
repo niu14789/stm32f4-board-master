@@ -15,6 +15,6 @@ window_hwnd * button_create(window_hwnd * hwnd,struct gui_msg_t*p_msg,int (*call
 
 int button_onfocus(struct gui_msg_t*p_msg);
 int button_losefocus(struct gui_msg_t*p_msg);
-int button_show(struct gui_msg_t*p_msg);
+int button_show(struct gui_handler * g_hmd);
 
 #endif /* __BUTTON_H__ */

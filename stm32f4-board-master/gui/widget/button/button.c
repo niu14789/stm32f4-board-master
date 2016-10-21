@@ -17,18 +17,90 @@
 struct gui_handler handler[10];
 static unsigned char handler_cnt = 0;
 
-//const char bitmap_
+const char bitmap_button_black[4] = {0x00,0x30,0x40,0x40};
+const char bitmap_button_white[4] = {0x00,0x00,0x30,0x20};
 
 int button_create_aschild(struct gui_handler * h_hmd)
 {
-	gui_device *gui_device_t;
+		gui_device *gui_device_t;
+		int i,j;
+			unsigned short button_real_width = 0, button_real_height = 0;
+			unsigned short x_b,y_b,x_size,y_size,half_size;
+		gui_device_t = gui_dev_ops_g();
 
-	gui_device_t = gui_dev_ops_g();
+		if( ((h_hmd->widget_msg.x - h_hmd->parent_window->window.widget_msg.x) > h_hmd->parent_window->window.widget_msg.xsize) ||
+			((h_hmd->widget_msg.y - h_hmd->parent_window->window.widget_msg.y) > h_hmd->parent_window->window.widget_msg.ysize)	)
+		{
+			printf_d("button position out of the parent window\n");
+			return ERR;
+		}
 
-	if( (h_hmd->widget_msg.x - h_hmd->parent_window->window.widget_msg.x)  )
+		if(h_hmd->parent_window->window.widget_msg.xsize > (h_hmd->widget_msg.x + h_hmd->widget_msg.xsize) )
+		{
+			 button_real_width = h_hmd->widget_msg.xsize;
+		}else
+		{
+			button_real_width = h_hmd->parent_window->window.widget_msg.xsize - h_hmd->widget_msg.x;
+		}
+
+		if(h_hmd->parent_window->window.widget_msg.ysize > (h_hmd->widget_msg.y + h_hmd->widget_msg.ysize) )
+		{
+			button_real_height = h_hmd->widget_msg.ysize;
+
+		}else
+		{
+			button_real_height = h_hmd->parent_window->window.widget_msg.ysize - h_hmd->widget_msg.y;
+		}
+
+		x_b = h_hmd->parent_window->window.widget_msg.x + h_hmd->widget_msg.x;
+		y_b = h_hmd->parent_window->window.widget_msg.y + h_hmd->widget_msg.y;
+
+		x_size = h_hmd->widget_msg.xsize;
+		y_size = h_hmd->widget_msg.ysize;
+
+		half_size = (y_size - 4)/2;
+
+		for(i=0;i<((y_size - 4)/2);i++)
+		{
+			gui_device_t->gui_dev_ops_g.set_line(x_b+2,y_b+2+i,x_size+x_b-2,y_b+2+i,RGB(243-i,243-i,243-i));
+
+			gui_device_t->gui_dev_ops_g.set_line(x_b+2,y_b+2+i+half_size,x_size+x_b-2,y_b+2+i+half_size,RGB(223-i,223-i,223-i));
+		}
 	
+    for(j=0;j<4;j++)
+    {
+    	for(i=0;i<4;i++)
+    	{
+    		if(bitmap_button_black[j] & (0x80 >> i))
+    		{
+      			gui_device_t->gui_dev_ops_g.put_pixel(x_b + i , y_b + j,RGB(112,112,112));//black
+        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + x_size - i , y_b + j,RGB(112,112,112));//black
+        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + i , y_size + y_b - j,RGB(112,112,112));//black
+        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + x_size - i , y_size + y_b - j,RGB(112,112,112));//black
+    		}
+
+    		if(bitmap_button_white[j] & (0x80 >> i))
+    		{
+      			gui_device_t->gui_dev_ops_g.put_pixel(x_b + i , y_b + j,RGB(70,216,251));//white
+        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + x_size - i , y_b + j,RGB(70,216,251));//white
+        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + i , y_size + y_b - j,RGB(70,216,251));//white
+        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + x_size - i , y_size + y_b - j,RGB(70,216,251));//white
+    		}
+    	}
+    }
+
+    gui_device_t->gui_dev_ops_g.set_line(x_b,y_b+4,x_b,y_size + y_b - 4,RGB(112,112,112));
+    gui_device_t->gui_dev_ops_g.set_line(x_b+x_size,y_b+4,x_b+x_size,y_size + y_b - 4,RGB(112,112,112));
+
+    gui_device_t->gui_dev_ops_g.set_line(x_b+1,y_b+4,x_b+1,y_size + y_b - 4,RGB(70,216,251));
+    gui_device_t->gui_dev_ops_g.set_line(x_b+x_size-1,y_b+4,x_b+x_size-1,y_size + y_b - 4,RGB(70,216,251));
 
 
+    gui_device_t->gui_dev_ops_g.set_line(x_b+4,y_b,x_size+x_b-4,y_b,RGB(112,112,112));
+    gui_device_t->gui_dev_ops_g.set_line(x_b+4,y_b+y_size,x_size+x_b-4,y_size+y_b,RGB(112,112,112));
+
+    gui_device_t->gui_dev_ops_g.set_line(x_b+4,y_b+1,x_size+x_b-4,y_b+1,RGB(70,216,251));
+    gui_device_t->gui_dev_ops_g.set_line(x_b+4,y_b+y_size-1,x_size+x_b-4,y_size+y_b-1,RGB(70,216,251));
 
 	return 0;
 }

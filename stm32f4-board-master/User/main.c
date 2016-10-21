@@ -89,17 +89,17 @@ int main(void)
  	 gui_create(device_availdable_list);
 
 	
-	gui_msg_tmp.x += 10;
-	gui_msg_tmp.y += 10;
-	
-	window_create(&window_handler,&gui_msg_tmp,NULL);
-	
-	refresh();
+// 	gui_msg_tmp.x += 10;
+// 	gui_msg_tmp.y += 10;
+// 	
+// 	window_create(&window_handler,&gui_msg_tmp,NULL);
+// 	
+ 	refresh();
 
 	   stm32_usart_init(USART3,PB10_PB11,57600);
 
 
-	 while(1)
+	 while(1);
  	 {
 		 	gui_msg_tmp.x = x;
 	    gui_msg_tmp.y = y;

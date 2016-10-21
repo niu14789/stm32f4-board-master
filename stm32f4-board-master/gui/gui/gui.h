@@ -129,6 +129,7 @@ struct gui_operations{
 	int (*onfocus)(struct gui_msg_t*p_msg);
 	int (*losefocus)(struct gui_msg_t*p_msg);
 	int (*onclick)(struct gui_msg_t*p_msg);
+//	int (*move)()
 };
 
 /* the gui system callback typedef */

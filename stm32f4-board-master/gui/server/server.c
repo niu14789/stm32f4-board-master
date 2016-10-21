@@ -89,6 +89,9 @@ int gui_event_done(gui_msg *p_msg,enum event_type event)
 			break;
 		case key_long_press:
 			break;
+		case widget_move:
+
+            break;
 		default:break;
 	}
 	return 0;

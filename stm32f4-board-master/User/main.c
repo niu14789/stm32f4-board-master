@@ -69,6 +69,34 @@ gui_message gui_msg_tmp =
 		__GUI_WIDGET_HANDLE       /* no ues */
 	};
 	
+int send_move_cmd_test(unsigned short x_gain, unsigned short y_gain)	
+{
+		static struct file * fd = NULL;
+		static unsigned short data_2[2];
+		static	gui_msg_l0 move_msg = {
+		0,0,30,30
+    };
+		if(fd == NULL)
+		  fd = open("/dev/queuel0.d",__FS_OPEN_EXISTING | __FS_WRITE ); 
+		
+		data_2[0] = x_gain;
+		data_2[1] = y_gain;
+		
+//		move_msg.x_pos = 30;
+//		move_msg.y_pos = 30;
+		
+		move_msg.x_pos += x_gain;
+		move_msg.y_pos += y_gain;
+		
+		
+		move_msg.event_type = widget_move;
+		move_msg.pri_data = &data_2;
+		
+		write(fd,(const char *)&move_msg,sizeof(move_msg));
+		
+		return 0;
+}
+	
 int main(void)
 {
 
@@ -85,7 +113,8 @@ int main(void)
     system_initialization(device_availdable_list);
 #if 1
 
-	 
+	
+	
  	 gui_create(device_availdable_list);
 
 	
@@ -97,7 +126,17 @@ int main(void)
  	refresh();
 
 	   stm32_usart_init(USART3,PB10_PB11,57600);
+ 
+	
+	 while(1)
+	 {
+		 send_move_cmd_test(5,5);
 
+		 gui_server();
+		 		 refresh();
+		 fd_delay(0xfffff);
+	 }
+	
 
 	 while(1);
  	 {

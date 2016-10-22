@@ -22,8 +22,8 @@ int gui_create(const char *device_availdable_list)
 
 	gui_message gui_msg_tmp =
 	{
-		0,
-		0,
+		20,
+		20,
 		0,
 		0,
 		"main_window",
@@ -37,8 +37,8 @@ int gui_create(const char *device_availdable_list)
 		__GUI_WIDGET_HANDLE       /* no ues */
 	};
 	
-	gui_msg_tmp.xsize = 160;//gui_device_t->gui_device_msg.xsize;
-	gui_msg_tmp.ysize = 120;//gui_device_t->gui_device_msg.ysize;
+	gui_msg_tmp.xsize = 120;//gui_device_t->gui_device_msg.xsize;
+	gui_msg_tmp.ysize = 80;//gui_device_t->gui_device_msg.ysize;
 	gui_msg_tmp.x_size_pic = gui_device_t->gui_device_msg.xsize; /* full of window */
 	gui_msg_tmp.y_size_pic = gui_device_t->gui_device_msg.ysize; /* full of window */
 	

@@ -165,9 +165,26 @@ window_hwnd * window_create(window_hwnd * hwnd,struct gui_msg_t*p_msg,int (*call
     return &window_handler;
 }
 
+int window_move(struct gui_msg_t*p_msg,void *data)
+{
+ 
+	  unsigned short *p_dx = (unsigned short *)data;
+
+  	p_msg->x += 	p_dx[0];
+	  p_msg->y += 	p_dx[1];
+	
+	  window_create_asparent(p_msg);
+	
+	  return 0;
+}
+
 struct gui_operations window_ops = {
 		window_create,
 		window_show,
+		NULL,
+		NULL,
+		NULL,
+		window_move
 };
 
 

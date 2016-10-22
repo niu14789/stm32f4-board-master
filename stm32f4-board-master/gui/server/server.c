@@ -56,7 +56,7 @@ int gui_event_idle(void)
 		/* got the a event */
 		p_gui_msg = (gui_msg *)buffer;
 
-		gui_event_done(p_gui_msg,p_gui_msg->event_type);
+		gui_event_done(p_gui_msg,p_gui_msg->event_type,p_gui_msg->data);
 
 		/* idle the callback function */
 		if(p_gui_msg->handler->callback!=NULL)
@@ -65,7 +65,7 @@ int gui_event_idle(void)
 	return 0;
 }
 
-int gui_event_done(gui_msg *p_msg,enum event_type event)
+int gui_event_done(gui_msg *p_msg,enum event_type event,void *data)
 {
 	switch(event)
 	{
@@ -90,8 +90,9 @@ int gui_event_done(gui_msg *p_msg,enum event_type event)
 		case key_long_press:
 			break;
 		case widget_move:
-
-            break;
+      if(p_msg->handler->gui_ops->move != NULL)
+				 p_msg->handler->gui_ops->move(&p_msg->handler->widget_msg,data);
+      break;
 		default:break;
 	}
 	return 0;
@@ -127,7 +128,7 @@ int gui_event_check(void)
 		  {
 				gui_msg_buffer.handler = p_gui;
 				gui_msg_buffer.event_type = gui_msgl0.event_type;
-
+        gui_msg_buffer.data = gui_msgl0.pri_data;
 				/*revert all focus widget in same parent window*/
 				gui_revert_widget(gui_hander_root,p_gui);
 				/*send the data to the msg queue */

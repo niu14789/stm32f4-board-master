@@ -114,7 +114,7 @@ struct inode
   struct nxgui_object *nxgui;     /* nuttx gui link */
   FAR void         *i_private;    /* Per inode driver private data */
   int (*init)(void);              /* node firmware init interface */
-  const char        *i_name;    /* Name of inode (variable) */
+  const char        *i_name;      /* Name of inode (variable) */
 };
 
 struct file

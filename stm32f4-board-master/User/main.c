@@ -133,7 +133,7 @@ int main(void)
 		 send_move_cmd_test(5,5);
 
 		 gui_server();
-		 		 refresh();
+
 		 fd_delay(0xfffff);
 	 }
 	

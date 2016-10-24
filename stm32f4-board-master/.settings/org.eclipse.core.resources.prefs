@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//driver/e2p/e2p.c=UTF-8
 encoding//driver/touch/touch.c=UTF-8
 encoding//fs/f_read.c=UTF-8
 encoding//gui/gui_config/gui_config.c=UTF-8

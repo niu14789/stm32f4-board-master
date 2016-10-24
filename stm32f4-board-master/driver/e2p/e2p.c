@@ -1,16 +1,19 @@
 /*
  * e2p.c
  *
- *  Created on: 2016年10月24日
+ *  Created on: 2016骞�10鏈�24鏃�
  *      Author: YJ-User17
  */
 #include "fs.h"
 #include "i2c.h"
 #include "e2p.h"
+#include "string.h"
 
 static struct file eeprom_file;
 
 static dev_i2c_def * i2c_dev_p = NULL;
+
+static unsigned short save_addr_default = 0;
 
 static struct file_operations e2p_ops =
 {
@@ -69,18 +72,26 @@ struct file * e2p_device_open(struct file * filp)
 	eeprom_file.f_inode = &inode_e2p;
 	eeprom_file.f_oflags |= filp->f_oflags;
 
+	if(strstr(filp->f_path,"lcd2_default_cali.bin") != NULL)
+	{
+		save_addr_default = 0;
+	}else if(strstr(filp->f_path,"lcd1_default_cali.bin") != NULL)
+	{
+		save_addr_default = 20;
+	}
+
 	return &eeprom_file;
 }
 
 int32_t e2p_device_write(FAR struct file *filp, FAR const char *buffer, uint32_t buflen)
 {
-	 AT24CXX_Write(0,(unsigned char *)buffer,buflen);
+	 AT24CXX_Write(save_addr_default,(unsigned char *)buffer,buflen);
 	 return 0;
 }
 
 uint32_t e2p_device_read(FAR struct file *filp, FAR char *buffer, uint32_t buflen)
 {
-	AT24CXX_Read(0,(unsigned char *)buffer,buflen);
+	AT24CXX_Read(save_addr_default,(unsigned char *)buffer,buflen);
 	return buflen;
 }
 

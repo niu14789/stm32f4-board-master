@@ -96,7 +96,7 @@ int send_move_cmd_test(unsigned short x_gain, unsigned short y_gain)
 		
 		return 0;
 }
-	
+	int gui_config_init(void);
 int main(void)
 {
 
@@ -113,7 +113,7 @@ int main(void)
     system_initialization(device_availdable_list);
 #if 1
 
-	
+	gui_config_init();
 	
  	 gui_create(device_availdable_list);
 

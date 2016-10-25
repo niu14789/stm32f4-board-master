@@ -75,12 +75,16 @@ struct file * e2p_device_open(struct file * filp)
 	if(strstr(filp->f_path,"lcd2_default_cali.bin") != NULL)
 	{
 		save_addr_default = 0;
-	}else if(strstr(filp->f_path,"lcd1_default_cali.bin") != NULL)
+		return &eeprom_file;
+	}
+	else if(strstr(filp->f_path,"lcd1_default_cali.bin") != NULL)
 	{
 		save_addr_default = 20;
+		return &eeprom_file;
+	}else
+	{
+		return NULL;
 	}
-
-	return &eeprom_file;
 }
 
 int32_t e2p_device_write(FAR struct file *filp, FAR const char *buffer, uint32_t buflen)

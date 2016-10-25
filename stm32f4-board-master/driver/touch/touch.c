@@ -9,6 +9,8 @@
 #include "fs.h"
 #include "touch.h"
 
+#include "gui_config.h"
+
 #define  CMD_RDX (0xD0)
 #define  CMD_RDY (0x90)
 
@@ -55,28 +57,41 @@ int touch2_init(void)
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;//锟斤拷锟侥Ｊ�
 	GPIO_Init(GPIOH, &GPIO_InitStructure);//锟斤拷始锟斤拷
 
-//
-//	TP_Read_XY(&tp_dev.x[0],&tp_dev.y[0]);//锟斤拷一锟轿讹拷取锟斤拷始锟斤拷
-//	AT24CXX_Init();		//锟斤拷始锟斤拷24CXX
-//	if(TP_Get_Adjdata())return 0;//锟窖撅拷校准
-//	else			   //未校准?
-//	{
-//		LCD_Clear(WHITE);//锟斤拷锟斤拷
-//		TP_Adjust();  	//锟斤拷幕校准
-//		TP_Save_Adjdata();
-//	}
-//	TP_Get_Adjdata();
+	gui_touch_dev_register(gui_dev_ops_g()->gui_device_msg.xsize,
+			               gui_dev_ops_g()->gui_device_msg.ysize,
+						   read_ad_x,
+						   read_ad_y);
 
-//    while(1)
-		{
-			TP_Scan(1);
-		}
-exit_interrupt_init();
    return 0;
 }
 
 #define PEN  		(GPIO_ReadInputDataBit(GPIOH,GPIO_Pin_6))//PHin(6)  	//T_PEN
 #define DOUT 		(GPIO_ReadInputDataBit(GPIOH,GPIO_Pin_8))//PHin(8)   	//T_MISO
+
+unsigned short read_ad_x(void)
+{
+	if(PEN==0)
+	{
+	    return TP_Read_XOY(CMD_RDX);
+	}
+	else
+	{
+		return 0;
+	}
+}
+unsigned short read_ad_y(void)
+{
+	if(PEN==0)
+	{
+	    return TP_Read_XOY(CMD_RDY);
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+
 //#define TDIN 		PHout(7)  	//T_MOSI
 //#define TCLK 		PBout(0)  	//T_SCK
 //#define TCS  		PFout(11)  	//T_CS

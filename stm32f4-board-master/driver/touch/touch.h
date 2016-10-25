@@ -9,7 +9,8 @@
 #define DRIVER_TOUCH_TOUCH_H_
 
 
-
+unsigned short read_ad_x(void);
+unsigned short read_ad_y(void);
 int touch2_init(void);
 u8 TP_Read_XY(u16 *x,u16 *y);
 u16 TP_Read_AD(u8 CMD);

@@ -34,6 +34,7 @@ struct file * led_device_open(struct file * filp)
 {
 	static struct file led_file;
 	led_file.f_inode = &inode_led;
+	led_init();
 	/* open always ok */
 	return &led_file;
 }
@@ -59,24 +60,25 @@ int32_t led_write(FAR struct file *filp, FAR const char *buffer, uint32_t buflen
 }
 /*
 
-  ¿ª·¢°åÓÐÈý¸öLEDµÆ£¬ÆäÖÐÒ»¸öÎªºìÉ«µÄµçÔ´µÆ
-	Ê£ÏÂµÄÁ½¸ö¿ÉÓÃ³ÌÐò¿ØÖÆ£¬Á¬½ÓµÄIOÎªPG6£¨À¶É«£©DS0©£PG7£¨´äÂÌÉ«£©DS1
+  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½LEDï¿½Æ£ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Îªï¿½ï¿½É«ï¿½Äµï¿½Ô´ï¿½ï¿½
+	Ê£ï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã³ï¿½ï¿½ï¿½ï¿½ï¿½Æ£ï¿½ï¿½ï¿½ï¿½Óµï¿½IOÎªPG6ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½DS0ï¿½ï¿½PG7ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½DS1
 	
 */
 int led_init(void)
 {
-  GPIO_InitTypeDef  GPIO_InitStructure;
+	GPIO_InitTypeDef  GPIO_InitStructure;
 
-  /* Enable the GPIO_LED Clock */
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOG, ENABLE);
+	/* Enable the GPIO_LED Clock */
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOG, ENABLE);
 
-  /* Configure the GPIO_LED pin */
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6|GPIO_Pin_7;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(GPIOG, &GPIO_InitStructure);
+	/* Configure the GPIO_LED pin */
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6|GPIO_Pin_7;
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
+	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOG, &GPIO_InitStructure);
+	inode_ili_lcd2.i_flags =  __FS_IS_INODE_OK | __FS_IS_INODE_INIT;
 	return OK;
 }
 

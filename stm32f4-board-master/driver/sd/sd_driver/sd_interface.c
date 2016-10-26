@@ -65,15 +65,18 @@ int sd_init(void)
 		if(ret == FR_OK)
 		{
 		   printf_d("good ! mount sdcard ok\n");
+		   inode_sd.i_flags =  __FS_IS_INODE_OK | __FS_IS_INODE_INIT;
            return OK;  /* sdcard node init ok    */
 		}else
 		{
 		   printf_d("mount sdcard fail\n");
+		   inode_sd.i_flags =  __FS_IS_INODE_FAIL | __FS_IS_INODE_INIT;
 		   return ERR; /* sdcard node init fail  */
 		}
 	}else
 	{
 		printf_d("not good ! can not find a sdcard\n");
+		inode_sd.i_flags =  __FS_IS_INODE_FAIL | __FS_IS_INODE_INIT;
 		return ERR;
 	}
 }
@@ -82,6 +85,9 @@ struct file * sd_device_open(struct file * filp)
 {
 	char f_name[50] = {0};  //most length support ? why we ues 'static',I dont know
     int multi;
+
+    if(!(inode_sd.i_flags &  __FS_IS_INODE_OK))
+    	return NULL;// init not ok,return dect
 
     /* get the free block */
     multi = sd_device_multiple();

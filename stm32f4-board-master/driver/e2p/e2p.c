@@ -22,7 +22,6 @@ static struct file_operations e2p_ops =
   e2p_device_read
 };
 
-
 static struct inode inode_e2p =
 {
 	NULL,
@@ -48,20 +47,22 @@ int e2p_init(void)
 	if(fd != NULL)
 	{
 		i2c_dev_p = (dev_i2c_def *)fd->f_inode->i_private;
-		eeprom_file.f_oflags |= 0x4000;
 
 		if(AT24CXX_Check() == 0)
 		{
 		   printf_d("eeprom dev init and check ok\n");
+		   inode_e2p.i_flags = __FS_IS_INODE_OK | __FS_IS_INODE_INIT;
 	       return OK; //ok
 		}else
 		{
 		   printf_d("eeprom dev init and check fail\n");
+		   inode_e2p.i_flags = __FS_IS_INODE_FAIL | __FS_IS_INODE_INIT;
 		   return ERR; //err
 		}
 	}else
 	{
 		printf_d("eeprom : can not find the i2c driver\n");
+		eeprom_file.f_oflags &= ~0x4000;
 		return ERR;
 	}
 }
@@ -69,6 +70,10 @@ int e2p_init(void)
 struct file * e2p_device_open(struct file * filp)
 {
 	/* open always ok */
+
+	if( !( inode_e2p.i_flags & __FS_IS_INODE_OK ) )
+	   return NULL; /* inode not ok */
+
 	eeprom_file.f_inode = &inode_e2p;
 	eeprom_file.f_oflags |= filp->f_oflags;
 

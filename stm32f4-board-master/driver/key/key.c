@@ -34,7 +34,7 @@ struct file * key_device_open(struct file * filp)
 	/* open always ok */
 	key_file.f_inode = &inode_key;
 	key_file.f_oflags = filp->f_oflags;
-
+	key_init();
 	return &key_file;
 }
 
@@ -105,5 +105,8 @@ int key_init(void)
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
-  return 0;
+
+	inode_key.i_flags = __FS_IS_INODE_OK | __FS_IS_INODE_INIT;
+
+    return 0;
 }

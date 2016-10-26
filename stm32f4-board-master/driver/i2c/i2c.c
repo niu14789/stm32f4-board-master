@@ -46,7 +46,7 @@ struct file * i2c_device_open(struct file * filp)
 	/* open always ok */
 	i2c_file.f_inode = &inode_i2c;
 	i2c_file.f_oflags = filp->f_oflags;
-
+	i2c_init();
 	return &i2c_file;
 }
 
@@ -69,6 +69,7 @@ int i2c_init(void)
 
 	IIC_SCL_1;//;
 	IIC_SDA_1;//;
+	inode_i2c.i_flags = __FS_IS_INODE_OK | __FS_IS_INODE_INIT;
 	return 0;
 }
 

@@ -61,7 +61,7 @@ int touch2_init(void)
 			               gui_dev_ops_g()->gui_device_msg.ysize,
 						   read_ad_x,
 						   read_ad_y);
-
+	inode_touch2.i_flags =  __FS_IS_INODE_OK|__FS_IS_INODE_INIT;
    return 0;
 }
 

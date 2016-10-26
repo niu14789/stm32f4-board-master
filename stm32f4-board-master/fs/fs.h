@@ -16,7 +16,7 @@
 
 /* general option */
 #define FAR
-#define FS_INODE_USABLE 0x56AB  /* magic */
+#define FS_INODE_USABLE       (0x0000)  /* magic */
 #define ERR  (-1)
 #define OK   (0)
 #define  DEVICE_END  0x8
@@ -36,6 +36,11 @@
 #define __FS_DIRTY  			(0x40)
 #endif
 
+/* inode message */
+#define __FS_IS_INODE_OK      (0x8000)
+#define __FS_IS_INODE_FAIL    (0x4000)
+#define __FS_IS_INODE_INIT    (0x2000)
+/* ------------- */
 struct inode;
 
 typedef struct inode_vmn_t

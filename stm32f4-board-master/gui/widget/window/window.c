@@ -178,13 +178,22 @@ int window_move(struct gui_msg_t*p_msg,void *data)
 	return 0;
 }
 
+int window_event_process(struct gui_handler * h_hmd,enum event_type event , void * data)
+{
+	switch(event)
+	{
+	case widget_move:
+		window_move(&h_hmd->widget_msg,data);
+		break;
+	default:
+		break;
+	}
+	return 0;
+}
 struct gui_operations window_ops = {
 		window_create,
 		window_show,
-		NULL,
-		NULL,
-		NULL,
-		window_move
+		window_event_process
 };
 
 

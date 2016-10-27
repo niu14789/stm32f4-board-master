@@ -126,10 +126,7 @@ typedef struct window_hwnd_t{
 struct gui_operations{
 	window_hwnd  * (*create)(window_hwnd * hwnd,struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data));
 	int (*show)(struct gui_handler * g_hmd);
-	int (*onfocus)(struct gui_msg_t*p_msg);
-	int (*losefocus)(struct gui_msg_t*p_msg);
-	int (*onclick)(struct gui_msg_t*p_msg);
-	int (*move)(struct gui_msg_t*p_msg,void *data);
+	int (*event_process)(struct gui_handler * h_hmd,enum event_type event , void * data);
 };
 
 /* the gui system callback typedef */

@@ -11,6 +11,7 @@
 
 #include "lcd_hw.h"
 #include "gui.h"
+#include "gui_config.h"
 
 static unsigned int sram_test[0xffff] __attribute__((at(0x68000000)));
 
@@ -101,7 +102,9 @@ int main(void)
 {
 
  	  int x=0,y=0,xs=5,ys=3;
-	
+ 	 static	gui_msg_l0 msg_l0;
+ 	static struct file * fd = NULL;
+ 	static unsigned short data_2[2];
 //	  struct file *fd1,*fd2,*fd3,*fd4,*fd5;
 	
  	  unsigned short r=122,g=90,b=12;
@@ -121,18 +124,34 @@ int main(void)
 // 	
 // 	window_create(&window_handler,&gui_msg_tmp,NULL);
 // 	
- 	refresh();
+ //	refresh();
 
 	   stm32_usart_init(USART3,PB10_PB11,57600);
  
-	
+	   if(fd == NULL)
+	   		  fd = open("/dev/queuel0.d",__FS_OPEN_EXISTING | __FS_WRITE );
+
 	 while(1)
 	 {
-		 send_move_cmd_test(5,5);
+//		 send_move_cmd_test(5,5);
 
-		 gui_server();
+		gui_server();
 
-		 fd_delay(0xfffff);
+		if(gui_dev_ops_g()->gui_touch_ops_g.measure_x())
+		{
+			msg_l0.x_pos = gui_dev_ops_g()->gui_touch_ops_g.measure_x() * gui_dev_ops_g()->gui_touch_ops_g.touch_cali_msg.x_cali_k +
+																	   gui_dev_ops_g()->gui_touch_ops_g.touch_cali_msg.x_cali_d;
+
+			msg_l0.y_pos = gui_dev_ops_g()->gui_touch_ops_g.measure_y() * gui_dev_ops_g()->gui_touch_ops_g.touch_cali_msg.y_cali_k +
+															   gui_dev_ops_g()->gui_touch_ops_g.touch_cali_msg.y_cali_d;
+
+			msg_l0.event_type = onfocus;
+
+			write(fd,(const char *)&msg_l0,sizeof(msg_l0));
+		}
+
+
+//		 fd_delay(0xfffff);
 	 }
 	
 

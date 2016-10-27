@@ -58,11 +58,11 @@ int gui_config_init(void)
 
     if(file_touch == NULL)
     {
-		printf_d("touch cali:can not find the eeprom dev\n");
-		printf_d("need calibration\n");
-		gui_touch_calibration(&gui_dev_ops_g()->gui_touch_ops_g.touch_cali_msg);
+			printf_d("touch cali:can not find the eeprom dev\n");
+			printf_d("need calibration\n");
+			gui_touch_calibration(&gui_dev_ops_g()->gui_touch_ops_g.touch_cali_msg);
 
-		return OK;
+			return OK;
     }
 
     if(read(file_touch,(char *)&buffer,sizeof(buffer)) != sizeof(buffer))
@@ -76,7 +76,7 @@ int gui_config_init(void)
     {
         /* has calirationed */
 
-    	memcpy(&gui_dev_ops_g()->gui_touch_ops_g.touch_cali_msg,buffer,8);
+    	memcpy(&gui_dev_ops_g()->gui_touch_ops_g.touch_cali_msg,buffer,16);
 
     	return OK;
     }else

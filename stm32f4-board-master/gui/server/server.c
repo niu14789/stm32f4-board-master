@@ -56,7 +56,7 @@ int gui_event_idle(void)
 		/* got the a event */
 		p_gui_msg = (gui_msg *)buffer;
 
-		gui_event_done(p_gui_msg,p_gui_msg->event_type,p_gui_msg->data);
+		p_gui_msg->handler->gui_ops->event_process(p_gui_msg->handler,p_gui_msg->event_type,p_gui_msg->data);
 
 		/* idle the callback function */
 		if(p_gui_msg->handler->callback!=NULL)
@@ -65,40 +65,6 @@ int gui_event_idle(void)
 	return 0;
 }
 
-int gui_event_done(gui_msg *p_msg,enum event_type event,void *data)
-{
-	switch(event)
-	{
-		case onfocus:
-			if(p_msg->handler->gui_ops->onfocus != NULL)
-				p_msg->handler->gui_ops->onfocus(&p_msg->handler->widget_msg);
-			break;
-		case losefocus:
-			if(p_msg->handler->gui_ops->losefocus != NULL)
-				p_msg->handler->gui_ops->losefocus(&p_msg->handler->widget_msg);
-			break;
-		case onclick:
-			if(p_msg->handler->gui_ops->onclick != NULL)
-				p_msg->handler->gui_ops->onclick(&p_msg->handler->widget_msg);
-			break;
-		case doubleclick:
-			break;
-		case change_caption:
-			break;
-		case key_click:
-			break;
-		case key_long_press:
-			break;
-		case widget_move:
-      if(p_msg->handler->gui_ops->move != NULL)
-				 p_msg->handler->gui_ops->move(&p_msg->handler->widget_msg,data);
-      break;
-		default:break;
-	}
-	return 0;
-}
-
-
 int gui_event_check(void)
 {
 	struct gui_handler *p_gui;
@@ -106,7 +72,7 @@ int gui_event_check(void)
 	int ret;
 	gui_msg gui_msg_buffer;
 	gui_msg_l0 gui_msgl0;
-
+    unsigned short x_pos,y_pos;
 	if( fd_queue == NULL )
 		return ERR;  /* queue init error ,direct return */
 
@@ -118,17 +84,22 @@ int gui_event_check(void)
 	if( ret != OK )
       return ERR;
 
+
 	for(p_gui=gui_hander_root;
 			p_gui!=NULL;p_gui=p_gui->link)
 	{
-		 if(gui_msgl0.x_pos>=p_gui->widget_msg.x &&
-			gui_msgl0.x_pos<=(p_gui->widget_msg.xsize+p_gui->widget_msg.x) &&
-			gui_msgl0.y_pos>=p_gui->widget_msg.y	&&
-			gui_msgl0.y_pos<=(p_gui->widget_msg.ysize+p_gui->widget_msg.y))
+
+		x_pos =  gui_msgl0.x_pos - p_gui->widget_msg.x;
+		y_pos =  gui_msgl0.y_pos - p_gui->widget_msg.y;
+
+		 if(x_pos>=p_gui->widget_msg.x &&
+			 x_pos<=(p_gui->widget_msg.xsize+p_gui->widget_msg.x) &&
+			 y_pos>=p_gui->widget_msg.y	&&
+			 y_pos<=(p_gui->widget_msg.ysize+p_gui->widget_msg.y))
 		  {
 				gui_msg_buffer.handler = p_gui;
 				gui_msg_buffer.event_type = gui_msgl0.event_type;
-        gui_msg_buffer.data = gui_msgl0.pri_data;
+                gui_msg_buffer.data = gui_msgl0.pri_data;
 				/*revert all focus widget in same parent window*/
 				gui_revert_widget(gui_hander_root,p_gui);
 				/*send the data to the msg queue */
@@ -136,7 +107,7 @@ int gui_event_check(void)
 
 				p_gui->status = FOCUS_ON;
 
-				return OK;
+	//			return OK;
 		  }
 	}
 	return ERR;

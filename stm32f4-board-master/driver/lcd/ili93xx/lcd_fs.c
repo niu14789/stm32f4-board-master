@@ -30,7 +30,7 @@ int lcd_ili_init(void)
 	if( id == 0 )
 	{
 		printf_d("[lcd2]:lcd init error : can not find the lcd device");
-		inode_ili_lcd2 =  __FS_IS_INODE_FAIL | __FS_IS_INODE_INIT;
+		inode_ili_lcd2.i_flags =  __FS_IS_INODE_FAIL | __FS_IS_INODE_INIT;
 		return (-1);
 	}
 	

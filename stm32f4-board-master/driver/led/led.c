@@ -78,7 +78,7 @@ int led_init(void)
 	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOG, &GPIO_InitStructure);
-	inode_ili_lcd2.i_flags =  __FS_IS_INODE_OK | __FS_IS_INODE_INIT;
+	inode_led.i_flags =  __FS_IS_INODE_OK | __FS_IS_INODE_INIT;
 	return OK;
 }
 

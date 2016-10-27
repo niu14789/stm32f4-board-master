@@ -23,7 +23,7 @@ struct inode inode_gui_config =
 	"gui_config"
 };
 
-//FS_REGISTER(FS_DRV("gui_config.d"),inode_gui_config);
+FS_REGISTER(FS_DRV("gui_config.d"),inode_gui_config);
 
 /* default set line,use as idoit foolish */
 void set_line_default(unsigned short x,unsigned short y,unsigned short x_s,unsigned short y_s,unsigned short color)
@@ -38,11 +38,23 @@ void fill_dect_default(unsigned short x,unsigned short y,unsigned short height,u
 
 int gui_config_init(void)
 {
-	struct file * file_touch;
+	struct file * file_touch,*file_lcd2;
     float buffer[5];
 
     /* open save file in eeprom*/
 	file_touch = open("/less/eeprom/lcd2_default_cali.bin",__FS_OPEN_EXISTING | __FS_READ);
+
+	if( open(FS_DEVICE("lcd2.d"), __FS_OPEN_EXISTING | __FS_READ) == NULL )
+	{
+		printf_d("touch we can not find the lcd2 device\n");
+		return ERR;
+	}
+
+	if( open(FS_INPUT("touch2.d"), __FS_OPEN_EXISTING | __FS_READ) == NULL )
+	{
+		printf_d("touch we can not find the touch device\n");
+		return ERR;
+	}
 
     if(file_touch == NULL)
     {
@@ -60,7 +72,7 @@ int gui_config_init(void)
     	return ERR;
     }
 
-    if(0)//*(int *)&buffer[4] == 0xabab)
+    if(*(int *)&buffer[4] == 0xbaba)
     {
         /* has calirationed */
 
@@ -73,7 +85,7 @@ int gui_config_init(void)
 
     	memcpy(&gui_dev_ops_g()->gui_touch_ops_g.touch_cali_msg,buffer,16);
 
-    	*(int *)&buffer[4] = 0xabab;
+    	*(int *)&buffer[4] = 0xbaba;
 
     	if(write(file_touch,(const char *)&buffer,sizeof(buffer)) == OK)
     	{
@@ -104,7 +116,6 @@ int gui_touch_calibration(touch_msg_def * touch_msg)
     y_size = gui_dev_ops_g()->gui_device_msg.ysize;
 
     gui_dev_ops_g()->gui_dev_ops_g.fill_dect(0,0,y_size,x_size,0xffff);
-
 
     /* show some msg */
 
@@ -166,29 +177,17 @@ int gui_touch_calibration(touch_msg_def * touch_msg)
     {
     	 GUI_DISPLAY_STRING((x_size - strlen(show_msg3))/2,y_size/2+16,show_msg3,0x0,GUI_DIS_STRING_MODE_TRANS);
          memcpy(touch_msg,cali_buffer,sizeof(touch_msg_def));
+         printf_d("touch calibration ok\n");
+         return OK;
     }else
     {
-    	GUI_DISPLAY_STRING((x_size - strlen(show_msg4))/2,y_size/2+16,show_msg4,0x0,GUI_DIS_STRING_MODE_TRANS);
+    	 GUI_DISPLAY_STRING((x_size - strlen(show_msg4))/2,y_size/2+16,show_msg4,0x0,GUI_DIS_STRING_MODE_TRANS);
+    	 printf_d("touch calibration err\n");
+    	 return ERR;
     }
-
-
-    while(1)
-    {
-    	x_d = gui_dev_ops_g()->gui_touch_ops_g.measure_x();
-    	y_d = gui_dev_ops_g()->gui_touch_ops_g.measure_y();
-
-        if(x_d && y_d)
-        {
-        	gui_dev_ops_g()->gui_dev_ops_g.put_pixel((unsigned short)(x_d * cali_buffer[0] + cali_buffer[1]),
-        			                                 (unsigned short)(y_d * cali_buffer[2] + cali_buffer[3]),0x1234);
-        }
-    }
-
-
     /* ok */
 
-    return 0;
-
+    return OK;
 }
 
 

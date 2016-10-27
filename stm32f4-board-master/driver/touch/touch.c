@@ -11,16 +11,24 @@
 
 #include "gui_config.h"
 
+struct file * touch2_device_open(struct file * filp);
+
+static struct file touch_file;
+
 #define  CMD_RDX (0xD0)
 #define  CMD_RDY (0x90)
 
+struct file_operations touch2_ops =
+{
+  touch2_device_open,
+};
 struct inode inode_touch2 =
 {
 	NULL,
 	NULL,
 	0,
 	FS_INODE_USABLE,
-	NULL,
+	&touch2_ops,
 	NULL,
 	NULL,
 	touch2_init,
@@ -29,12 +37,35 @@ struct inode inode_touch2 =
 
 FS_REGISTER(FS_INPUT("touch2.d"),inode_touch2);
 
+struct file * touch2_device_open(struct file * filp)
+{
+	touch_file.f_inode = &inode_touch2;
+	if(OK == touch2_init())
+	{
+		return &touch_file;
+	}else
+	{
+		return NULL;
+	}
+	/* open always ok */
+}
 
 int touch2_init(void)
 {
 
 	GPIO_InitTypeDef  GPIO_InitStructure;
 	
+	if(inode_touch2.i_flags & __FS_IS_INODE_INIT)
+	{
+		if(inode_touch2.i_flags & __FS_IS_INODE_OK)
+		{
+			return OK;//has been inited
+		}else
+		{
+			return ERR;//but fail
+		}
+	}
+
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB|RCC_AHB1Periph_GPIOC|RCC_AHB1Periph_GPIOF|RCC_AHB1Periph_GPIOH, ENABLE);//使锟斤拷GPIOB,C,F时锟斤拷
 
 	//GPIOB1,2锟斤拷始锟斤拷锟斤拷锟斤拷

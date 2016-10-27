@@ -1,18 +1,22 @@
 
-
 #include "fs.h"
 #include "lcd.h"
 #include "lcd_fs.h"
 #include "gui_config.h"
 
+static struct file lcd_file;
 
+struct file_operations lcd2_ops =
+{
+  lcd2_device_open,
+};
 struct inode inode_ili_lcd2 = 
 {
 	NULL,
 	NULL,
 	0,
 	FS_INODE_USABLE,
-	NULL,
+	&lcd2_ops,
 	NULL,
 	NULL,
 	lcd_ili_init,
@@ -25,6 +29,17 @@ int lcd_ili_init(void)
 {
 	int id;
 	
+	if(inode_ili_lcd2.i_flags & __FS_IS_INODE_INIT)
+	{
+		if(inode_ili_lcd2.i_flags & __FS_IS_INODE_OK)
+		{
+			return OK;//has been inited
+		}else
+		{
+			return ERR;//but fail
+		}
+	}
+
 	id = LCD_Init();
 	
 	if( id == 0 )
@@ -51,7 +66,18 @@ int lcd_ili_init(void)
 }
 
 
-
+struct file * lcd2_device_open(struct file * filp)
+{
+	lcd_file.f_inode = &inode_ili_lcd2;
+	if(OK == lcd_ili_init())
+	{
+		return &lcd_file;
+	}else
+	{
+		return NULL;
+	}
+	/* open always ok */
+}
 
 
 

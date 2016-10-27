@@ -37,10 +37,20 @@ static struct inode inode_e2p =
 
 FS_REGISTER(FS_EEPROM("eeprom.d"),inode_e2p);
 
-
 int e2p_init(void)
 {
 	struct file * fd;
+
+	if( inode_e2p.i_flags & __FS_IS_INODE_INIT )
+	{
+		if( inode_e2p.i_flags & __FS_IS_INODE_OK )
+		{
+			return OK;//has been inited
+		}else
+		{
+			return ERR;//but fail
+		}
+	}
 
 	fd = open(FS_DRV("i2c.d"),__FS_OPEN_EXISTING | __FS_WRITE );
 
@@ -62,7 +72,7 @@ int e2p_init(void)
 	}else
 	{
 		printf_d("eeprom : can not find the i2c driver\n");
-		eeprom_file.f_oflags &= ~0x4000;
+		eeprom_file.f_oflags = __FS_IS_INODE_FAIL | __FS_IS_INODE_INIT;
 		return ERR;
 	}
 }
@@ -71,8 +81,19 @@ struct file * e2p_device_open(struct file * filp)
 {
 	/* open always ok */
 
-	if( !( inode_e2p.i_flags & __FS_IS_INODE_OK ) )
-	   return NULL; /* inode not ok */
+	if( ( inode_e2p.i_flags & __FS_IS_INODE_INIT ) )
+	{
+		if(inode_e2p.i_flags & __FS_IS_INODE_FAIL)
+		{
+			return NULL;
+		}
+	}else
+	{
+		if(e2p_init() != OK)
+		{
+			return NULL;
+		}
+	}
 
 	eeprom_file.f_inode = &inode_e2p;
 	eeprom_file.f_oflags |= filp->f_oflags;

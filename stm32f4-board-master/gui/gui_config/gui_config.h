@@ -13,6 +13,10 @@
 #define GUI_WIDTH_PIXEL_DEFAULT       (320)
 #define GUI_HEIGHT_PIXEL_DEFAULT      (240)
 
+#define GUI_DIS_STRING_MODE_TRANS     (0x1<<15)
+
+#define GUI_DISPLAY_STRING(...)       /* GUI_DISPLAY_STRING(unsigned short x,unsigned short y,const char * str,unsigned short color,unsigned short mode) */
+
 /* gui display devive message */
 typedef struct gui_device_msg_t
 {
@@ -34,10 +38,10 @@ typedef struct gui_dev_ops_t
 
 typedef struct touch_t
 {
-	unsigned short x_cali_k;
-	unsigned short x_cali_d;
-	unsigned short y_cali_k;
-	unsigned short y_cali_d;
+	float x_cali_k;
+	float x_cali_d;
+	float y_cali_k;
+	float y_cali_d;
 }touch_msg_def;
 
 typedef struct gui_touch_dev_t{

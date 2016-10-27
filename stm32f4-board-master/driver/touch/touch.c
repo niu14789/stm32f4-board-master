@@ -72,7 +72,7 @@ unsigned short read_ad_x(void)
 {
 	if(PEN==0)
 	{
-	    return TP_Read_XOY(CMD_RDX);
+	    return TP_Read_XOY(CMD_RDY);
 	}
 	else
 	{
@@ -83,7 +83,7 @@ unsigned short read_ad_y(void)
 {
 	if(PEN==0)
 	{
-	    return TP_Read_XOY(CMD_RDY);
+	    return TP_Read_XOY(CMD_RDX);
 	}
 	else
 	{

@@ -39,7 +39,9 @@ void fill_dect_default(unsigned short x,unsigned short y,unsigned short height,u
 int gui_config_init(void)
 {
 	struct file * file_touch;
-    unsigned short buffer[5];
+    float buffer[5];
+
+    /* open save file in eeprom*/
 	file_touch = open("/less/eeprom/lcd2_default_cali.bin",__FS_OPEN_EXISTING | __FS_READ);
 
     if(file_touch == NULL)
@@ -58,7 +60,7 @@ int gui_config_init(void)
     	return ERR;
     }
 
-    if(0)//buffer[4] == 0xabab)
+    if(0)//*(int *)&buffer[4] == 0xabab)
     {
         /* has calirationed */
 
@@ -69,9 +71,9 @@ int gui_config_init(void)
     {
     	gui_touch_calibration((touch_msg_def *)&buffer);
 
-    	memcpy(&gui_dev_ops_g()->gui_touch_ops_g.touch_cali_msg,buffer,8);
+    	memcpy(&gui_dev_ops_g()->gui_touch_ops_g.touch_cali_msg,buffer,16);
 
-    	buffer[4] = 0xabab;
+    	*(int *)&buffer[4] = 0xabab;
 
     	if(write(file_touch,(const char *)&buffer,sizeof(buffer)) == OK)
     	{
@@ -87,8 +89,13 @@ int gui_config_init(void)
 
 int gui_touch_calibration(touch_msg_def * touch_msg)
 {
-    unsigned short x_k,x_d,y_k,y_d;
+    unsigned short x_k = 0,x_d = 0,y_k = 0,y_d = 0;
     unsigned short x_size,y_size;
+    float cali_buffer[4];
+    const char * show_msg1 = "tft touch pad calibration";
+    const char * show_msg2 = "please touch the '+'";
+    const char * show_msg3 = "fail try again";
+    const char * show_msg4 = "ok";
     /* start calibration  */
 
     /* clear lcd with while */
@@ -96,13 +103,90 @@ int gui_touch_calibration(touch_msg_def * touch_msg)
     x_size = gui_dev_ops_g()->gui_device_msg.xsize;
     y_size = gui_dev_ops_g()->gui_device_msg.ysize;
 
-    gui_dev_ops_g()->gui_dev_ops_g.fill_dect(0,0,y_size,x_size,0x0);
+    gui_dev_ops_g()->gui_dev_ops_g.fill_dect(0,0,y_size,x_size,0xffff);
 
-    /* draw a big point at (5 , 5*/
 
-    gui_dev_ops_g()->gui_dev_ops_g.fill_dect(3,3,4,5,0xffff);
+    /* show some msg */
 
-    while(!gui_dev_ops_g()->gui_touch_ops_g.measure_x());
+    GUI_DISPLAY_STRING((x_size - strlen(show_msg1))/2,y_size/2-16,show_msg1,0x0,GUI_DIS_STRING_MODE_TRANS);
+    GUI_DISPLAY_STRING((x_size - strlen(show_msg2))/2,y_size/2- 0,show_msg2,0x0,GUI_DIS_STRING_MODE_TRANS);
+    /* draw a big point at (15 , 15) */
+
+    gui_dev_ops_g()->gui_dev_ops_g.set_line(10,15,20,15,0x0);
+    gui_dev_ops_g()->gui_dev_ops_g.set_line(15,10,15,20,0x0);
+
+    while(!(x_k && y_k))
+    {
+    	x_k = gui_dev_ops_g()->gui_touch_ops_g.measure_x();
+    	y_k = gui_dev_ops_g()->gui_touch_ops_g.measure_y();
+    }
+
+    gui_dev_ops_g()->gui_dev_ops_g.set_line(10,15,20,15,0xffff);
+    gui_dev_ops_g()->gui_dev_ops_g.set_line(15,10,15,20,0xffff);
+
+    while(gui_dev_ops_g()->gui_touch_ops_g.measure_x()); // wait press off
+
+    gui_dev_ops_g()->gui_dev_ops_g.set_line(x_size-15-5,y_size-15,x_size-10,y_size-15,0x0);
+    gui_dev_ops_g()->gui_dev_ops_g.set_line(x_size-15,y_size-15-5,x_size-15,y_size-10,0x0);
+
+    while(!(x_d && y_d))
+    {
+    	x_d = gui_dev_ops_g()->gui_touch_ops_g.measure_x();
+    	y_d = gui_dev_ops_g()->gui_touch_ops_g.measure_y();
+    }
+
+    gui_dev_ops_g()->gui_dev_ops_g.set_line(x_size-15-5,y_size-15,x_size-10,y_size-15,0xffff);
+    gui_dev_ops_g()->gui_dev_ops_g.set_line(x_size-15,y_size-15-5,x_size-15,y_size-10,0xffff);
+
+    while(gui_dev_ops_g()->gui_touch_ops_g.measure_x()); // wait press off
+
+    cali_buffer[0] = (float)(x_size-30)/(float)((short)x_d-(short)x_k); // x_k
+    cali_buffer[1] = 15.0f - cali_buffer[0] * (float)x_k;//  x_d
+
+    cali_buffer[2] = (float)(y_size-30)/(float)((short)y_d-(short)y_k);// y_k
+    cali_buffer[3] = 15.0f - cali_buffer[2] * (float)y_k;// y_d
+
+    /* verify */
+
+    gui_dev_ops_g()->gui_dev_ops_g.set_line(x_size-15-5,15,x_size-10,15,0x0);
+    gui_dev_ops_g()->gui_dev_ops_g.set_line(x_size-15,15-5,x_size-15,20,0x0);
+
+    x_d = 0;
+    y_d = 0;
+    while(!(x_d && y_d))
+    {
+		x_d = gui_dev_ops_g()->gui_touch_ops_g.measure_x();
+		y_d = gui_dev_ops_g()->gui_touch_ops_g.measure_y();
+    }
+
+    if(((int)(x_d * cali_buffer[0] + cali_buffer[1]) >= x_size - 15 - 5) &&
+      ((int)(x_d * cali_buffer[0] + cali_buffer[1]) <= x_size - 10) &&
+	  ((int)(y_d * cali_buffer[2] + cali_buffer[3]) >= 15 - 5) &&
+	  ((int)(y_d * cali_buffer[2] + cali_buffer[3]) <= 20))
+    {
+    	 GUI_DISPLAY_STRING((x_size - strlen(show_msg3))/2,y_size/2+16,show_msg3,0x0,GUI_DIS_STRING_MODE_TRANS);
+         memcpy(touch_msg,cali_buffer,sizeof(touch_msg_def));
+    }else
+    {
+    	GUI_DISPLAY_STRING((x_size - strlen(show_msg4))/2,y_size/2+16,show_msg4,0x0,GUI_DIS_STRING_MODE_TRANS);
+    }
+
+
+    while(1)
+    {
+    	x_d = gui_dev_ops_g()->gui_touch_ops_g.measure_x();
+    	y_d = gui_dev_ops_g()->gui_touch_ops_g.measure_y();
+
+        if(x_d && y_d)
+        {
+        	gui_dev_ops_g()->gui_dev_ops_g.put_pixel((unsigned short)(x_d * cali_buffer[0] + cali_buffer[1]),
+        			                                 (unsigned short)(y_d * cali_buffer[2] + cali_buffer[3]),0x1234);
+        }
+    }
+
+
+    /* ok */
+
     return 0;
 
 }

@@ -10,7 +10,8 @@
 #include "window.h"
 #include "gui_config.h"
 
-extern window_hwnd  window_handler;
+static window_hwnd * ROOT_HANDLER = NULL;
+extern window_hwnd window_handler;
 
 int show(struct gui_handler *root);
 
@@ -22,8 +23,8 @@ int gui_create(const char *device_availdable_list)
 
 	gui_message gui_msg_tmp =
 	{
-		20,
-		20,
+		50,
+		50,
 		0,
 		0,
 		"main_window",
@@ -72,11 +73,27 @@ int widget_create(enum widget_type_t widget_type,struct gui_msg_t *p_gui_msg,int
 	return 0;
 }
 
+/*
+ * current handler
+ *
+ * get current handler
+ *
+ * very very usefull
+ *
+ * */
 window_hwnd * handler_current(void)
 {
-	return &window_handler;
+	return ROOT_HANDLER;
 }
 
+/*
+ * set the current handler
+ *
+ * */
+void set_handler_current(window_hwnd *hwnd)
+{
+	ROOT_HANDLER = hwnd;
+}
 
 /*
  *    insert the handler to the list

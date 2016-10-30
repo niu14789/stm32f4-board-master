@@ -84,33 +84,55 @@ int gui_event_check(void)
 	if( ret != OK )
       return ERR;
 
-
-	for(p_gui=gui_hander_root;
-			p_gui!=NULL;p_gui=p_gui->link)
+	if((gui_msgl0.x_pos >= gui_hander_root->widget_msg.x) &&
+	   (gui_msgl0.x_pos <= gui_hander_root->widget_msg.x + gui_hander_root->widget_msg.xsize) &&
+	   (gui_msgl0.y_pos >= gui_hander_root->widget_msg.y) &&
+	   (gui_msgl0.y_pos <= gui_hander_root->widget_msg.y + gui_hander_root->widget_msg.ysize))
 	{
+       /* find the window */
+		x_pos = gui_msgl0.x_pos -  gui_hander_root->widget_msg.x;
+		y_pos =  gui_msgl0.y_pos - gui_hander_root->widget_msg.y;
 
-		x_pos =  gui_msgl0.x_pos - p_gui->widget_msg.x;
-		y_pos =  gui_msgl0.y_pos - p_gui->widget_msg.y;
+		for(p_gui=gui_hander_root->link;
+					p_gui!=NULL;p_gui=p_gui->link)
+		{
+/* we find a widget ? */
+			 if((x_pos>=p_gui->widget_msg.x) &&
+				 (x_pos<=(p_gui->widget_msg.xsize+p_gui->widget_msg.x)) &&
+				 (y_pos>=p_gui->widget_msg.y)	&&
+				 (y_pos<=(p_gui->widget_msg.ysize+p_gui->widget_msg.y)))
+			  {
+					gui_msg_buffer.handler = p_gui;
+					gui_msg_buffer.event_type = gui_msgl0.event_type;
+					gui_msg_buffer.data = gui_msgl0.pri_data;
+					/*revert all focus widget in same parent window*/
+					gui_revert_widget(gui_hander_root,p_gui);
+					/*send the data to the msg queue */
+					write(fd_queue,(const char *)&gui_msg_buffer,sizeof(gui_msg_buffer));
 
-		 if(x_pos>=p_gui->widget_msg.x &&
-			 x_pos<=(p_gui->widget_msg.xsize+p_gui->widget_msg.x) &&
-			 y_pos>=p_gui->widget_msg.y	&&
-			 y_pos<=(p_gui->widget_msg.ysize+p_gui->widget_msg.y))
-		  {
-				gui_msg_buffer.handler = p_gui;
-				gui_msg_buffer.event_type = gui_msgl0.event_type;
-                gui_msg_buffer.data = gui_msgl0.pri_data;
-				/*revert all focus widget in same parent window*/
-				gui_revert_widget(gui_hander_root,p_gui);
-				/*send the data to the msg queue */
-				write(fd_queue,(const char *)&gui_msg_buffer,sizeof(gui_msg_buffer));
+					p_gui->status = FOCUS_ON;
 
-				p_gui->status = FOCUS_ON;
+					return OK;
+			  }
+		}
+		/* we can not find any widget  */
+		gui_msg_buffer.handler = gui_hander_root;
+		gui_msg_buffer.event_type = gui_msgl0.event_type;
+		gui_msg_buffer.data = gui_msgl0.pri_data;
+		/*revert all focus widget in same parent window*/
+		gui_revert_widget(gui_hander_root,p_gui);
+		/*send the data to the msg queue */
+		write(fd_queue,(const char *)&gui_msg_buffer,sizeof(gui_msg_buffer));
 
-	//			return OK;
-		  }
+		p_gui->status = FOCUS_ON;
+
+		return OK;
+	}else
+	{
+	  /* maybe select other window */
+       return ERR;
 	}
-	return ERR;
+
 }
 
 

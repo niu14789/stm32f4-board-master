@@ -15,13 +15,19 @@
 /* memory  manager */
 #define RGB(R,G,B)	(((R >> 3) << 11) | ((G >> 2) << 5) | (B >> 3))
 
-const unsigned char EVENT_COLOR[2][4] =
+const unsigned char EVENT_COLOR[2][4][3] =
 {
 		{
-		  243 , 223 , 112 , 255
+		  {243,243,243} ,
+		  {223,223,223} ,
+		  {112,112,112} ,
+		  {252,252,252}
 		},
 		{
-		  100 , 200 , 34 , 123
+		  {243,243,243} ,
+		  {223,223,223} ,
+		  {60,127,177} ,
+		  {70,216,251}
 		}
 };
 
@@ -76,9 +82,9 @@ int button_create_aschild(struct gui_handler * h_hmd,unsigned char event)
 
 	for(i=0;i<((y_size - 4)/2);i++)
 	{
-		gui_device_t->gui_dev_ops_g.set_line(x_b+2,y_b+2+i,x_size+x_b-2,y_b+2+i,RGB(EVENT_COLOR[event][0]-i,EVENT_COLOR[event][0]-i,EVENT_COLOR[event][0]-i));
+		gui_device_t->gui_dev_ops_g.set_line(x_b+2,y_b+2+i,x_size+x_b-2,y_b+2+i,RGB(EVENT_COLOR[event][0][0]-i,EVENT_COLOR[event][0][1]-i,EVENT_COLOR[event][0][2]-i));
 
-		gui_device_t->gui_dev_ops_g.set_line(x_b+2,y_b+2+i+half_size,x_size+x_b-2,y_b+2+i+half_size,RGB(EVENT_COLOR[event][1]-i,EVENT_COLOR[event][1]-i,EVENT_COLOR[event][1]-i));
+		gui_device_t->gui_dev_ops_g.set_line(x_b+2,y_b+2+i+half_size,x_size+x_b-2,y_b+2+i+half_size,RGB(EVENT_COLOR[event][1][0]-i,EVENT_COLOR[event][1][1]-i,EVENT_COLOR[event][1][2]-i));
 	}
 
     for(j=0;j<4;j++)
@@ -87,34 +93,34 @@ int button_create_aschild(struct gui_handler * h_hmd,unsigned char event)
     	{
     		if(bitmap_button_black[j] & (0x80 >> i))
     		{
-      			gui_device_t->gui_dev_ops_g.put_pixel(x_b + i , y_b + j,RGB(EVENT_COLOR[event][2],EVENT_COLOR[event][2],EVENT_COLOR[event][2]));//black
-        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + x_size - i , y_b + j,RGB(EVENT_COLOR[event][2],EVENT_COLOR[event][2],EVENT_COLOR[event][2]));//black
-        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + i , y_size + y_b - j,RGB(EVENT_COLOR[event][2],EVENT_COLOR[event][2],EVENT_COLOR[event][2]));//black
-        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + x_size - i , y_size + y_b - j,RGB(EVENT_COLOR[event][2],EVENT_COLOR[event][2],EVENT_COLOR[event][2]));//black
+      			gui_device_t->gui_dev_ops_g.put_pixel(x_b + i , y_b + j,RGB(EVENT_COLOR[event][2][0],EVENT_COLOR[event][2][1],EVENT_COLOR[event][2][2]));//black
+        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + x_size - i , y_b + j,RGB(EVENT_COLOR[event][2][0],EVENT_COLOR[event][2][1],EVENT_COLOR[event][2][2]));//black
+        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + i , y_size + y_b - j,RGB(EVENT_COLOR[event][2][0],EVENT_COLOR[event][2][1],EVENT_COLOR[event][2][2]));//black
+        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + x_size - i , y_size + y_b - j,RGB(EVENT_COLOR[event][2][0],EVENT_COLOR[event][2][1],EVENT_COLOR[event][2][2]));//black
     		}
 
     		if(bitmap_button_white[j] & (0x80 >> i))
     		{
-      			gui_device_t->gui_dev_ops_g.put_pixel(x_b + i , y_b + j,RGB(EVENT_COLOR[event][3],EVENT_COLOR[event][3],EVENT_COLOR[event][3]));//white
-        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + x_size - i , y_b + j,RGB(EVENT_COLOR[event][3],EVENT_COLOR[event][3],EVENT_COLOR[event][3]));//white
-        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + i , y_size + y_b - j,RGB(EVENT_COLOR[event][3],EVENT_COLOR[event][3],EVENT_COLOR[event][3]));//white
-        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + x_size - i , y_size + y_b - j,RGB(EVENT_COLOR[event][3],EVENT_COLOR[event][3],EVENT_COLOR[event][3]));//white
+      			gui_device_t->gui_dev_ops_g.put_pixel(x_b + i , y_b + j,RGB(EVENT_COLOR[event][3][0],EVENT_COLOR[event][3][1],EVENT_COLOR[event][3][2]));//white
+        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + x_size - i , y_b + j,RGB(EVENT_COLOR[event][3][0],EVENT_COLOR[event][3][1],EVENT_COLOR[event][3][2]));//white
+        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + i , y_size + y_b - j,RGB(EVENT_COLOR[event][3][0],EVENT_COLOR[event][3][1],EVENT_COLOR[event][3][2]));//white
+        		gui_device_t->gui_dev_ops_g.put_pixel(x_b + x_size - i , y_size + y_b - j,RGB(EVENT_COLOR[event][3][0],EVENT_COLOR[event][3][1],EVENT_COLOR[event][3][2]));//white
     		}
     	}
     }
 
-    gui_device_t->gui_dev_ops_g.set_line(x_b,y_b+4,x_b,y_size + y_b - 4,RGB(EVENT_COLOR[event][2],EVENT_COLOR[event][2],EVENT_COLOR[event][2]));
-    gui_device_t->gui_dev_ops_g.set_line(x_b+x_size,y_b+4,x_b+x_size,y_size + y_b - 4,RGB(EVENT_COLOR[event][2],EVENT_COLOR[event][2],EVENT_COLOR[event][2]));
+    gui_device_t->gui_dev_ops_g.set_line(x_b,y_b+4,x_b,y_size + y_b - 4,RGB(EVENT_COLOR[event][2][0],EVENT_COLOR[event][2][1],EVENT_COLOR[event][2][2]));
+    gui_device_t->gui_dev_ops_g.set_line(x_b+x_size,y_b+4,x_b+x_size,y_size + y_b - 4,RGB(EVENT_COLOR[event][2][0],EVENT_COLOR[event][2][1],EVENT_COLOR[event][2][2]));
 
-    gui_device_t->gui_dev_ops_g.set_line(x_b+1,y_b+4,x_b+1,y_size + y_b - 4,RGB(EVENT_COLOR[event][3],EVENT_COLOR[event][3],EVENT_COLOR[event][3]));
-    gui_device_t->gui_dev_ops_g.set_line(x_b+x_size-1,y_b+4,x_b+x_size-1,y_size + y_b - 4,RGB(EVENT_COLOR[event][3],EVENT_COLOR[event][3],EVENT_COLOR[event][3]));
+    gui_device_t->gui_dev_ops_g.set_line(x_b+1,y_b+4,x_b+1,y_size + y_b - 4,RGB(EVENT_COLOR[event][3][0],EVENT_COLOR[event][3][1],EVENT_COLOR[event][3][2]));
+    gui_device_t->gui_dev_ops_g.set_line(x_b+x_size-1,y_b+4,x_b+x_size-1,y_size + y_b - 4,RGB(EVENT_COLOR[event][3][0],EVENT_COLOR[event][3][1],EVENT_COLOR[event][3][2]));
 
 
-    gui_device_t->gui_dev_ops_g.set_line(x_b+4,y_b,x_size+x_b-4,y_b,RGB(EVENT_COLOR[event][2],EVENT_COLOR[event][2],EVENT_COLOR[event][2]));
-    gui_device_t->gui_dev_ops_g.set_line(x_b+4,y_b+y_size,x_size+x_b-4,y_size+y_b,RGB(EVENT_COLOR[event][2],EVENT_COLOR[event][2],EVENT_COLOR[event][2]));
+    gui_device_t->gui_dev_ops_g.set_line(x_b+4,y_b,x_size+x_b-4,y_b,RGB(EVENT_COLOR[event][2][0],EVENT_COLOR[event][2][1],EVENT_COLOR[event][2][2]));
+    gui_device_t->gui_dev_ops_g.set_line(x_b+4,y_b+y_size,x_size+x_b-4,y_size+y_b,RGB(EVENT_COLOR[event][2][0],EVENT_COLOR[event][2][1],EVENT_COLOR[event][2][2]));
 
-    gui_device_t->gui_dev_ops_g.set_line(x_b+4,y_b+1,x_size+x_b-4,y_b+1,RGB(EVENT_COLOR[event][3],EVENT_COLOR[event][3],EVENT_COLOR[event][3]));
-    gui_device_t->gui_dev_ops_g.set_line(x_b+4,y_b+y_size-1,x_size+x_b-4,y_size+y_b-1,RGB(EVENT_COLOR[event][3],EVENT_COLOR[event][3],EVENT_COLOR[event][3]));
+    gui_device_t->gui_dev_ops_g.set_line(x_b+4,y_b+1,x_size+x_b-4,y_b+1,RGB(EVENT_COLOR[event][3][0],EVENT_COLOR[event][3][1],EVENT_COLOR[event][3][2]));
+    gui_device_t->gui_dev_ops_g.set_line(x_b+4,y_b+y_size-1,x_size+x_b-4,y_size+y_b-1,RGB(EVENT_COLOR[event][3][0],EVENT_COLOR[event][3][1],EVENT_COLOR[event][3][2]));
 
 	return 0;
 }
@@ -170,7 +176,7 @@ window_hwnd * button_create(window_hwnd * hwnd,struct gui_msg_t * p_msg,int (*ca
 
 int button_show(struct gui_handler * g_hmd)
 {
-	return button_create_aschild(g_hmd,1);
+	return button_create_aschild(g_hmd,0);
 }
 
 

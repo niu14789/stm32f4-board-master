@@ -118,7 +118,8 @@ struct gui_hwnd{
 };
 
 typedef struct window_hwnd_t{
-	struct window_hwnd_t *link[3]; // support three child windows
+	struct window_hwnd_t *child_link[3]; // support three child windows
+	struct window_hwnd_t *same_link;     // suport same class window
 	widget_hwnd  window;
 }window_hwnd;
 
@@ -170,6 +171,8 @@ window_hwnd * handler_current(void);
 struct gui_handler * handler_insert(window_hwnd * hwnd,struct gui_handler *insert_one);
 int gui_create(const char *device_availdable_list);
 int widget_create(enum widget_type_t widget_type,struct gui_msg_t *p_gui_msg,int (*callback)(enum event_type,void *data));
+int refresh(void);
+void set_handler_current(window_hwnd *hwnd);
 /* end nuttx */
 
 #endif /* __GUI_H__ */

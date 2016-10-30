@@ -149,20 +149,21 @@ int window_show(struct gui_handler * g_hmd)
 window_hwnd * window_create(window_hwnd * hwnd,struct gui_msg_t*p_msg,int (*callback)(enum event_type,void *data))
 {
 	/* widget message */
-	memcpy(&window_handler.window.widget_msg,p_msg,sizeof(window_handler.window.widget_msg));
-	window_handler.window.gui_ops = &window_ops;
-	window_handler.window.callback = callback;
-	window_handler.window.id = 1;
-	window_handler.window.link = NULL;
-	window_handler.window.status = p_msg->mode;
+	memcpy(&hwnd->window.widget_msg,p_msg,sizeof(window_handler.window.widget_msg));
+	hwnd->window.gui_ops = &window_ops;
+	hwnd->window.callback = callback;
+	hwnd->window.id = 1;
+	hwnd->window.link = NULL;
+	hwnd->window.status = p_msg->mode;
 
 	/*
 	 *   reserve function
+	 */
+    window_insert(hwnd,0);
+	/*
 	 *
-	 *   window_insert(&window_handler);
-	 *
-	 * */
-    return &window_handler;
+	 */
+    return hwnd;
 }
 
 int window_move(struct gui_msg_t*p_msg,void *data)
@@ -196,7 +197,37 @@ struct gui_operations window_ops = {
 		window_event_process
 };
 
+int window_insert(window_hwnd * hwnd,unsigned short mode)
+{
+	window_hwnd * root;
 
+	root =  handler_current();
+
+	if( root == NULL )
+	{
+		/* first insert */
+		set_handler_current(hwnd);
+
+		return OK;
+	}
+
+	/* second and more */
+	if(mode == 0)
+	{
+		/* as child */
+
+		root->child_link[0] = hwnd;
+		set_handler_current(hwnd);
+
+	}else
+	{
+		/* ad same class */
+		root->same_link = hwnd;
+		set_handler_current(hwnd);
+	}
+
+    return OK;
+}
 
 
 

@@ -15,6 +15,13 @@
 #include "gui.h"
 #include "stdio.h"
 
+/* about windows */
+#include "window.h"
+#include "gui.h"
+#include "button.h"
+static window_hwnd  window_handler_key;
+/* ------------- */
+
 int key_gui_callback(enum event_type event,void *data);
 
 struct gui_msg_t key_gui_msg = {
@@ -37,20 +44,39 @@ struct nxgui_object key_gui_object = {
 
 int key_gui_callback(enum event_type event,void *data)
 {
-// 	extern int lcd_fd;
-// 	switch(event)
-// 	{
-// 		case onfocus:
-// 		    write(lcd_fd,"keyonfocus",1);
-// 			break;
-// 		case losefocus:
-// 			write(lcd_fd,"keylosefocus",1);
-// 			break;
-// 		default:break;
-// 	}
-	char s_send[5]={0x53,0x00,0x02,0x11,0x66};
-	printf(s_send);
-	
+	gui_message gui_msg_tmp =
+	{
+		100,
+		80,
+		150,
+		120,
+		"main_window",
+		"/sdcard/main.bmp",
+		0,
+		0,
+		__GUI_WIDGET_MODE_0     | /* pic mode , with caption */
+		__GUI_WIDGET_TYPE_OCT   | /* right angle mode */
+		__GUI_WIDGET_FRAME_NONE | /* without frame */
+		__GUI_WIDGET_THEME_0    | /* theme 0 */
+		__GUI_WIDGET_HANDLE       /* no ues */
+	};
+
+	struct gui_msg_t b1_msg = {
+			10,
+			80,
+			50,
+			30,
+	};
+	/* create the default create */
+	window_create(&window_handler_key,&gui_msg_tmp,NULL);
+
+	button_create(&window_handler_key,&b1_msg,NULL);
+
+	b1_msg.x = 80;
+
+	button_create(&window_handler_key,&b1_msg,NULL);
+
+	refresh();
 	return 0;
 }
 

@@ -148,6 +148,8 @@ int main(void)
 			msg_l0.event_type = onfocus;
 
 			write(fd,(const char *)&msg_l0,sizeof(msg_l0));
+
+			while(gui_dev_ops_g()->gui_touch_ops_g.measure_x());
 		}
 
 

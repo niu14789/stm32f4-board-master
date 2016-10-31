@@ -159,7 +159,7 @@ window_hwnd * window_create(window_hwnd * hwnd,struct gui_msg_t*p_msg,int (*call
 	/*
 	 *   reserve function
 	 */
-    window_insert(hwnd,0);
+    window_insert(hwnd);
 	/*
 	 *
 	 */
@@ -183,6 +183,9 @@ int window_event_process(struct gui_handler * h_hmd,enum event_type event , void
 {
 	switch(event)
 	{
+	case onfocus:
+		refresh();
+		break;
 	case widget_move:
 		window_move(&h_hmd->widget_msg,data);
 		break;
@@ -197,7 +200,7 @@ struct gui_operations window_ops = {
 		window_event_process
 };
 
-int window_insert(window_hwnd * hwnd,unsigned short mode)
+int window_insert(window_hwnd * hwnd)
 {
 	window_hwnd * root;
 
@@ -212,7 +215,7 @@ int window_insert(window_hwnd * hwnd,unsigned short mode)
 	}
 
 	/* second and more */
-	if(mode == 0)
+	if( hwnd->window.widget_msg.mode & __GUI_WIDGET_HANDLE )
 	{
 		/* as child */
 
@@ -223,14 +226,17 @@ int window_insert(window_hwnd * hwnd,unsigned short mode)
 	{
 		/* ad same class */
 		root->same_next = hwnd;
-		hwnd->parent = root;
+		hwnd->same_pre = root;
 		set_handler_current(hwnd);
 	}
 
     return OK;
 }
 
-
+int window_delete(window_hwnd * hwnd)
+{
+return OK;
+}
 
 
 

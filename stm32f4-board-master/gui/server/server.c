@@ -68,7 +68,8 @@ int gui_event_idle(void)
 int gui_event_check(void)
 {
 	struct gui_handler *p_gui;
-	struct gui_handler *gui_hander_root = &handler_current()->window;
+	window_hwnd * p_hwnd_n;
+	window_hwnd * gui_hwnd = handler_current();
 	int ret;
 	gui_msg gui_msg_buffer;
 	gui_msg_l0 gui_msgl0;
@@ -84,14 +85,13 @@ int gui_event_check(void)
 	if( ret != OK )
       return ERR;
 
-	if( gui_with_in(gui_hander_root,gui_msgl0.x_pos,gui_msgl0.y_pos) == OK)
+	if( (p_hwnd_n = gui_find_window(gui_hwnd,gui_msgl0.x_pos,gui_msgl0.y_pos)) != NULL )
 	{
        /* find the window */
-		x_pos =  gui_msgl0.x_pos -  gui_hander_root->widget_msg.x;
-		y_pos =  gui_msgl0.y_pos - gui_hander_root->widget_msg.y;
+		x_pos =  gui_msgl0.x_pos -  p_hwnd_n->window.widget_msg.x;//;
+		y_pos =  gui_msgl0.y_pos -  p_hwnd_n->window.widget_msg.y;
 
-		for(p_gui=gui_hander_root->link;
-					p_gui!=NULL;p_gui=p_gui->link)
+		for(p_gui=p_hwnd_n->window.link;p_gui!=NULL;p_gui=p_gui->link)
 		{
              /* we find a widget ? */
 			 if(gui_with_in(p_gui,x_pos,y_pos) == OK)
@@ -100,7 +100,7 @@ int gui_event_check(void)
 					gui_msg_buffer.event_type = gui_msgl0.event_type;
 					gui_msg_buffer.data = gui_msgl0.pri_data;
 					/*revert all focus widget in same parent window*/
-					gui_revert_widget(gui_hander_root,p_gui);
+					gui_revert_widget(&p_hwnd_n->window,p_gui);
 					/*send the data to the msg queue */
 					write(fd_queue,(const char *)&gui_msg_buffer,sizeof(gui_msg_buffer));
 
@@ -110,11 +110,11 @@ int gui_event_check(void)
 			  }
 		}
 		/* we can not find any widget  */
-		gui_msg_buffer.handler = gui_hander_root;
+		gui_msg_buffer.handler = &p_hwnd_n->window;
 		gui_msg_buffer.event_type = gui_msgl0.event_type;
 		gui_msg_buffer.data = gui_msgl0.pri_data;
 		/*revert all focus widget in same parent window*/
-		gui_revert_widget(gui_hander_root,p_gui);
+		gui_revert_widget(&p_hwnd_n->window,p_gui);
 		/*send the data to the msg queue */
 		write(fd_queue,(const char *)&gui_msg_buffer,sizeof(gui_msg_buffer));
 
@@ -128,7 +128,31 @@ int gui_event_check(void)
 	}
 
 }
+static window_hwnd * gui_find_window(window_hwnd * current_hwnd,unsigned short x,unsigned short y)
+{
+   /* define a hwnd */
+   window_hwnd * p_gui;
+   /* find from head */
+   for(p_gui = current_hwnd;p_gui != NULL ; p_gui = p_gui->same_next)
+   {
+	   if( gui_with_in( &p_gui->window , x , y ) == OK)
+	   {
+		   set_handler_current(p_gui);
+           return p_gui;
+	   }
+   }
+   /* find from trail */
+   for(p_gui = current_hwnd;p_gui != NULL ; p_gui = p_gui->same_pre)
+   {
+	   if( gui_with_in( &p_gui->window , x , y ) == OK)
+	   {
+		   set_handler_current(p_gui);
+		   return p_gui;
+	   }
+   }
 
+   return NULL;
+}
 
 static int gui_with_in(struct gui_handler *gui_hander_root,unsigned short x,unsigned short y)
 {

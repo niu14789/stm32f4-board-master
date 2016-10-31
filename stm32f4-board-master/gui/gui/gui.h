@@ -32,7 +32,7 @@
 #define __GUI_WIDGET_THEME_5          ( 0x1 << 14) /* theme mode 5 */
 #define __GUI_WIDGET_THEME_6          ( 0x1 << 15) /* theme mode 6 */
 
-#define __GUI_WIDGET_HANDLE           ( 0x1 << 16) /*  */
+#define __GUI_WIDGET_HANDLE           ( 0x1 << 16) /* 1:child or 0:parent */
 
 typedef struct window_hwnd_t window_hwnd;
 

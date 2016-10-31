@@ -84,23 +84,17 @@ int gui_event_check(void)
 	if( ret != OK )
       return ERR;
 
-	if((gui_msgl0.x_pos >= gui_hander_root->widget_msg.x) &&
-	   (gui_msgl0.x_pos <= gui_hander_root->widget_msg.x + gui_hander_root->widget_msg.xsize) &&
-	   (gui_msgl0.y_pos >= gui_hander_root->widget_msg.y) &&
-	   (gui_msgl0.y_pos <= gui_hander_root->widget_msg.y + gui_hander_root->widget_msg.ysize))
+	if( gui_with_in(gui_hander_root,gui_msgl0.x_pos,gui_msgl0.y_pos) == OK)
 	{
        /* find the window */
-		x_pos = gui_msgl0.x_pos -  gui_hander_root->widget_msg.x;
+		x_pos =  gui_msgl0.x_pos -  gui_hander_root->widget_msg.x;
 		y_pos =  gui_msgl0.y_pos - gui_hander_root->widget_msg.y;
 
 		for(p_gui=gui_hander_root->link;
 					p_gui!=NULL;p_gui=p_gui->link)
 		{
-/* we find a widget ? */
-			 if((x_pos>=p_gui->widget_msg.x) &&
-				 (x_pos<=(p_gui->widget_msg.xsize+p_gui->widget_msg.x)) &&
-				 (y_pos>=p_gui->widget_msg.y)	&&
-				 (y_pos<=(p_gui->widget_msg.ysize+p_gui->widget_msg.y)))
+             /* we find a widget ? */
+			 if(gui_with_in(p_gui,x_pos,y_pos) == OK)
 			  {
 					gui_msg_buffer.handler = p_gui;
 					gui_msg_buffer.event_type = gui_msgl0.event_type;
@@ -136,8 +130,23 @@ int gui_event_check(void)
 }
 
 
+static int gui_with_in(struct gui_handler *gui_hander_root,unsigned short x,unsigned short y)
+{
+	if((x >= gui_hander_root->widget_msg.x) &&
+	   (x <= gui_hander_root->widget_msg.x + gui_hander_root->widget_msg.xsize) &&
+	   (y >= gui_hander_root->widget_msg.y) &&
+	   (y <= gui_hander_root->widget_msg.y + gui_hander_root->widget_msg.ysize))
+	{
+		return OK;
+	}else
+	{
+		return ERR;
+	}
+}
+
+
 /* revert all focused widget */
-int gui_revert_widget(struct gui_handler * p_gui_root,struct gui_handler * p_gui_same)
+static int gui_revert_widget(struct gui_handler * p_gui_root,struct gui_handler * p_gui_same)
 {
 	struct gui_handler * p_gui = p_gui_root;
 	gui_msg gui_msg_buffer;

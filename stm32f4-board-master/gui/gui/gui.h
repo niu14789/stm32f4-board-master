@@ -119,7 +119,9 @@ struct gui_hwnd{
 
 typedef struct window_hwnd_t{
 	struct window_hwnd_t *child_link[3]; // support three child windows
-	struct window_hwnd_t *same_link;     // suport same class window
+	struct window_hwnd_t *parent;        // parent window
+	struct window_hwnd_t *same_next;     // support same class window:next link
+	struct window_hwnd_t *same_pre;      // support same class windiw:precise link
 	widget_hwnd  window;
 }window_hwnd;
 

@@ -222,7 +222,8 @@ int window_insert(window_hwnd * hwnd,unsigned short mode)
 	}else
 	{
 		/* ad same class */
-		root->same_link = hwnd;
+		root->same_next = hwnd;
+		hwnd->parent = root;
 		set_handler_current(hwnd);
 	}
 

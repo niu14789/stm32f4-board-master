@@ -74,6 +74,7 @@ int gui_event_check(void)
 	gui_msg gui_msg_buffer;
 	gui_msg_l0 gui_msgl0;
     unsigned short x_pos,y_pos;
+
 	if( fd_queue == NULL )
 		return ERR;  /* queue init error ,direct return */
 

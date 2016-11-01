@@ -33,6 +33,8 @@
 #define __GUI_WIDGET_THEME_6          ( 0x1 << 15) /* theme mode 6 */
 
 #define __GUI_WIDGET_HANDLE           ( 0x1 << 16) /* 1:child or 0:parent */
+#define __GUI_WIDGET_SAME             ( 0x1 << 17) /* insert as parent window `s child window */
+
 
 typedef struct window_hwnd_t window_hwnd;
 
@@ -118,7 +120,7 @@ struct gui_hwnd{
 };
 
 typedef struct window_hwnd_t{
-	struct window_hwnd_t *child_link[3]; // support three child windows
+	struct window_hwnd_t *child;         // support  child windows
 	struct window_hwnd_t *parent;        // parent window
 	struct window_hwnd_t *same_next;     // support same class window:next link
 	struct window_hwnd_t *same_pre;      // support same class windiw:precise link

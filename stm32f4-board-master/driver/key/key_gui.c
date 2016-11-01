@@ -94,6 +94,8 @@ int key_gui_callback(enum event_type event,void *data)
 	b1_msg.x = 10;
 	b1_msg.y = 40;
 
+	gui_msg_tmp.mode &=~ __GUI_WIDGET_HANDLE;//as same
+
 	window_create(&window_handler_t,&gui_msg_tmp,NULL);
 	button_create(&window_handler_t,&b1_msg,NULL);
 	b1_msg.x = 110;

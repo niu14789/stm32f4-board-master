@@ -93,6 +93,7 @@ window_hwnd * handler_current(void)
 void set_handler_current(window_hwnd *hwnd)
 {
 	ROOT_HANDLER = hwnd;
+	refresh();
 }
 
 /*

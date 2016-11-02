@@ -234,7 +234,7 @@ int window_insert(window_hwnd * hwnd)
 
 int window_delete(window_hwnd * hwnd)
 {
-return OK;
+   return OK;
 }
 
 

@@ -84,7 +84,7 @@ int key_gui_callback(enum event_type event,void *data)
 
 	button_create(&window_handler_key,&b1_msg,NULL);
 
-	refresh();
+	refresh_now(&window_handler_key);
 
 	gui_msg_tmp.x = 120;
 	gui_msg_tmp.y = 20;
@@ -100,7 +100,8 @@ int key_gui_callback(enum event_type event,void *data)
 	button_create(&window_handler_t,&b1_msg,NULL);
 	b1_msg.x = 110;
 	button_create(&window_handler_t,&b1_msg,NULL);
-	refresh();
+
+	refresh_now(&window_handler_t);
 
 	return 0;
 }

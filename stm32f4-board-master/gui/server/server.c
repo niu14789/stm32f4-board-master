@@ -96,7 +96,7 @@ static window_hwnd * gui_find_window(unsigned short x,unsigned short y)
 {
    /* define a hwnd */
    window_hwnd * p_gui;
-   window_hwnd * current_hwnd = handler_current();
+   window_hwnd * current_hwnd = window_current();
    /* find from head */
    for(p_gui = current_hwnd;p_gui != NULL ; p_gui = p_gui->same_next)
    {
@@ -106,7 +106,7 @@ static window_hwnd * gui_find_window(unsigned short x,unsigned short y)
 		      return p_gui;
 		   else
 		   {
-			   set_handler_current(current_hwnd,p_gui);
+			   set_window_current(current_hwnd,p_gui);
 			   return p_gui;
 		   }
 	   }
@@ -120,7 +120,7 @@ static window_hwnd * gui_find_window(unsigned short x,unsigned short y)
 		      return p_gui;
 		   else
 		   {
-			   set_handler_current(current_hwnd,p_gui);
+			   set_window_current(current_hwnd,p_gui);
 			   return p_gui;
 		   }
 	   }

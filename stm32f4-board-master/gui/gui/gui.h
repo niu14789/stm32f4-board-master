@@ -73,6 +73,7 @@ enum event_type
    change_caption,
    key_click,
    key_long_press,
+   window_draw_again,
    OTHER_NPI
 };
 
@@ -171,12 +172,11 @@ typedef struct
 }gui_msg_l0;
 
 /* function */
-window_hwnd * handler_current(void);
+window_hwnd * window_current(void);
 struct gui_handler * handler_insert(window_hwnd * hwnd,struct gui_handler *insert_one);
 int gui_create(const char *device_availdable_list);
 int widget_create(enum widget_type_t widget_type,struct gui_msg_t *p_gui_msg,int (*callback)(enum event_type,void *data));
-int refresh(void);
-void set_handler_current(window_hwnd *,window_hwnd *);
+void set_window_current(window_hwnd *,window_hwnd *);
 /* end nuttx */
 
 #endif /* __GUI_H__ */

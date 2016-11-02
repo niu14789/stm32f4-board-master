@@ -11,6 +11,7 @@
 #include "lcd_hw.h"
 #include "gui_config.h"
 #include "window.h"
+#include "msg.h"
 
 const char bitmap_frame_black[8] = { 0x07 , 0x18 , 0x20 , 0x40 , 0x40 , 0x80 , 0x80 , 0x80 };
 
@@ -25,7 +26,7 @@ window_hwnd  window_handler;
 
 struct gui_operations window_ops;
 
-int window_create_asparent( struct gui_msg_t * p_msg )
+int window_create_asparent( struct gui_msg_t * p_msg ,unsigned char event)
 {
 	int i , j;
     unsigned char rgb_color_r,rgb_color_g,rgb_color_b;
@@ -33,6 +34,42 @@ int window_create_asparent( struct gui_msg_t * p_msg )
 
 	gui_device_t = gui_dev_ops_g();
 		/* window without caption */
+
+	if(event == 0)
+	{
+		rgb_color_r = 154;
+		rgb_color_g = 182;
+		rgb_color_b = 210;
+
+		for(i=0;i<16;i++)
+		{
+			 gui_device_t->gui_dev_ops_g.set_line( p_msg->x + 5 , p_msg->y + 2 + i,
+												   p_msg->x + p_msg->xsize - 5,  p_msg->y + 2 + i,
+												   RGB(rgb_color_r,rgb_color_g,rgb_color_b));
+				rgb_color_r += 3;
+				rgb_color_g += 3;
+				rgb_color_b += 3;
+		}
+		return OK;
+	}
+	else if(event == 1)
+	{
+		rgb_color_r = 60;
+		rgb_color_g = 127;
+		rgb_color_b = 177;
+
+		for(i=0;i<16;i++)
+		{
+			 gui_device_t->gui_dev_ops_g.set_line( p_msg->x + 5 , p_msg->y + 2 + i,
+												   p_msg->x + p_msg->xsize - 5,  p_msg->y + 2 + i,
+												   RGB(rgb_color_r,rgb_color_g,rgb_color_b));
+				rgb_color_r += 3;
+				rgb_color_g += 3;
+				rgb_color_b += 3;
+		}
+		return OK;
+	}
+
 
 	gui_device_t->gui_dev_ops_g.fill_dect(p_msg->x + 2 ,
 			                              p_msg->y + 3 ,
@@ -109,9 +146,9 @@ int window_create_asparent( struct gui_msg_t * p_msg )
 										  p_msg->x + p_msg->xsize - 8,  p_msg->y + 1,
 										  0xffff);
 
-    rgb_color_r = 154;
-    rgb_color_g = 182;
-    rgb_color_b = 210;
+		rgb_color_r = 60;
+		rgb_color_g = 127;
+		rgb_color_b = 177;
 
     for(i=0;i<16;i++)
     {
@@ -136,10 +173,10 @@ int window_show(struct gui_handler * g_hmd)
 {
 	if(g_hmd->widget_msg.mode & (__GUI_WIDGET_MODE_2))
 	{
-		gui_draw_bmp(&g_hmd->widget_msg,0);
+		gui_draw_bmp(&g_hmd->widget_msg,0xff);
 	}else if(g_hmd->widget_msg.mode & (__GUI_WIDGET_MODE_0))
 	{
-		window_create_asparent(&g_hmd->widget_msg);
+		window_create_asparent(&g_hmd->widget_msg,0xff);
 	}
 
 	return 0;//window_create_asparent(p_msg->x,p_msg->y,p_msg->xsize,p_msg->ysize,p_msg->caption,p_msg->mode);
@@ -168,28 +205,34 @@ window_hwnd * window_create(window_hwnd * hwnd,struct gui_msg_t*p_msg,int (*call
 
 int window_move(struct gui_msg_t*p_msg,void *data)
 {
- 
-	unsigned short *p_dx = (unsigned short *)data;
+ 		unsigned short *p_dx = (unsigned short *)data;
 
-	p_msg->x += 	p_dx[0];
-	p_msg->y += 	p_dx[1];
-	
-	 refresh();
-	
-	return 0;
+		p_msg->x += 	p_dx[0];
+		p_msg->y += 	p_dx[1];
+
+		window_refresh();
+
+		return 0;
 }
 
 int window_event_process(struct gui_handler * h_hmd,enum event_type event , void * data)
 {
 	switch(event)
 	{
-	case onfocus:
-		break;
-	case widget_move:
-		window_move(&h_hmd->widget_msg,data);
-		break;
-	default:
-		break;
+		case onfocus:
+			window_create_asparent(&h_hmd->widget_msg,1);
+			break;
+		case losefocus:
+			  window_create_asparent(&h_hmd->widget_msg,0);
+			break;
+		case widget_move:
+			  window_move(&h_hmd->widget_msg,data);
+			break;
+		case window_draw_again:
+			 window_refresh();
+			break;
+		default:
+			break;
 	}
 	return 0;
 }
@@ -203,12 +246,12 @@ int window_insert(window_hwnd * hwnd)
 {
 	window_hwnd * root;
 
-	root =  handler_current();
+	root =  window_current();
 
 	if( root == NULL )
 	{
 		/* first insert */
-		set_handler_current(root,hwnd);
+		set_window_current(root,hwnd);
 
 		return OK;
 	}
@@ -219,17 +262,41 @@ int window_insert(window_hwnd * hwnd)
 		/* as child */
 		root->child = hwnd;
 		hwnd->parent = root;
-		set_handler_current(root,hwnd);
+		set_window_current(root,hwnd);
 	}else
 	{
 		/* ad same class */
 		root->same_next = hwnd;
 		hwnd->same_pre = root;
-		set_handler_current(root,hwnd);
+		set_window_current(root,hwnd);
 	}
 
     return OK;
 }
+
+
+static int window_refresh(void)
+{
+	struct gui_handler *p_root , *root;
+
+	root = &window_current()->window;
+	for(p_root=root;
+			p_root!=NULL;
+			p_root=p_root->link)
+	{
+		if(p_root->gui_ops->show!=NULL)
+			p_root->gui_ops->show(p_root);
+	}
+	return 0;
+}
+
+
+int refresh_now(window_hwnd * now)
+{
+	gui_send_msg(&now->window,window_draw_again,NULL);
+	return OK;
+}
+
 
 int window_delete(window_hwnd * hwnd)
 {

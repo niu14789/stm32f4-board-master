@@ -77,27 +77,29 @@ int widget_create(enum widget_type_t widget_type,struct gui_msg_t *p_gui_msg,int
 /*
  * current handler
  *
- * get current handler
+ * get current wwindow
  *
  * very very usefull
  *
  * */
-window_hwnd * handler_current(void)
+window_hwnd * window_current(void)
 {
 	return ROOT_HANDLER;
 }
 
 /*
- * set the current handler
+ * set the current window
  *
  * */
-void set_handler_current(window_hwnd * old,window_hwnd * new)
+void set_window_current(window_hwnd * old,window_hwnd * new)
 {
 	if(old!=NULL)
 	  gui_send_msg(&old->window,losefocus,NULL);
 
+
 	ROOT_HANDLER = new;
-	refresh();
+
+	gui_send_msg(&new->window,window_draw_again,NULL);
 }
 
 /*
@@ -137,20 +139,6 @@ int show(struct gui_handler *root)
 	return 0;
 }
 
-int refresh(void)
-{
-	struct gui_handler *p_root , *root;
-	
-	root = &handler_current()->window;
-	for(p_root=root;
-			p_root!=NULL;
-			p_root=p_root->link)
-	{
-		if(p_root->gui_ops->show!=NULL)
-			p_root->gui_ops->show(p_root);
-	}
-	return 0;
-}
 
 
 

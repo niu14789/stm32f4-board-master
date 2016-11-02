@@ -10,7 +10,7 @@
 #include "bmp.h"
 #include "gui.h"
 #include "gui_config.h"
-
+#include "string.h"
 
 /*-----------------*/
 #define MAX_READ_LEN_BMP  (320 * 4)
@@ -24,12 +24,12 @@ int gui_draw_bmp( const struct gui_msg_t * p_msg , unsigned int __MODE__)
    struct file *fd;
    int ret;
    BITMAPINFO * bmpinfo;
-   static unsigned short pic_width , pic_height;
+//   static unsigned short pic_width , pic_height;
    unsigned char color_byte; //8 16 32bit color byte
-   unsigned int i,j,k,cnt = 0;
+   unsigned int i,j,cnt = 0;
    unsigned short color;
-   unsigned char alphabend;
-   unsigned char *bmpbuf;
+//   unsigned char alphabend;
+//   unsigned char *bmpbuf;
    gui_device *gui_device_t;
 
    gui_device_t = gui_dev_ops_g();
@@ -60,8 +60,8 @@ int gui_draw_bmp( const struct gui_msg_t * p_msg , unsigned int __MODE__)
 	   return ERR;
    }
 
-   pic_width  = bmpinfo->bmiHeader.biWidth;     //get bmp width
-   pic_height = bmpinfo->bmiHeader.biHeight;	//get bmp height
+//   pic_width  = bmpinfo->bmiHeader.biWidth;     //get bmp width
+//   pic_height = bmpinfo->bmiHeader.biHeight;	//get bmp height
 
    lseek(fd,bmpinfo->bmfHeader.bfOffBits,0);
 
@@ -79,7 +79,7 @@ int gui_draw_bmp( const struct gui_msg_t * p_msg , unsigned int __MODE__)
 					color=(buffer_bmp[cnt])>>3;		   		 	//B
 					color+=((unsigned short)(buffer_bmp[cnt+1])<<3)&0X07E0;	//G
 					color+=(((unsigned short)buffer_bmp[cnt+2])<<8)&0XF800;	//R
-					alphabend=buffer_bmp[cnt+3];					//ALPHA通道
+//					alphabend=buffer_bmp[cnt+3];					//ALPHA通道
 					gui_device_t->gui_dev_ops_g.put_pixel(p_msg->x + j,p_msg->y + i,color);
 					cnt +=4;
 					color = 0;

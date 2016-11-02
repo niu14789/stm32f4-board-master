@@ -57,8 +57,12 @@ uint32_t queuel0_read(FAR struct file *filp, FAR char *buffer, uint32_t buflen)
 int queuel0_init(void)
 {
 	queuel0_create(QUEUE_L0_ID,QUEUE_DEEPTH_L0);
+
+	inode_queuel0.i_flags |= __FS_IS_INODE_OK | __FS_IS_INODE_INIT;
+
 	return 0;
 }
+
 int queuel0_create(unsigned short ID,unsigned short deepth)
 {
 	int i;

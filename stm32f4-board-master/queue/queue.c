@@ -13,6 +13,9 @@
  * */
 static queue_msg_t queue_msg[QUEUE_DEEPTH_MSG] __attribute__((at(QUEUE_MEM)));
 
+/* queue file  */
+static struct file queue;
+
 struct file_operations queue_msg_ops =
 {
   queue_device_open,
@@ -38,7 +41,6 @@ FS_REGISTER(FS_DEVICE("queue.d"),inode_queue);
 /* interface functions */
 struct file * queue_device_open(struct file * filp)
 {
-	static struct file queue;
 	queue.f_inode = &inode_queue;
 	/* open always ok */
 	return &queue;
@@ -57,8 +59,12 @@ uint32_t queue_read(FAR struct file *filp, FAR char *buffer, uint32_t buflen)
 int queue_init(void)
 {
 	queue_create(QUEUE_MSG_ID,QUEUE_DEEPTH_MSG);
+
+	inode_queue.i_flags |= __FS_IS_INODE_OK | __FS_IS_INODE_INIT;
+
 	return 0;
 }
+
 int queue_create(unsigned short ID,unsigned short deepth)
 {
 	int i;

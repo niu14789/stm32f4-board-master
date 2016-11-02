@@ -38,7 +38,7 @@ void fill_dect_default(unsigned short x,unsigned short y,unsigned short height,u
 
 int gui_config_init(void)
 {
-	struct file * file_touch,*file_lcd2;
+	struct file * file_touch;
     float buffer[5];
 
     /* open save file in eeprom*/
@@ -58,11 +58,11 @@ int gui_config_init(void)
 
     if(file_touch == NULL)
     {
-			printf_d("touch cali:can not find the eeprom dev\n");
-			printf_d("need calibration\n");
-			gui_touch_calibration(&gui_dev_ops_g()->gui_touch_ops_g.touch_cali_msg);
+		printf_d("touch cali:can not find the eeprom dev\n");
+		printf_d("need calibration\n");
+		gui_touch_calibration(&gui_dev_ops_g()->gui_touch_ops_g.touch_cali_msg);
 
-			return OK;
+		return OK;
     }
 
     if(read(file_touch,(char *)&buffer,sizeof(buffer)) != sizeof(buffer))
@@ -185,9 +185,6 @@ int gui_touch_calibration(touch_msg_def * touch_msg)
     	 printf_d("touch calibration err\n");
     	 return ERR;
     }
-    /* ok */
-
-    return OK;
 }
 
 

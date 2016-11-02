@@ -350,7 +350,7 @@
               <MiscControls>--diag_suppress=870</MiscControls>
               <Define>USE_STDPERIPH_DRIVER,USE_USB_OTG_FS,USE_EMBEDDED_PHY</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\Libraries\CMSIS\Include;..\..\Libraries\CMSIS\Device\ST\STM32F4xx\Include;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\User\bsp_stm32f4xx\inc;..\..\User\bsp_stm32f4xx;..\..\User;..\..\Libraries\STM32_USB_Device_Library\Class\msc\inc;..\..\Libraries\STM32_USB_Device_Library\Core\inc;..\..\Libraries\STM32_USB_OTG_Driver\inc;..\..\User\usb_mass_storage;..\..\User\iapss;..\..\User\iapss\fatfs;..\..\Hardware\io;..\..\Hardware\led;..\..\Hardware\key;..\..\Hardware\usart;..\..\Hardware\exit;..\..\Hardware\pwm;..\..\Hardware\adc;..\..\Hardware\rtc;..\..\fs;..\..\driver\lcd;..\..\driver\lcd\ra8875;..\..\driver\sd\sd_driver;..\..\driver\sd\fatfs;..\..\gui\widget\button;..\..\gui\gui;..\..\driver\led;..\..\gui\server;..\..\driver\sram;..\..\gui\widget\window;..\..\driver\lcd\ili93xx;..\..\gui\gui_config;..\..\driver\touch;..\..\gui\pic\bmp;..\..\driver\i2c;..\..\driver\e2p</IncludePath>
+              <IncludePath>..\..\Libraries\CMSIS\Include;..\..\Libraries\CMSIS\Device\ST\STM32F4xx\Include;..\..\Libraries\STM32F4xx_StdPeriph_Driver\inc;..\..\User\bsp_stm32f4xx\inc;..\..\User\bsp_stm32f4xx;..\..\User;..\..\Libraries\STM32_USB_Device_Library\Class\msc\inc;..\..\Libraries\STM32_USB_Device_Library\Core\inc;..\..\Libraries\STM32_USB_OTG_Driver\inc;..\..\User\usb_mass_storage;..\..\User\iapss;..\..\User\iapss\fatfs;..\..\Hardware\io;..\..\Hardware\led;..\..\Hardware\key;..\..\Hardware\usart;..\..\Hardware\exit;..\..\Hardware\pwm;..\..\Hardware\adc;..\..\Hardware\rtc;..\..\fs;..\..\driver\lcd;..\..\driver\lcd\ra8875;..\..\driver\sd\sd_driver;..\..\driver\sd\fatfs;..\..\gui\widget\button;..\..\gui\gui;..\..\driver\led;..\..\gui\server;..\..\driver\sram;..\..\gui\widget\window;..\..\driver\lcd\ili93xx;..\..\gui\gui_config;..\..\driver\touch;..\..\gui\pic\bmp;..\..\driver\i2c;..\..\driver\e2p;..\..\gui\msg</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -640,6 +640,11 @@
               <FileName>bmp.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\gui\pic\bmp\bmp.c</FilePath>
+            </File>
+            <File>
+              <FileName>msg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\gui\msg\msg.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1389,6 +1394,11 @@
               <FileName>bmp.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\gui\pic\bmp\bmp.c</FilePath>
+            </File>
+            <File>
+              <FileName>msg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\gui\msg\msg.c</FilePath>
             </File>
           </Files>
         </Group>

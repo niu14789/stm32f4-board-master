@@ -108,7 +108,7 @@ FAR struct fd_find *inode_find(inode_vmn *inode,FAR const char *path, FAR const 
 
 int system_initialization(char *device_availdable_list)
 {
-  int ret,i,n;
+    int ret,i,n;
 
 	inode_vmn * p_vmn_start = inode_sched_getfiles();
     n = inode_sched_limit();

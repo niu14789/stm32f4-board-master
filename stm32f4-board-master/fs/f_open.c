@@ -11,6 +11,7 @@ struct file * open(const char *path, int oflags)
    * get inode sched getfiles
    * p vmn start
    * nothing
+   *
    * */
   p_vmn_start = inode_sched_getfiles();
 

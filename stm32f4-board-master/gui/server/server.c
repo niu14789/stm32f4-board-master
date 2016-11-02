@@ -8,11 +8,9 @@
 #include "fs.h"
 #include "gui.h"
 #include "server.h"
+#include "msg.h"
 
 #define QUEUE_PATH  "/dev/queue.d"
-
-
-static struct file * fd_queuel0 = 0;
 
 int gui_server(void)
 {
@@ -43,7 +41,7 @@ int gui_event_idle(void)
         /* deal with uis */
 		p_gui_msg->handler->gui_ops->event_process(p_gui_msg->handler,p_gui_msg->event_type,p_gui_msg->data);
 
-		/* idle the callback function */
+		/* deal with the callback function */
 		if(p_gui_msg->handler->callback!=NULL)
 			p_gui_msg->handler->callback(p_gui_msg->event_type,p_gui_msg->data);
 	}
@@ -59,10 +57,7 @@ int gui_event_check(void)
 	gui_msg_l0 gui_msgl0;
     unsigned short x_pos,y_pos;
 
-	if( fd_queuel0 == NULL )
-		 fd_queuel0 = open("/dev/queuel0.d",__FS_OPEN_EXISTING | __FS_WRITE);
-
-	ret = read(fd_queuel0,(char *)&gui_msgl0,sizeof(gui_msgl0));
+	ret = gui_read_msgl0((char *)&gui_msgl0,sizeof(gui_msgl0));
 
 	if( ret != OK )
       return ERR;
@@ -175,70 +170,6 @@ static int gui_revert_widget(struct gui_handler * p_gui_root,struct gui_handler 
 	return ERR;
 }
 
-
-int gui_send_msg(struct gui_handler* handler,enum event_type  event_type,void *data)
-{
-	int ret;
-	/* define some buffer as same */
-	static struct file * fd_queue = 0;
-	/* flag depend */
-	static char flag = 0;
-    /* define some buffer as same */
-	gui_msg gui_msg_buffer;
-	/* first open the queue */
-	if(!flag) /* is first time enter */
-	{
-		fd_queue = open("/dev/queue.d",__FS_OPEN_EXISTING | __FS_WRITE);
-		if(fd_queue != NULL)
-		{
-		  printf_d("[gui_server] the queue open ok!\n");
-		  flag = 1; /* ignore first time */
-		}else
-		{
-		  printf_d("[gui_server] the queue open fail,server setup fail!\n");
-		  return ERR;
-		}
-	}
-
-	/* open ok */
-
-	gui_msg_buffer.handler = handler;
-	gui_msg_buffer.event_type =event_type;
-	gui_msg_buffer.data = data;
-
-	/* write data to queue */
-	ret = write(fd_queue,(const char *)&gui_msg_buffer,sizeof(gui_msg_buffer));
-
-	return ret;//ok or fail
-}
-
-int gui_read_msg(char * data,unsigned int len)
-{
-	int ret;
-	/* define some buffer as same */
-	static struct file * fd_queue = 0;
-	/* flag depend */
-	static char flag = 0;
-
-	/* first open the queue */
-	if(!flag) /* is first time enter */
-	{
-		fd_queue = open("/dev/queue.d",__FS_OPEN_EXISTING | __FS_WRITE);
-		if(fd_queue != NULL)
-		{
-		  printf_d("[gui_server] the queue open ok!\n");
-		  flag = 1; /* ignore first time */
-		}else
-		{
-		  printf_d("[gui_server] the queue open fail,server setup fail!\n");
-		  return ERR;
-		}
-	}
-
-	ret = read(fd_queue,data,len);
-
-	return ret;
-}
 
 
 

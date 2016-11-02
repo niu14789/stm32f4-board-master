@@ -108,7 +108,7 @@ typedef struct gui_handler{
 	unsigned short              status;
 	struct gui_operations     *gui_ops;
     struct gui_msg_t        widget_msg;
-    window_hwnd * parent_window;
+    window_hwnd        * parent_window;
 	int (*callback)(enum event_type,void *data);
 }widget_hwnd;
 
@@ -176,7 +176,7 @@ struct gui_handler * handler_insert(window_hwnd * hwnd,struct gui_handler *inser
 int gui_create(const char *device_availdable_list);
 int widget_create(enum widget_type_t widget_type,struct gui_msg_t *p_gui_msg,int (*callback)(enum event_type,void *data));
 int refresh(void);
-void set_handler_current(window_hwnd *hwnd);
+void set_handler_current(window_hwnd *,window_hwnd *);
 /* end nuttx */
 
 #endif /* __GUI_H__ */

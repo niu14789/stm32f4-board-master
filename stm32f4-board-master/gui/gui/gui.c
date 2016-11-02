@@ -9,6 +9,7 @@
 #include "button.h"
 #include "window.h"
 #include "gui_config.h"
+#include "msg.h"
 
 static window_hwnd * ROOT_HANDLER = NULL;
 extern window_hwnd window_handler;
@@ -90,9 +91,12 @@ window_hwnd * handler_current(void)
  * set the current handler
  *
  * */
-void set_handler_current(window_hwnd *hwnd)
+void set_handler_current(window_hwnd * old,window_hwnd * new)
 {
-	ROOT_HANDLER = hwnd;
+	if(old!=NULL)
+	  gui_send_msg(&old->window,losefocus,NULL);
+
+	ROOT_HANDLER = new;
 	refresh();
 }
 

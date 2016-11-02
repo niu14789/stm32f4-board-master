@@ -184,7 +184,6 @@ int window_event_process(struct gui_handler * h_hmd,enum event_type event , void
 	switch(event)
 	{
 	case onfocus:
-
 		break;
 	case widget_move:
 		window_move(&h_hmd->widget_msg,data);
@@ -209,7 +208,7 @@ int window_insert(window_hwnd * hwnd)
 	if( root == NULL )
 	{
 		/* first insert */
-		set_handler_current(hwnd);
+		set_handler_current(root,hwnd);
 
 		return OK;
 	}
@@ -220,13 +219,13 @@ int window_insert(window_hwnd * hwnd)
 		/* as child */
 		root->child = hwnd;
 		hwnd->parent = root;
-		set_handler_current(hwnd);
+		set_handler_current(root,hwnd);
 	}else
 	{
 		/* ad same class */
 		root->same_next = hwnd;
 		hwnd->same_pre = root;
-		set_handler_current(hwnd);
+		set_handler_current(root,hwnd);
 	}
 
     return OK;

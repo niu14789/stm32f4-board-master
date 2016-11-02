@@ -50,10 +50,9 @@ int gui_event_idle(void)
 
 int gui_event_check(void)
 {
+	int ret;
 	struct gui_handler *p_gui;
 	window_hwnd * p_hwnd_n;
-	window_hwnd * gui_hwnd = handler_current();
-	int ret;
 	gui_msg_l0 gui_msgl0;
     unsigned short x_pos,y_pos;
 
@@ -62,19 +61,19 @@ int gui_event_check(void)
 	if( ret != OK )
       return ERR;
 
-	if( (p_hwnd_n = gui_find_window(gui_hwnd,gui_msgl0.x_pos,gui_msgl0.y_pos)) != NULL )
+	if((p_hwnd_n = gui_find_window(gui_msgl0.x_pos,gui_msgl0.y_pos)) != NULL )
 	{
-       /* find the window */
+		/* thansfer x and y to window */
 		x_pos =  gui_msgl0.x_pos -  p_hwnd_n->window.widget_msg.x;
 		y_pos =  gui_msgl0.y_pos -  p_hwnd_n->window.widget_msg.y;
-
-		for(p_gui=p_hwnd_n->window.link;p_gui!=NULL;p_gui=p_gui->link)
+        /* find the widget */
+		for(p_gui = p_hwnd_n->window.link ; p_gui != NULL ; p_gui = p_gui->link)
 		{
              /* we find a widget ? */
 			 if(gui_with_in(p_gui,x_pos,y_pos) == OK)
 			  {
 					/*revert all focus widget in same parent window*/
-					gui_revert_widget(&p_hwnd_n->window,p_gui);
+					gui_revert_widget(p_hwnd_n->window.link,p_gui);
 					/*send the data to the msg queue */
 					gui_send_msg(p_gui,gui_msgl0.event_type,gui_msgl0.pri_data);
 
@@ -83,21 +82,9 @@ int gui_event_check(void)
 					return OK;
 			  }
 		}
-
-		/*revert all focus widget in same parent window*/
-		gui_revert_widget(&p_hwnd_n->window,p_gui);
-
-		/*
-		 * we can not find any widget but selfwindow
-		 *
-		 * send the data to the msg queue
-		 *
-		 * */
-		gui_send_msg(&p_hwnd_n->window,gui_msgl0.event_type,gui_msgl0.pri_data);
-
-		p_gui->status = FOCUS_ON;
-
-		return OK;
+        /* not good ! we find nothing , hahahaha */
+		return ERR;
+		/*------------*/
 	}else
 	{
 	  /* maybe select other window */
@@ -105,17 +92,23 @@ int gui_event_check(void)
 	}
 }
 
-static window_hwnd * gui_find_window(window_hwnd * current_hwnd,unsigned short x,unsigned short y)
+static window_hwnd * gui_find_window(unsigned short x,unsigned short y)
 {
    /* define a hwnd */
    window_hwnd * p_gui;
+   window_hwnd * current_hwnd = handler_current();
    /* find from head */
    for(p_gui = current_hwnd;p_gui != NULL ; p_gui = p_gui->same_next)
    {
 	   if( gui_with_in( &p_gui->window , x , y ) == OK)
 	   {
-		   set_handler_current(p_gui);
-           return p_gui;
+		   if( current_hwnd == p_gui)
+		      return p_gui;
+		   else
+		   {
+			   set_handler_current(current_hwnd,p_gui);
+			   return p_gui;
+		   }
 	   }
    }
    /* find from trail */
@@ -123,8 +116,13 @@ static window_hwnd * gui_find_window(window_hwnd * current_hwnd,unsigned short x
    {
 	   if( gui_with_in( &p_gui->window , x , y ) == OK)
 	   {
-		   set_handler_current(p_gui);
-		   return p_gui;
+		   if( current_hwnd == p_gui)
+		      return p_gui;
+		   else
+		   {
+			   set_handler_current(current_hwnd,p_gui);
+			   return p_gui;
+		   }
 	   }
    }
 
@@ -157,7 +155,7 @@ static int gui_revert_widget(struct gui_handler * p_gui_root,struct gui_handler 
 	   if(p_gui->status == FOCUS_ON)
 	   {
 		   if(p_gui == p_gui_same)
-			   return ERR;
+			   return OK;
 
 		   /* send the data to the msg queue */
 		   gui_send_msg(p_gui,losefocus,NULL);
